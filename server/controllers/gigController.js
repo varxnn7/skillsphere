@@ -1,5 +1,6 @@
 const Gig = require('../models/Gig');
 const FreelancerProfile = require('../models/FreelancerProfile');
+const ClientProfile = require('../models/ClientProfile');
 const sendEmail = require('../utils/email');
 
 // @desc    Create a new gig
@@ -129,9 +130,12 @@ exports.getGigs = async (req, res, next) => {
     }
 
     if (budgetMin || budgetMax) {
-      query.budgetMax = {};
-      if (budgetMin) query.budgetMax.$gte = Number(budgetMin);
-      if (budgetMax) query.budgetMin = { ...query.budgetMin, $lte: Number(budgetMax) };
+      if (budgetMin) {
+        query.budgetMax = { $gte: Number(budgetMin) };
+      }
+      if (budgetMax) {
+        query.budgetMin = { $lte: Number(budgetMax) };
+      }
     }
 
     if (location) {
@@ -202,14 +206,27 @@ exports.getGig = async (req, res, next) => {
     const gig = await Gig.findById(req.params.id)
       .populate({
         path: 'client',
-        select: 'name email avatar'
+        select: 'name email avatar createdAt'
       });
 
     if (!gig) {
       return res.status(404).json({ success: false, message: 'Gig not found' });
     }
 
-    res.status(200).json({ success: true, gig });
+    // Fetch client profile stats
+    const clientProfile = await ClientProfile.findOne({ user: gig.client._id });
+    
+    // Structure response object with client ratings
+    const gigObj = gig.toObject();
+    if (gigObj.client) {
+      gigObj.client.rating = clientProfile ? clientProfile.averageRating : 0;
+      gigObj.client.location = clientProfile ? clientProfile.location : '';
+      gigObj.client.totalPosted = clientProfile ? clientProfile.totalPosted : 0;
+      gigObj.client.totalSpent = clientProfile ? clientProfile.totalSpent : 0;
+      gigObj.client.createdAt = gig.client.createdAt;
+    }
+
+    res.status(200).json({ success: true, gig: gigObj });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

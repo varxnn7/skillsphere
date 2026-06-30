@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Search as SearchIcon, SlidersHorizontal } from 'lucide-react';
 import api from '../../utils/api';
 import { gigsStart, gigsSuccess, gigsFailure } from '../../store/gigsSlice';
@@ -11,46 +12,58 @@ import LoadingSpinner from '../../components/LoadingSpinner';
 
 const BrowseGigs = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { gigs, pagination, loading } = useSelector((state) => state.gigs);
 
-  // Filter & Search Params States
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filters, setFilters] = useState({
-    category: '',
-    experienceLevel: '',
-    isRemote: '',
-    budgetMin: 500,
-    budgetMax: 100000,
-    sort: 'newest',
-    page: 1
-  });
+  // Parse state from URL
+  const getParams = useCallback(() => {
+    const params = new URLSearchParams(location.search);
+    return {
+      search: params.get('search') || '',
+      category: params.get('category') || '',
+      experienceLevel: params.get('experienceLevel') || '',
+      isRemote: params.get('isRemote') || '',
+      budgetMin: params.get('budgetMin') ? Number(params.get('budgetMin')) : 500,
+      budgetMax: params.get('budgetMax') ? Number(params.get('budgetMax')) : 100000,
+      sort: params.get('sort') || 'newest',
+      page: params.get('page') ? Number(params.get('page')) : 1
+    };
+  }, [location.search]);
 
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const currentParams = getParams();
 
-  // Debounced search helper: 300ms
-  const [debouncedSearch, setDebouncedSearch] = useState('');
+  // Local state for search bar (immediate feedback)
+  const [searchTerm, setSearchTerm] = useState(currentParams.search);
+
+  // Sync state search term with URL search term if it changes (e.g. on reset or URL paste)
+  useEffect(() => {
+    setSearchTerm(currentParams.search);
+  }, [currentParams.search]);
+
+  // Debounced URL updates for typing in search bar
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedSearch(searchTerm);
-      setFilters(prev => ({ ...prev, page: 1 })); // reset page on search
+      const params = new URLSearchParams(location.search);
+      if (searchTerm) {
+        params.set('search', searchTerm);
+      } else {
+        params.delete('search');
+      }
+      params.set('page', '1'); // reset page on search
+      navigate({ search: params.toString() }, { replace: true });
     }, 300);
     return () => clearTimeout(handler);
-  }, [searchTerm]);
+  }, [searchTerm, navigate]);
+
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const fetchGigs = useCallback(async () => {
     dispatch(gigsStart());
     try {
-      // Build query string matching URL query param guidelines
-      const params = new URLSearchParams();
-      if (debouncedSearch) params.append('search', debouncedSearch);
-      if (filters.category) params.append('category', filters.category);
-      if (filters.experienceLevel) params.append('experienceLevel', filters.experienceLevel);
-      if (filters.isRemote) params.append('isRemote', filters.isRemote);
-      if (filters.budgetMin) params.append('budgetMin', filters.budgetMin);
-      if (filters.budgetMax) params.append('budgetMax', filters.budgetMax);
-      if (filters.sort) params.append('sort', filters.sort);
-      params.append('page', filters.page);
-      params.append('limit', 6);
+      const params = new URLSearchParams(location.search);
+      if (!params.has('page')) params.set('page', '1');
+      if (!params.has('limit')) params.set('limit', '6');
 
       const response = await api.get(`/gigs?${params.toString()}`);
       if (response.data.success) {
@@ -62,31 +75,35 @@ const BrowseGigs = () => {
     } catch (err) {
       dispatch(gigsFailure(err.response?.data?.message || 'Failed to fetch gigs.'));
     }
-  }, [filters, debouncedSearch, dispatch]);
+  }, [location.search, dispatch]);
 
   useEffect(() => {
     fetchGigs();
   }, [fetchGigs]);
 
   const handleFilterChange = (newFilters) => {
-    setFilters(newFilters);
+    const params = new URLSearchParams();
+    if (searchTerm) params.set('search', searchTerm);
+    if (newFilters.category) params.set('category', newFilters.category);
+    if (newFilters.experienceLevel) params.set('experienceLevel', newFilters.experienceLevel);
+    if (newFilters.isRemote) params.set('isRemote', newFilters.isRemote);
+    if (newFilters.budgetMin && newFilters.budgetMin !== 500) params.set('budgetMin', newFilters.budgetMin);
+    if (newFilters.budgetMax && newFilters.budgetMax !== 100000) params.set('budgetMax', newFilters.budgetMax);
+    if (newFilters.sort) params.set('sort', newFilters.sort);
+    params.set('page', newFilters.page || '1');
+
+    navigate({ search: params.toString() });
   };
 
   const handleReset = () => {
     setSearchTerm('');
-    setFilters({
-      category: '',
-      experienceLevel: '',
-      isRemote: '',
-      budgetMin: 500,
-      budgetMax: 100000,
-      sort: 'newest',
-      page: 1
-    });
+    navigate({ search: '' });
   };
 
   const handlePageChange = (page) => {
-    setFilters({ ...filters, page });
+    const params = new URLSearchParams(location.search);
+    params.set('page', page);
+    navigate({ search: params.toString() });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -124,8 +141,13 @@ const BrowseGigs = () => {
           <div className="flex items-center gap-3">
             {/* Sort options */}
             <select
-              value={filters.sort}
-              onChange={(e) => setFilters({ ...filters, sort: e.target.value, page: 1 })}
+              value={currentParams.sort}
+              onChange={(e) => {
+                const params = new URLSearchParams(location.search);
+                params.set('sort', e.target.value);
+                params.set('page', '1');
+                navigate({ search: params.toString() });
+              }}
               className="px-3 py-1.5 rounded-lg border border-dark-border bg-dark-surface text-xs font-bold text-slate-300 focus:outline-none"
             >
               <option value="newest">Newest First</option>
@@ -148,7 +170,7 @@ const BrowseGigs = () => {
           {/* Sidebar filters (Desktop view) */}
           <div className="hidden md:block md:col-span-1">
             <GigFilters
-              filters={filters}
+              filters={currentParams}
               onFilterChange={handleFilterChange}
               onReset={handleReset}
             />
@@ -158,7 +180,7 @@ const BrowseGigs = () => {
           {showMobileFilters && (
             <div className="md:hidden col-span-1 border-t border-dark-border pt-4">
               <GigFilters
-                filters={filters}
+                filters={currentParams}
                 onFilterChange={handleFilterChange}
                 onReset={handleReset}
               />
@@ -170,7 +192,7 @@ const BrowseGigs = () => {
             {loading ? (
               /* Skeleton Loader Cards Grid */
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
-                {[1, 2, 4].map(idx => (
+                {[1, 2, 3, 4, 5, 6].map(idx => (
                   <div key={idx} className="bg-dark-surface border border-dark-border rounded-2xl p-6 h-64 animate-pulse space-y-4">
                     <div className="h-4 bg-dark-border rounded-lg w-1/3" />
                     <div className="h-6 bg-dark-border rounded-lg w-3/4" />

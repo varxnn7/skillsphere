@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../store/authSlice';
 import { clearProfile } from '../store/profileSlice';
-import { LogOut, User, LayoutDashboard, Settings, Menu, X } from 'lucide-react';
+import { LogOut, User, LayoutDashboard, Settings, Menu, X, MessageSquare } from 'lucide-react';
+import NotificationBell from './notifications/NotificationBell';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -72,25 +73,39 @@ const Navbar = () => {
             </Link>
 
             {isAuthenticated ? (
-              <div className="relative" ref={dropdownRef}>
-                <button
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center gap-2 focus:outline-none"
+              <div className="flex items-center gap-4">
+                {/* Messages Link */}
+                <Link
+                  to="/messages"
+                  className="p-2 rounded-xl border border-dark-border hover:border-white/15 text-[#94A3B8] hover:text-white hover:bg-white/5 transition-colors cursor-pointer relative"
+                  title="Messages"
                 >
-                  <img
-                    className="h-8 w-8 rounded-full object-cover border border-dark-border"
-                    src={user?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=80'}
-                    alt="Profile"
-                  />
-                  <span className="text-sm font-medium text-slate-200 max-w-[100px] truncate">{user?.name}</span>
-                </button>
+                  <MessageSquare className="h-4 w-4" />
+                </Link>
 
-                {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-dark-surface border border-dark-border ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden">
-                    <div className="px-4 py-2 border-b border-[rgba(255,255,255,0.05)]">
-                      <p className="text-xs text-brand-cyan font-medium uppercase tracking-wider">{user?.role}</p>
-                      <p className="text-sm font-semibold text-white truncate">{user?.name}</p>
-                    </div>
+                {/* Notification Bell */}
+                <NotificationBell />
+
+                {/* User Dropdown */}
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                    className="flex items-center gap-2 focus:outline-none"
+                  >
+                    <img
+                      className="h-8 w-8 rounded-full object-cover border border-dark-border"
+                      src={user?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=80'}
+                      alt="Profile"
+                    />
+                    <span className="text-sm font-medium text-slate-200 max-w-[100px] truncate">{user?.name}</span>
+                  </button>
+
+                  {dropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-dark-surface border border-dark-border ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden">
+                      <div className="px-4 py-2 border-b border-[rgba(255,255,255,0.05)]">
+                        <p className="text-xs text-brand-cyan font-medium uppercase tracking-wider">{user?.role}</p>
+                        <p className="text-sm font-semibold text-white truncate">{user?.name}</p>
+                      </div>
 
                     <Link
                       to={getDashboardLink()}
@@ -122,6 +137,7 @@ const Navbar = () => {
                   </div>
                 )}
               </div>
+            </div>
             ) : (
               <div className="flex items-center gap-3">
                 <Link

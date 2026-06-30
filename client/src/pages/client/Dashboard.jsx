@@ -1,49 +1,64 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Briefcase, CreditCard, PlusCircle, Clock, CheckCircle2, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import api from '../../utils/api';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const ClientDashboard = () => {
   const { user } = useSelector((state) => state.auth);
+  const [stats, setStats] = useState([]);
+  const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock stats
-  const stats = [
-    { title: 'Posted Gigs', value: '4', icon: Briefcase, color: 'text-[#3B82F6] bg-[#3B82F6]/10 border-[#3B82F6]/20' },
-    { title: 'Active Projects', value: '2', icon: Clock, color: 'text-[#8B5CF6] bg-[#8B5CF6]/10 border-[#8B5CF6]/20' },
-    { title: 'Total Spent', value: '₹14,500', icon: CreditCard, color: 'text-[#10B981] bg-[#10B981]/10 border-[#10B981]/20' },
-    { title: 'Pending Payments', value: '₹3,200', icon: TrendingUp, color: 'text-[#F59E0B] bg-[#F59E0B]/10 border-[#F59E0B]/20' }
-  ];
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await api.get('/dashboard/stats');
+        if (response.data.success) {
+          const statsMap = {
+            'Posted Gigs': Briefcase,
+            'Active Projects': Clock,
+            'Total Spent': CreditCard,
+            'Pending Payments': TrendingUp
+          };
 
-  // Mock activities
-  const activities = [
-    {
-      id: 1,
-      type: 'proposal',
-      title: 'New proposal received',
-      desc: 'John Doe applied to your "Local WordPress Development" gig.',
-      time: '2 hours ago',
-      icon: Briefcase,
-      color: 'bg-[#3B82F6]'
-    },
-    {
-      id: 2,
-      type: 'payment',
-      title: 'Milestone escrow deposited',
-      desc: 'You deposited ₹5,000 in escrow for "Mobile App UI Design" project.',
-      time: '1 day ago',
-      icon: CreditCard,
-      color: 'bg-[#10B981]'
-    },
-    {
-      id: 3,
-      type: 'verification',
-      title: 'Gig published successfully',
-      desc: 'Your request for "Home Plumbing Maintenance" is live now.',
-      time: '3 days ago',
-      icon: CheckCircle2,
-      color: 'bg-brand-indigo'
-    }
-  ];
+          const mappedStats = response.data.stats.map(s => ({
+            ...s,
+            icon: statsMap[s.title] || Briefcase
+          }));
+
+          const actMap = {
+            'proposal': Briefcase,
+            'payment': CreditCard,
+            'verification': CheckCircle2
+          };
+
+          const mappedActivities = response.data.activities.map(act => ({
+            ...act,
+            icon: actMap[act.type] || Briefcase
+          }));
+
+          setStats(mappedStats);
+          setActivities(mappedActivities);
+        }
+      } catch (err) {
+        console.error('Error fetching dashboard stats:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-[400px] flex items-center justify-center">
+        <LoadingSpinner size="lg" color="white" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Briefcase,
@@ -18,33 +18,53 @@ import {
   Tooltip,
   ResponsiveContainer
 } from 'recharts';
+import api from '../../utils/api';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const FreelancerDashboard = () => {
   const { user } = useSelector((state) => state.auth);
+  const [stats, setStats] = useState([]);
+  const [chartData, setChartData] = useState([]);
+  const [localJobs, setLocalJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock stats
-  const stats = [
-    { title: 'Profile Views', value: '280', icon: Eye, color: 'text-[#3B82F6] bg-[#3B82F6]/10 border-[#3B82F6]/20' },
-    { title: 'Proposals Sent', value: '18', icon: FileText, color: 'text-[#8B5CF6] bg-[#8B5CF6]/10 border-[#8B5CF6]/20' },
-    { title: 'Active Gigs', value: '3', icon: Briefcase, color: 'text-[#10B981] bg-[#10B981]/10 border-[#10B981]/20' },
-    { title: 'Total Earnings', value: '₹42,000', icon: TrendingUp, color: 'text-brand-indigo bg-brand-indigo/10 border-brand-indigo/20' }
-  ];
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await api.get('/dashboard/stats');
+        if (response.data.success) {
+          const statsMap = {
+            'Profile Views': Eye,
+            'Proposals Sent': FileText,
+            'Active Gigs': Briefcase,
+            'Total Earnings': TrendingUp
+          };
 
-  // Mock chart data
-  const chartData = [
-    { month: 'Jan', earnings: 5000 },
-    { month: 'Feb', earnings: 12000 },
-    { month: 'Mar', earnings: 10000 },
-    { month: 'Apr', earnings: 18000 },
-    { month: 'May', earnings: 25000 },
-    { month: 'Jun', earnings: 42000 }
-  ];
+          const mappedStats = response.data.stats.map(s => ({
+            ...s,
+            icon: statsMap[s.title] || Eye
+          }));
 
-  // Mock list of local jobs
-  const localJobs = [
-    { id: 1, title: 'React Web App Developer', distance: '1.2 km away', client: 'Alpha Corp', budget: '₹15,000' },
-    { id: 2, title: 'Local Delivery Logistics Dashboard', distance: '3.5 km away', client: 'Beta Logistics', budget: '₹8,500' }
-  ];
+          setStats(mappedStats);
+          setChartData(response.data.chartData || []);
+          setLocalJobs(response.data.localJobs || []);
+        }
+      } catch (err) {
+        console.error('Error fetching freelancer dashboard:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-[400px] flex items-center justify-center">
+        <LoadingSpinner size="lg" color="white" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { freelancerProfileSuccess, profileFailure, profileStart } from '../../store/profileSlice';
+import { updateUser } from '../../store/authSlice';
 import api from '../../utils/api';
 import Toast from '../../components/Toast';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -61,6 +62,27 @@ const FreelancerProfile = () => {
   const [toastConfig, setToastConfig] = useState(null);
   const [isUploadingResume, setIsUploadingResume] = useState(false);
   const [isAddingPortfolio, setIsAddingPortfolio] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+
+  const handleAvatarUpload = async (file) => {
+    const data = new FormData();
+    data.append('avatar', file);
+
+    setIsUploadingAvatar(true);
+    try {
+      const response = await api.post('/profile/upload-avatar', data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      if (response.data.success) {
+        dispatch(updateUser({ avatar: response.data.avatar }));
+        setToastConfig({ message: 'Avatar updated successfully!', type: 'success' });
+      }
+    } catch (err) {
+      setToastConfig({ message: err.response?.data?.message || 'Avatar upload failed.', type: 'error' });
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -227,7 +249,11 @@ const FreelancerProfile = () => {
         <div className="h-36 bg-gradient-brand relative" />
         <div className="px-6 pb-6 relative flex flex-col md:flex-row md:items-end gap-6 -mt-12">
           {/* Avatar Upload component */}
-          <AvatarUpload currentAvatar={user?.avatar} />
+          <AvatarUpload 
+            currentAvatar={user?.avatar} 
+            onUpload={handleAvatarUpload}
+            isUploading={isUploadingAvatar}
+          />
           
           <div className="flex-1 mt-4 md:mt-0">
             <h1 className="text-2xl font-extrabold text-white">{user?.name}</h1>

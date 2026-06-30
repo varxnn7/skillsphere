@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { clientProfileSuccess, profileFailure, profileStart } from '../../store/profileSlice';
+import { updateUser } from '../../store/authSlice';
 import api from '../../utils/api';
 import Toast from '../../components/Toast';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import AvatarUpload from '../../components/AvatarUpload';
 import { Building, MapPin, Save, Award, Briefcase, DollarSign } from 'lucide-react';
 
 const ClientProfile = () => {
@@ -19,6 +21,27 @@ const ClientProfile = () => {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [toastConfig, setToastConfig] = useState(null);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+
+  const handleAvatarUpload = async (file) => {
+    const data = new FormData();
+    data.append('avatar', file);
+
+    setIsUploadingAvatar(true);
+    try {
+      const response = await api.post('/profile/upload-avatar', data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      if (response.data.success) {
+        dispatch(updateUser({ avatar: response.data.avatar }));
+        setToastConfig({ message: 'Avatar updated successfully!', type: 'success' });
+      }
+    } catch (err) {
+      setToastConfig({ message: err.response?.data?.message || 'Avatar upload failed.', type: 'error' });
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -79,10 +102,10 @@ const ClientProfile = () => {
       <div className="bg-dark-surface rounded-3xl border border-dark-border shadow-[0_0_20px_rgba(0,0,0,0.2)] overflow-hidden">
         <div className="h-32 bg-gradient-brand relative" />
         <div className="px-6 pb-6 relative flex flex-col sm:flex-row sm:items-end gap-4 -mt-10">
-          <img
-            src={user?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150'}
-            alt="Avatar"
-            className="w-24 h-24 rounded-full border-4 border-[#111118] object-cover shadow-lg bg-[#0A0A0F] relative z-10"
+          <AvatarUpload
+            currentAvatar={user?.avatar}
+            onUpload={handleAvatarUpload}
+            isUploading={isUploadingAvatar}
           />
           <div className="flex-1">
             <h1 className="text-2xl font-extrabold text-white">{clientProfile?.companyName || user?.name || 'Company Name'}</h1>

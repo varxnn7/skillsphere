@@ -1,5 +1,6 @@
 const FreelancerProfile = require('../models/FreelancerProfile');
 const ClientProfile = require('../models/ClientProfile');
+const User = require('../models/User');
 const { handleFileUpload } = require('../middleware/upload');
 
 // @desc    Get freelancer profile by User ID
@@ -148,6 +149,42 @@ exports.updateClientProfile = async (req, res, next) => {
     await profile.populate('user', 'name email role avatar');
 
     res.status(200).json({ success: true, profile });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// @desc    Upload user avatar
+// @route   POST /api/profile/upload-avatar
+// @access  Private
+exports.uploadAvatar = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'Please upload an image file' });
+    }
+
+    const avatarUrl = await handleFileUpload(req);
+
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    user.avatar = avatarUrl;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Avatar uploaded successfully',
+      avatar: avatarUrl,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        avatar: user.avatar
+      }
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

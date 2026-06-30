@@ -326,6 +326,22 @@ exports.googleOAuth = async (req, res, next) => {
     let user = await User.findOne({ email: googleEmail });
 
     if (user) {
+      // Security Check: Block admins from using Google Auth
+      if (user.role === 'admin') {
+        return res.status(403).json({
+          success: false,
+          message: 'Admin accounts cannot log in via Google OAuth. Please use your Admin credentials.'
+        });
+      }
+
+      // Security Check: Block password-based accounts from using Google Auth
+      if (!user.isGoogleAuth) {
+        return res.status(401).json({
+          success: false,
+          message: 'This email is registered with a password. Please log in using your password credentials.'
+        });
+      }
+
       // Existing user — just log them in
       const token = generateToken(user._id);
       return res.status(200).json({

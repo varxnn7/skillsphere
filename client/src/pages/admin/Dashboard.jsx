@@ -1,23 +1,62 @@
-import React from 'react';
-import { Users, CreditCard, ShieldAlert, Award, FileText, Calendar } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Users, CreditCard, ShieldAlert, Award, FileText, Calendar, MessageSquare } from 'lucide-react';
+import api from '../../utils/api';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const AdminDashboard = () => {
-  // Mock administrative stats
-  const stats = [
-    { title: 'Total Registered Users', value: '1,420', icon: Users, color: 'text-[#3B82F6] bg-[#3B82F6]/10 border-[#3B82F6]/20' },
-    { title: 'Total Platform Revenue', value: '₹5,40,000', icon: CreditCard, color: 'text-[#10B981] bg-[#10B981]/10 border-[#10B981]/20' },
-    { title: 'Active Gigs', value: '382', icon: FileText, color: 'text-[#8B5CF6] bg-[#8B5CF6]/10 border-[#8B5CF6]/20' },
-    { title: 'Disputes Pending', value: '7', icon: ShieldAlert, color: 'text-[#EF4444] bg-[#EF4444]/10 border-[#EF4444]/20' }
-  ];
+  const navigate = useNavigate();
+  const [stats, setStats] = useState([]);
+  const [recentSignups, setRecentSignups] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock signups table
-  const recentSignups = [
-    { id: 1, name: 'Alice Smith', email: 'alice.smith@example.com', role: 'Freelancer', status: 'verified', joined: 'June 27, 2026' },
-    { id: 2, name: 'Metro Construction', email: 'hr@metroconst.in', role: 'Client', status: 'pending', joined: 'June 26, 2026' },
-    { id: 3, name: 'Devendra Kumar', email: 'devendra.k@gmail.com', role: 'Freelancer', status: 'verified', joined: 'June 25, 2026' },
-    { id: 4, name: 'Nisha Sharma', email: 'nisha.sharma@hotmail.com', role: 'Freelancer', status: 'flagged', joined: 'June 24, 2026' },
-    { id: 5, name: 'City Plumbing Inc', email: 'ops@cityplumb.org', role: 'Client', status: 'verified', joined: 'June 24, 2026' }
-  ];
+  const handleChat = async (recipientId) => {
+    try {
+      const response = await api.post('/conversations', { recipientId });
+      if (response.data.success) {
+        navigate(`/messages/${response.data.conversation._id}`);
+      }
+    } catch (err) {
+      console.error('Failed to start chat:', err);
+    }
+  };
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await api.get('/dashboard/stats');
+        if (response.data.success) {
+          const statsMap = {
+            'Total Registered Users': Users,
+            'Total Platform Revenue': CreditCard,
+            'Active Gigs': FileText,
+            'Disputes Pending': ShieldAlert
+          };
+
+          const mappedStats = response.data.stats.map(s => ({
+            ...s,
+            icon: statsMap[s.title] || Users
+          }));
+
+          setStats(mappedStats);
+          setRecentSignups(response.data.recentSignups || []);
+        }
+      } catch (err) {
+        console.error('Error fetching admin dashboard:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-[400px] flex items-center justify-center">
+        <LoadingSpinner size="lg" color="white" />
+      </div>
+    );
+  }
 
   const getStatusBadge = (status) => {
     const styles = {
@@ -97,6 +136,12 @@ const AdminDashboard = () => {
                   <td className="px-6 py-4">{getStatusBadge(usr.status)}</td>
                   <td className="px-6 py-4 text-xs font-medium text-[#94A3B8]">{usr.joined}</td>
                   <td className="px-6 py-4 text-right">
+                    <button 
+                      onClick={() => handleChat(usr.id)}
+                      className="text-xs font-bold text-brand-purple hover:text-white transition-colors mr-4 cursor-pointer"
+                    >
+                      Chat
+                    </button>
                     <button className="text-xs font-bold text-brand-indigo hover:text-white transition-colors mr-4 cursor-pointer">
                       Verify
                     </button>

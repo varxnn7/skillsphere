@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { ArrowLeft, MapPin, Calendar, Briefcase, FileText, CheckCircle2, ChevronRight, ShieldCheck, CreditCard, Clock } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, Briefcase, FileText, CheckCircle2, ChevronRight, ShieldCheck, CreditCard, Clock, Star, Trash2, Heart } from 'lucide-react';
 import api from '../../utils/api';
-import { selectedGigSuccess, gigsStart, gigsFailure } from '../../store/gigsSlice';
+import { selectedGigSuccess, gigsStart, gigsFailure, addBookmark, removeBookmark } from '../../store/gigsSlice';
 import StatusBadge from '../../components/ui/StatusBadge';
 import Navbar from '../../components/Navbar';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -24,6 +24,8 @@ const GigDetail = () => {
 
   // Similar gigs mockup for visual excellence
   const [similarGigs, setSimilarGigs] = useState([]);
+  const [hasApplied, setHasApplied] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
   // Proposal Form State
   const [proposalForm, setProposalForm] = useState({
@@ -64,10 +66,41 @@ const GigDetail = () => {
     }
   };
 
+  const checkAppliedAndSaved = async () => {
+    if (user && user.role === 'freelancer') {
+      try {
+        const response = await api.get('/proposals/my-proposals');
+        if (response.data.success) {
+          const applied = response.data.proposals.some(p => {
+            const gigIdVal = p.gig?._id || p.gig;
+            return gigIdVal === id;
+          });
+          setHasApplied(applied);
+        }
+      } catch (err) {
+        console.error('Failed to check proposal status:', err);
+      }
+    }
+  };
+
+  const { bookmarkedGigs } = useSelector((state) => state.gigs);
+  const isBookmarked = bookmarkedGigs.some((g) => g._id === id);
+
+  const handleToggleSave = () => {
+    if (isBookmarked) {
+      dispatch(removeBookmark(id));
+      setToastConfig({ message: 'Gig removed from bookmarks', type: 'success' });
+    } else {
+      dispatch(addBookmark(gig));
+      setToastConfig({ message: 'Gig saved to bookmarks', type: 'success' });
+    }
+  };
+
   useEffect(() => {
     if (id) {
       fetchGigDetails();
       incrementViews();
+      checkAppliedAndSaved();
     }
   }, [id, dispatch]);
 
@@ -269,58 +302,105 @@ const GigDetail = () => {
                 </div>
               </div>
 
-              <div className="space-y-3 text-xs text-[#94A3B8] font-semibold">
+              <div className="space-y-3 text-xs text-[#94A3B8] font-semibold border-t border-dark-border/40 pt-4">
+                <div className="flex justify-between items-center">
+                  <span>Rating</span>
+                  <span className="text-white flex items-center gap-1">
+                    <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
+                    {gig.client?.rating ? gig.client.rating.toFixed(1) : '5.0'} / 5.0
+                  </span>
+                </div>
                 <div className="flex justify-between items-center">
                   <span>Location</span>
                   <span className="text-white flex items-center gap-1">
                     <MapPin className="h-3.5 w-3.5 text-[#64748B]" />
-                    {gig.isRemote ? 'Remote' : gig.location || 'Hybrid'}
+                    {gig.isRemote ? 'Remote' : gig.client?.location || gig.location || 'Hybrid'}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span>Status</span>
-                  <span className="text-white">Active Recruiter</span>
+                  <span>Member Since</span>
+                  <span className="text-white">
+                    {gig.client?.createdAt ? new Date(gig.client.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short' }) : 'Recently'}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Total Gigs Posted</span>
+                  <span className="text-white">
+                    {gig.client?.totalPosted || 1}
+                  </span>
                 </div>
               </div>
 
               {/* Submit Proposal trigger button */}
-              {user && user.role === 'freelancer' && gig.status === 'open' && (
+              {user && user.role === 'freelancer' && (
+                hasApplied ? (
+                  <div className="space-y-2">
+                    <div className="w-full py-3 px-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-center text-xs font-bold">
+                      You already applied to this gig
+                    </div>
+                    <button
+                      onClick={() => navigate('/freelancer/my-proposals')}
+                      className="w-full py-2.5 rounded-xl border border-dark-border bg-dark-surface/50 text-[#94A3B8] hover:text-white text-xs font-bold transition-colors cursor-pointer text-center block"
+                    >
+                      View Your Proposal
+                    </button>
+                  </div>
+                ) : (
+                  gig.status === 'open' && (
+                    <button
+                      onClick={() => setIsModalOpen(true)}
+                      className="w-full py-3.5 rounded-xl bg-gradient-brand hover-glow-purple text-white text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <Briefcase className="h-4 w-4" />
+                      Submit a Proposal
+                    </button>
+                  )
+                )
+              )}
+
+              {/* Bookmark Save button */}
+              {user && user.role === 'freelancer' && (
                 <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="w-full py-3.5 rounded-xl bg-gradient-brand hover-glow-purple text-white text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  onClick={handleToggleSave}
+                  className={`w-full py-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                    isBookmarked
+                      ? 'border-brand-purple/40 bg-brand-purple/10 text-brand-purple'
+                      : 'border-dark-border bg-dark-surface/50 text-[#94A3B8] hover:text-white hover:border-[#94A3B8]/40'
+                  }`}
                 >
-                  <Briefcase className="h-4 w-4" />
-                  Submit a Proposal
+                  <Heart className={`h-4 w-4 ${isBookmarked ? 'fill-current' : ''}`} />
+                  {isBookmarked ? 'Saved' : 'Save Gig'}
                 </button>
               )}
             </div>
-
-            {/* Similars Gigs sidebar list */}
-            {similarGigs.length > 0 && (
-              <div className="bg-dark-surface border border-dark-border rounded-3xl p-6 space-y-4">
-                <h3 className="text-sm font-extrabold text-white border-b border-dark-border/40 pb-2">Similar Opportunities</h3>
-                <div className="space-y-3">
-                  {similarGigs.map((sim) => (
-                    <div
-                      key={sim._id}
-                      onClick={() => {
-                        navigate(`/gigs/${sim._id}`);
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                      className="p-3 border border-dark-border/60 bg-[rgba(255,255,255,0.01)] rounded-xl hover:border-brand-indigo/40 transition-all cursor-pointer space-y-1"
-                    >
-                      <h4 className="text-xs font-bold text-white truncate">{sim.title}</h4>
-                      <div className="flex justify-between items-center text-[10px] text-[#64748B] font-semibold">
-                        <span>₹{sim.budgetMin} - ₹{sim.budgetMax}</span>
-                        <span>{sim.duration}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         </div>
+
+        {/* Similar Gigs at the bottom */}
+        {similarGigs.length > 0 && (
+          <div className="space-y-4 border-t border-dark-border/40 pt-8">
+            <h3 className="text-sm font-extrabold text-white">Similar Opportunities</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {similarGigs.map((sim) => (
+                <div
+                  key={sim._id}
+                  onClick={() => {
+                    navigate(`/gigs/${sim._id}`);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="p-5 border border-dark-border bg-dark-surface rounded-2xl hover:border-brand-indigo/40 hover-lift transition-all cursor-pointer space-y-3"
+                >
+                  <h4 className="text-sm font-bold text-white truncate">{sim.title}</h4>
+                  <p className="text-xs text-[#94A3B8] line-clamp-2">{sim.description}</p>
+                  <div className="flex justify-between items-center text-[11px] text-[#64748B] font-bold border-t border-dark-border/40 pt-3">
+                    <span>₹{sim.budgetMin} - ₹{sim.budgetMax}</span>
+                    <span className="text-brand-indigo">{sim.duration}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Submit Proposal Modal overlay */}
@@ -361,11 +441,11 @@ const GigDetail = () => {
           <div className="space-y-1.5">
             <div className="flex justify-between items-center">
               <label className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wide">Cover Letter</label>
-              <span className="text-[10px] text-[#64748B] font-bold">{proposalForm.coverLetter.length}/2000 chars</span>
+              <span className="text-[10px] text-[#64748B] font-bold">{proposalForm.coverLetter.length}/5000 chars</span>
             </div>
             <textarea
               rows="5"
-              maxLength="2000"
+              maxLength="5000"
               value={proposalForm.coverLetter}
               onChange={(e) => setProposalForm({ ...proposalForm, coverLetter: e.target.value })}
               className="w-full px-4 py-3 rounded-xl border border-dark-border bg-dark-surface text-white text-xs focus:ring-2 focus:ring-brand-indigo resize-none"

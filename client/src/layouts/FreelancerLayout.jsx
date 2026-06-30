@@ -17,7 +17,7 @@ const FreelancerLayout = () => {
     { name: 'Dashboard', path: '/freelancer/dashboard', icon: LayoutDashboard },
     { name: 'Browse Gigs', path: '/freelancer/browse-gigs', icon: Search },
     { name: 'My Proposals', path: '/freelancer/my-proposals', icon: FileText },
-    { name: 'Messages', path: '/freelancer/messages', icon: MessageSquare },
+    { name: 'Messages', path: '/messages', icon: MessageSquare },
     { name: 'Earnings', path: '/freelancer/earnings', icon: TrendingUp },
     { name: 'Profile', path: '/freelancer/profile', icon: User },
     { name: 'Settings', path: '/freelancer/settings', icon: Settings }

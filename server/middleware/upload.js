@@ -1,9 +1,7 @@
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('cloudinary').v2;
 
-// Check if Cloudinary environment variables are set and not mock
 const isCloudinaryConfigured = 
   process.env.CLOUDINARY_CLOUD_NAME && 
   process.env.CLOUDINARY_CLOUD_NAME !== 'mock_cloud' &&
@@ -12,6 +10,7 @@ const isCloudinaryConfigured =
   process.env.CLOUDINARY_API_SECRET &&
   process.env.CLOUDINARY_API_SECRET !== 'mock_secret';
 
+// Configure Cloudinary if valid
 if (isCloudinaryConfigured) {
   cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -20,24 +19,42 @@ if (isCloudinaryConfigured) {
   });
 }
 
-// Ensure local uploads directory exists
-const localUploadsDir = path.join(__dirname, '../uploads');
-if (!fs.existsSync(localUploadsDir)) {
-  fs.mkdirSync(localUploadsDir, { recursive: true });
+// Middleware to check configuration and return clear error
+const checkCloudinaryConfig = (req, res, next) => {
+  if (!isCloudinaryConfigured) {
+    return res.status(500).json({
+      success: false,
+      message: 'Cloudinary not configured - add credentials to .env'
+    });
+  }
+  next();
+};
+
+let storage;
+if (isCloudinaryConfigured) {
+  storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+      folder: 'skillsphere',
+      resource_type: 'auto',
+      public_id: (req, file) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        return file.fieldname + '-' + uniqueSuffix;
+      }
+    }
+  });
+} else {
+  // Dummy storage engine to prevent multer startup errors when not configured
+  storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, '/tmp');
+    },
+    filename: (req, file, cb) => {
+      cb(null, file.originalname);
+    }
+  });
 }
 
-// Multer Local Storage Configuration
-const localStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, localUploadsDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
-// File Filter helper
 const fileFilter = (req, file, cb) => {
   const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
   if (allowedTypes.includes(file.mimetype)) {
@@ -48,36 +65,23 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({
-  storage: localStorage, // We'll upload locally first, then push to Cloudinary if configured
+  storage: storage,
   fileFilter: fileFilter,
   limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
 });
 
-// Middleware wrapper to handle uploading to Cloudinary if available
-const handleFileUpload = async (req, fileField) => {
-  if (!req.file) return null;
-
-  if (isCloudinaryConfigured) {
-    try {
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        resource_type: 'auto',
-        folder: 'skillsphere'
-      });
-      // Delete temporary local file
-      fs.unlinkSync(req.file.path);
-      return result.secure_url;
-    } catch (error) {
-      console.error('Cloudinary upload error:', error);
-      // Fallback to local URL on failure
-    }
+const handleFileUpload = async (req) => {
+  if (!isCloudinaryConfigured) {
+    throw new Error('Cloudinary not configured - add credentials to .env');
   }
-
-  // Fallback to local file URL
-  const serverUrl = `${req.protocol}://${req.get('host')}`;
-  return `${serverUrl}/uploads/${req.file.filename}`;
+  if (!req.file) return null;
+  // CloudinaryStorage sets the file URL inside req.file.path or req.file.secure_url
+  return req.file.path;
 };
 
 module.exports = {
   upload,
-  handleFileUpload
+  handleFileUpload,
+  checkCloudinaryConfig,
+  isCloudinaryConfigured
 };

@@ -33,7 +33,7 @@ const PostGig = () => {
   });
 
   // Milestone Form State
-  const [newMilestone, setNewMilestone] = useState({ title: '', amount: '', description: '' });
+  const [newMilestone, setNewMilestone] = useState({ title: '', amount: '', dueDate: '', description: '' });
 
   const steps = [
     'Gig Details',
@@ -42,18 +42,51 @@ const PostGig = () => {
     'Location & Review'
   ];
 
-  // Load Draft from LocalStorage if exists
+  // Load Draft from LocalStorage if exists, unless in Edit mode
+  const editId = new URLSearchParams(window.location.search).get('edit');
+
   useEffect(() => {
-    const savedDraft = localStorage.getItem('gig_post_draft');
-    if (savedDraft) {
-      try {
-        setFormData(JSON.parse(savedDraft));
-        setToastConfig({ message: 'Loaded saved draft details!', type: 'success' });
-      } catch (err) {
-        console.error('Failed to parse draft:', err);
+    if (editId) {
+      const fetchGigForEdit = async () => {
+        try {
+          const res = await api.get(`/gigs/${editId}`);
+          if (res.data.success) {
+            const gig = res.data.gig;
+            setFormData({
+              title: gig.title,
+              description: gig.description,
+              category: gig.category || 'Web Development',
+              subCategory: gig.subCategory || '',
+              skills: gig.skills || [],
+              experienceLevel: gig.experienceLevel || 'intermediate',
+              duration: gig.duration || '1-3 months',
+              budgetType: gig.budgetType || 'fixed',
+              budgetMin: gig.budgetMin || 1000,
+              budgetMax: gig.budgetMax || 5000,
+              location: gig.location || '',
+              isRemote: gig.isRemote !== undefined ? gig.isRemote : true,
+              attachments: gig.attachments || [],
+              milestones: gig.milestones || []
+            });
+            setToastConfig({ message: 'Loaded job details for editing!', type: 'success' });
+          }
+        } catch (err) {
+          console.error('Failed to fetch gig for editing:', err);
+        }
+      };
+      fetchGigForEdit();
+    } else {
+      const savedDraft = localStorage.getItem('gig_post_draft');
+      if (savedDraft) {
+        try {
+          setFormData(JSON.parse(savedDraft));
+          setToastConfig({ message: 'Loaded saved draft details!', type: 'success' });
+        } catch (err) {
+          console.error('Failed to parse draft:', err);
+        }
       }
     }
-  }, []);
+  }, [editId]);
 
   const saveDraft = () => {
     localStorage.setItem('gig_post_draft', JSON.stringify(formData));
@@ -61,9 +94,19 @@ const PostGig = () => {
   };
 
   const handleNext = () => {
-    if (currentStep === 0 && (!formData.title.trim() || !formData.description.trim())) {
-      setToastConfig({ message: 'Please enter a title and description.', type: 'error' });
-      return;
+    if (currentStep === 0) {
+      if (!formData.title.trim()) {
+        setToastConfig({ message: 'Please enter a job title.', type: 'error' });
+        return;
+      }
+      if (formData.description.trim().length < 100) {
+        setToastConfig({ message: 'Please enter a description of at least 100 characters.', type: 'error' });
+        return;
+      }
+      if (formData.description.trim().length > 5000) {
+        setToastConfig({ message: 'Description cannot exceed 5000 characters.', type: 'error' });
+        return;
+      }
     }
     if (currentStep === 1 && formData.skills.length === 0) {
       setToastConfig({ message: 'Please add at least one required skill tag.', type: 'error' });
@@ -77,15 +120,15 @@ const PostGig = () => {
   };
 
   const addMilestone = () => {
-    if (!newMilestone.title.trim() || !newMilestone.amount) {
-      setToastConfig({ message: 'Please add a milestone title and amount.', type: 'error' });
+    if (!newMilestone.title.trim() || !newMilestone.amount || !newMilestone.dueDate) {
+      setToastConfig({ message: 'Please add a milestone title, amount, and due date.', type: 'error' });
       return;
     }
     setFormData({
       ...formData,
       milestones: [...formData.milestones, { ...newMilestone, amount: Number(newMilestone.amount) }]
     });
-    setNewMilestone({ title: '', amount: '', description: '' });
+    setNewMilestone({ title: '', amount: '', dueDate: '', description: '' });
   };
 
   const removeMilestone = (idxToRemove) => {
@@ -97,11 +140,22 @@ const PostGig = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (currentStep < steps.length - 1) {
+      handleNext();
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      const response = await api.post('/gigs', formData);
+      let response;
+      if (editId) {
+        response = await api.put(`/gigs/${editId}`, formData);
+      } else {
+        response = await api.post('/gigs', formData);
+      }
+
       if (response.data.success) {
-        setToastConfig({ message: 'Gig posted successfully!', type: 'success' });
+        setToastConfig({ message: editId ? 'Gig updated successfully!' : 'Gig posted successfully!', type: 'success' });
         localStorage.removeItem('gig_post_draft');
         setTimeout(() => {
           navigate('/client/my-gigs');
@@ -164,11 +218,14 @@ const PostGig = () => {
                     className="w-full px-4 py-3 rounded-xl border border-dark-border bg-dark-surface text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-indigo/30 focus:border-brand-indigo transition-smooth"
                   >
                     <option value="Web Development">Web Development</option>
-                    <option value="Mobile Apps">Mobile Apps</option>
-                    <option value="Design & Creative">Design & Creative</option>
-                    <option value="Writing & Translation">Writing & Translation</option>
-                    <option value="Marketing & Sales">Marketing & Sales</option>
-                    <option value="Finance & Accounting">Finance & Accounting</option>
+                    <option value="Mobile App">Mobile App</option>
+                    <option value="Design">Design</option>
+                    <option value="Writing">Writing</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Video">Video</option>
+                    <option value="Music">Music</option>
+                    <option value="Data">Data</option>
+                    <option value="Other">Other</option>
                   </select>
                 </div>
                 <div>
@@ -189,7 +246,8 @@ const PostGig = () => {
                   rows="6"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Provide a detailed scope of work, goals, and expectations for the freelancer..."
+                  placeholder="Provide a detailed scope of work, goals, and expectations for the freelancer (minimum 100 characters)..."
+                  maxLength={5000}
                   className="w-full px-4 py-3 rounded-xl border border-dark-border bg-[rgba(255,255,255,0.03)] text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-indigo/30 focus:border-brand-indigo transition-smooth resize-none"
                   required
                 />
@@ -209,32 +267,39 @@ const PostGig = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wide mb-1.5">Experience Level Required</label>
-                  <select
-                    value={formData.experienceLevel}
-                    onChange={(e) => setFormData({ ...formData, experienceLevel: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-dark-border bg-dark-surface text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-indigo/30"
-                  >
-                    <option value="entry">Entry Level (Junior)</option>
-                    <option value="intermediate">Intermediate (Mid-level)</option>
-                    <option value="expert">Expert (Senior Consultant)</option>
-                  </select>
+              <div className="space-y-4">
+                <label className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wide mb-1.5">Experience Level Required</label>
+                <div className="grid grid-cols-3 gap-4">
+                  {['entry', 'intermediate', 'expert'].map((level) => (
+                    <div
+                      key={level}
+                      onClick={() => setFormData({ ...formData, experienceLevel: level })}
+                      className={`p-4 rounded-xl border transition-all cursor-pointer text-center capitalize ${
+                        formData.experienceLevel === level
+                          ? 'border-brand-indigo bg-brand-indigo/10 text-white font-bold'
+                          : 'border-dark-border bg-dark-surface/50 text-[#94A3B8] hover:border-[#94A3B8]/30'
+                      }`}
+                    >
+                      {level}
+                    </div>
+                  ))}
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wide mb-1.5">Project Duration</label>
-                  <select
-                    value={formData.duration}
-                    onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-dark-border bg-dark-surface text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-indigo/30"
-                  >
-                    <option value="Less than 1 month">Less than 1 month</option>
-                    <option value="1-3 months">1-3 months</option>
-                    <option value="3-6 months">3-6 months</option>
-                    <option value="More than 6 months">More than 6 months</option>
-                  </select>
-                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wide mb-1.5">Project Duration</label>
+                <select
+                  value={formData.duration}
+                  onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+                  className="w-full px-4 py-3 rounded-xl border border-dark-border bg-dark-surface text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-indigo/30"
+                >
+                  <option value="Less than 1 week">Less than 1 week</option>
+                  <option value="1-2 weeks">1-2 weeks</option>
+                  <option value="2-4 weeks">2-4 weeks</option>
+                  <option value="1-3 months">1-3 months</option>
+                  <option value="3-6 months">3-6 months</option>
+                  <option value="More than 6 months">More than 6 months</option>
+                </select>
               </div>
             </div>
           )}
@@ -294,13 +359,13 @@ const PostGig = () => {
               <div className="space-y-4 border-t border-dark-border/40 pt-4">
                 <h3 className="text-sm font-bold text-white">Project Milestones (Optional)</h3>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
                   <input
                     type="text"
                     value={newMilestone.title}
                     onChange={(e) => setNewMilestone({ ...newMilestone, title: e.target.value })}
                     placeholder="Milestone title"
-                    className="px-3 py-2 text-xs rounded-xl border border-dark-border bg-dark-surface text-white"
+                    className="px-3 py-2 text-xs rounded-xl border border-dark-border bg-dark-surface text-white sm:col-span-2"
                   />
                   <input
                     type="number"
@@ -309,15 +374,21 @@ const PostGig = () => {
                     placeholder="Amount (₹)"
                     className="px-3 py-2 text-xs rounded-xl border border-dark-border bg-dark-surface text-white"
                   />
-                  <button
-                    type="button"
-                    onClick={addMilestone}
-                    className="px-3 py-2 text-xs rounded-xl bg-brand-indigo/15 text-brand-indigo border border-brand-indigo/25 hover:bg-brand-indigo hover:text-white transition-all font-bold flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <Plus className="h-4 w-4" />
-                    Add Milestone
-                  </button>
+                  <input
+                    type="date"
+                    value={newMilestone.dueDate}
+                    onChange={(e) => setNewMilestone({ ...newMilestone, dueDate: e.target.value })}
+                    className="px-3 py-2 text-xs rounded-xl border border-dark-border bg-dark-surface text-[#94A3B8]"
+                  />
                 </div>
+                <button
+                  type="button"
+                  onClick={addMilestone}
+                  className="w-full py-2 bg-brand-indigo/15 text-brand-indigo border border-brand-indigo/25 hover:bg-brand-indigo hover:text-white transition-all font-bold flex items-center justify-center gap-1.5 cursor-pointer rounded-xl text-xs"
+                >
+                  <Plus className="h-4 w-4" />
+                  Add Milestone
+                </button>
 
                 {formData.milestones.length > 0 && (
                   <div className="space-y-2">
@@ -328,7 +399,7 @@ const PostGig = () => {
                       >
                         <div>
                           <p className="font-bold text-white">{m.title}</p>
-                          {m.description && <p className="text-[10px] text-[#64748B]">{m.description}</p>}
+                          <p className="text-[10px] text-[#64748B]">Due: {new Date(m.dueDate).toLocaleDateString()}</p>
                         </div>
                         <div className="flex items-center gap-3">
                           <span className="font-extrabold text-brand-indigo">₹{m.amount.toLocaleString()}</span>

@@ -48,11 +48,15 @@ const SearchPage = () => {
     return () => clearTimeout(handler);
   }, [searchTerm]);
 
-  // Load suggestions
+  // Load suggestions as user types (debounced)
   useEffect(() => {
     const loadSuggestions = async () => {
+      if (!debouncedSearch.trim()) {
+        setSuggestions({ categories: [], skills: [] });
+        return;
+      }
       try {
-        const response = await api.get('/search/suggestions');
+        const response = await api.get(`/search/suggestions?q=${debouncedSearch}`);
         if (response.data.success) {
           setSuggestions({
             categories: response.data.categories,
@@ -64,7 +68,7 @@ const SearchPage = () => {
       }
     };
     loadSuggestions();
-  }, []);
+  }, [debouncedSearch]);
 
   const handleSearch = useCallback(async () => {
     setLoading(true);
@@ -147,14 +151,9 @@ const SearchPage = () => {
     setShowSuggestions(false);
   };
 
-  // Filter lists based on input
-  const filteredSkills = suggestions.skills.filter(s =>
-    s.toLowerCase().includes(searchTerm.toLowerCase()) && searchTerm.trim() !== ''
-  ).slice(0, 5);
-
-  const filteredCategories = suggestions.categories.filter(c =>
-    c.toLowerCase().includes(searchTerm.toLowerCase()) && searchTerm.trim() !== ''
-  ).slice(0, 5);
+  // Filter lists based on backend response (already filtered, just limit sizes)
+  const filteredSkills = suggestions.skills.slice(0, 5);
+  const filteredCategories = suggestions.categories.slice(0, 5);
 
   return (
     <div className="min-h-screen bg-[#0A0A0F] text-white flex flex-col transition-smooth">

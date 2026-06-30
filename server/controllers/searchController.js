@@ -125,9 +125,12 @@ exports.searchGigs = async (req, res, next) => {
     }
 
     if (budgetMin || budgetMax) {
-      query.budgetMax = {};
-      if (budgetMin) query.budgetMax.$gte = Number(budgetMin);
-      if (budgetMax) query.budgetMin = { ...query.budgetMin, $lte: Number(budgetMax) };
+      if (budgetMin) {
+        query.budgetMax = { $gte: Number(budgetMin) };
+      }
+      if (budgetMax) {
+        query.budgetMin = { $lte: Number(budgetMax) };
+      }
     }
 
     if (location) {
@@ -192,6 +195,8 @@ exports.searchGigs = async (req, res, next) => {
 // @access  Public
 exports.getSuggestions = async (req, res, next) => {
   try {
+    const { q = '' } = req.query;
+
     // Fetch unique categories and skills from Gigs & FreelancerProfiles
     const dbCategories = await Gig.distinct('category');
     const dbSkills = await FreelancerProfile.distinct('skills.name');
@@ -229,8 +234,15 @@ exports.getSuggestions = async (req, res, next) => {
     ];
 
     // Combine and remove duplicates
-    const categories = Array.from(new Set([...defaultCategories, ...dbCategories]));
-    const skills = Array.from(new Set([...defaultSkills, ...dbSkills]));
+    let categories = Array.from(new Set([...defaultCategories, ...dbCategories]));
+    let skills = Array.from(new Set([...defaultSkills, ...dbSkills]));
+
+    // Filter by query string if present
+    if (q) {
+      const regex = new RegExp(q.trim(), 'i');
+      categories = categories.filter(c => regex.test(c));
+      skills = skills.filter(s => regex.test(s));
+    }
 
     res.status(200).json({
       success: true,

@@ -50,7 +50,7 @@ const ProposalSchema = new mongoose.Schema(
       {
         amount: { type: Number, required: true },
         message: { type: String },
-        by: { type: String, enum: ['client', 'freelancer'], required: true },
+        by: { type: String, required: true },
         date: { type: Date, default: Date.now }
       }
     ]

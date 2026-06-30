@@ -47,6 +47,11 @@ app.use('/api/profile', require('./routes/profile'));
 app.use('/api/gigs', require('./routes/gigs'));
 app.use('/api/proposals', require('./routes/proposals'));
 app.use('/api/search', require('./routes/search'));
+app.use('/api/dashboard', require('./routes/dashboard'));
+app.use('/api/conversations', require('./routes/conversations'));
+app.use('/api/messages', require('./routes/messages'));
+app.use('/api/reviews', require('./routes/reviews'));
+app.use('/api/notifications', require('./routes/notifications'));
 
 // Root path fallback
 app.get('/', (req, res) => {
@@ -69,9 +74,18 @@ app.use((err, req, res, next) => {
   });
 });
 
+const http = require('http');
+const server = http.createServer(app);
+
+// Initialize Socket.IO
+const { initSocket } = require('./socket');
+const { sendRealTimeNotification, io } = initSocket(server);
+app.set('sendRealTimeNotification', sendRealTimeNotification);
+app.set('io', io);
+
 const PORT = process.env.PORT || 5000;
 
-const server = app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
 });
 

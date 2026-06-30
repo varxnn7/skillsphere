@@ -17,7 +17,7 @@ const ClientLayout = () => {
     { name: 'Dashboard', path: '/client/dashboard', icon: LayoutDashboard },
     { name: 'Post Gig', path: '/client/post-gig', icon: PlusCircle },
     { name: 'My Gigs', path: '/client/my-gigs', icon: Briefcase },
-    { name: 'Messages', path: '/client/messages', icon: MessageSquare },
+    { name: 'Messages', path: '/messages', icon: MessageSquare },
     { name: 'Payments', path: '/client/payments', icon: CreditCard },
     { name: 'Profile', path: '/client/profile', icon: User },
     { name: 'Settings', path: '/client/settings', icon: Settings }

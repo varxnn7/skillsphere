@@ -36,6 +36,11 @@ import SearchPage from './pages/Search';
 // Admin Pages
 import AdminDashboard from './pages/admin/Dashboard';
 
+// Week 3 Pages
+import Messages from './pages/Messages';
+import Notifications from './pages/Notifications';
+import FreelancerReviews from './pages/freelancer/Reviews';
+
 // Placeholder Component for sub-routes
 const Placeholder = ({ title }) => (
   <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm">
@@ -74,7 +79,7 @@ function App() {
         <Route path="post-gig" element={<PostGig />} />
         <Route path="my-gigs" element={<MyGigs />} />
         <Route path="gigs/:id/proposals" element={<GigProposals />} />
-        <Route path="messages" element={<Placeholder title="Real-time Chat Portal" />} />
+        <Route path="messages" element={<Navigate to="/messages" replace />} />
         <Route path="payments" element={<Placeholder title="Escrow Payments Terminal" />} />
         <Route path="settings" element={<Placeholder title="Client Account Settings" />} />
       </Route>
@@ -95,7 +100,7 @@ function App() {
         <Route path="profile" element={<FreelancerProfile />} />
         <Route path="browse-gigs" element={<BrowseGigs />} />
         <Route path="my-proposals" element={<MyProposals />} />
-        <Route path="messages" element={<Placeholder title="Real-time Chat Inbox" />} />
+        <Route path="messages" element={<Navigate to="/messages" replace />} />
         <Route path="earnings" element={<Placeholder title="Earnings Ledger & Invoices" />} />
         <Route path="settings" element={<Placeholder title="Freelancer Settings" />} />
       </Route>
@@ -150,6 +155,40 @@ function App() {
         <Route path="analytics" element={<Placeholder title="Admin Stats Analytics" />} />
         <Route path="settings" element={<Placeholder title="Global System Settings" />} />
       </Route>
+
+      {/* Week 3 Routes */}
+      <Route
+        path="/messages"
+        element={
+          <ProtectedRoute>
+            <Messages />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/messages/:conversationId"
+        element={
+          <ProtectedRoute>
+            <Messages />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/notifications"
+        element={
+          <ProtectedRoute>
+            <Notifications />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/freelancer/:id/reviews"
+        element={
+          <ProtectedRoute>
+            <FreelancerReviews />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />

@@ -9,7 +9,8 @@ const GigSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: [true, 'Please add a gig description']
+      required: [true, 'Please add a gig description'],
+      maxlength: [5000, 'Description cannot exceed 5000 characters']
     },
     client: {
       type: mongoose.Schema.Types.ObjectId,
