@@ -77,9 +77,9 @@ exports.getDashboardStats = async (req, res, next) => {
       });
 
     } else if (role === 'freelancer') {
-      // 1. Profile views (simulate/static since not in schema)
+      // 1. Profile views (from schema tracking)
       const freelancerProfile = await FreelancerProfile.findOne({ user: userId });
-      const profileViews = freelancerProfile ? (freelancerProfile.averageRating * 50 + 10).toFixed(0) : '15';
+      const profileViews = freelancerProfile ? (freelancerProfile.views || 0).toString() : '0';
 
       // 2. Proposals Sent
       const proposalsSentCount = await Proposal.countDocuments({ freelancer: userId });

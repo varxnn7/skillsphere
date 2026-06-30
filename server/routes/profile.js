@@ -9,12 +9,12 @@ const {
   updateClientProfile,
   uploadAvatar
 } = require('../controllers/profileController');
-const { protect } = require('../middleware/auth');
+const { protect, optionalProtect } = require('../middleware/auth');
 const { isFreelancer, isClient } = require('../middleware/roleCheck');
 const { upload, checkCloudinaryConfig } = require('../middleware/upload');
 
 // Public routes for profile queries
-router.get('/freelancer/:id', getFreelancerProfile);
+router.get('/freelancer/:id', optionalProtect, getFreelancerProfile);
 router.get('/client/:id', getClientProfile);
 
 // Shared avatar upload route (both Client and Freelancer)

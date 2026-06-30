@@ -14,6 +14,12 @@ exports.getFreelancerProfile = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Freelancer profile not found' });
     }
 
+    // Increment views if viewer is a client
+    if (req.user && req.user.role === 'client') {
+      profile.views = (profile.views || 0) + 1;
+      await profile.save();
+    }
+
     res.status(200).json({ success: true, profile });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

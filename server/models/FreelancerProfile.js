@@ -78,6 +78,10 @@ const FreelancerProfileSchema = new mongoose.Schema(
     totalReviews: {
       type: Number,
       default: 0
+    },
+    views: {
+      type: Number,
+      default: 0
     }
   },
   {

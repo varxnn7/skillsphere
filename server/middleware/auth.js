@@ -32,4 +32,26 @@ const protect = async (req, res, next) => {
   }
 };
 
-module.exports = { protect };
+const optionalProtect = async (req, res, next) => {
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'skillsphere_secret_key_12345');
+      req.user = await User.findById(decoded.id);
+    } catch (err) {
+      // Ignore validation errors for optional authentication
+    }
+  }
+
+  next();
+};
+
+module.exports = { protect, optionalProtect };
