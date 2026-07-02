@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 import RoleRoute from './components/RoleRoute';
+import ErrorBoundary from './components/ui/ErrorBoundary';
 
 // Public Pages
 import Landing from './pages/Landing';
@@ -41,6 +42,21 @@ import Messages from './pages/Messages';
 import Notifications from './pages/Notifications';
 import FreelancerReviews from './pages/freelancer/Reviews';
 
+import PageLoader from './components/ui/PageLoader';
+
+// Week 4 Lazy Loaded Pages
+const ClientPayments = React.lazy(() => import('./pages/client/Payments'));
+const MakePayment = React.lazy(() => import('./pages/client/MakePayment'));
+const FreelancerEarnings = React.lazy(() => import('./pages/freelancer/Earnings'));
+const ProjectTracker = React.lazy(() => import('./pages/shared/ProjectTracker'));
+const RaiseDispute = React.lazy(() => import('./pages/shared/RaiseDispute'));
+const DisputeDetail = React.lazy(() => import('./pages/shared/DisputeDetail'));
+
+const AdminUsers = React.lazy(() => import('./pages/admin/Users'));
+const AdminGigs = React.lazy(() => import('./pages/admin/Gigs'));
+const AdminDisputes = React.lazy(() => import('./pages/admin/Disputes'));
+const AdminRevenue = React.lazy(() => import('./pages/admin/Revenue'));
+
 // Placeholder Component for sub-routes
 const Placeholder = ({ title }) => (
   <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm">
@@ -53,147 +69,179 @@ const Placeholder = ({ title }) => (
 
 function App() {
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<Landing />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/verify-email/:token" element={<VerifyEmail />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password/:token" element={<ResetPassword />} />
+    <ErrorBoundary>
+      <React.Suspense fallback={<PageLoader />}>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/verify-email/:token" element={<VerifyEmail />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-      {/* Client Routes */}
-      <Route
-        path="/client"
-        element={
-          <ProtectedRoute>
-            <RoleRoute allowedRoles={['client']}>
-              <ClientLayout />
-            </RoleRoute>
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<Navigate to="/client/dashboard" replace />} />
-        <Route path="dashboard" element={<ClientDashboard />} />
-        <Route path="profile" element={<ClientProfile />} />
-        <Route path="post-gig" element={<PostGig />} />
-        <Route path="my-gigs" element={<MyGigs />} />
-        <Route path="gigs/:id/proposals" element={<GigProposals />} />
-        <Route path="messages" element={<Navigate to="/messages" replace />} />
-        <Route path="payments" element={<Placeholder title="Escrow Payments Terminal" />} />
-        <Route path="settings" element={<Placeholder title="Client Account Settings" />} />
-      </Route>
+          {/* Client Routes */}
+          <Route
+            path="/client"
+            element={
+              <ProtectedRoute>
+                <RoleRoute allowedRoles={['client']}>
+                  <ClientLayout />
+                </RoleRoute>
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="/client/dashboard" replace />} />
+            <Route path="dashboard" element={<ClientDashboard />} />
+            <Route path="profile" element={<ClientProfile />} />
+            <Route path="post-gig" element={<PostGig />} />
+            <Route path="my-gigs" element={<MyGigs />} />
+            <Route path="gigs/:id/proposals" element={<GigProposals />} />
+            <Route path="messages" element={<Navigate to="/messages" replace />} />
+            <Route path="payments" element={<ClientPayments />} />
+            <Route path="pay/:proposalId" element={<MakePayment />} />
+            <Route path="settings" element={<Placeholder title="Client Account Settings" />} />
+          </Route>
 
-      {/* Freelancer Routes */}
-      <Route
-        path="/freelancer"
-        element={
-          <ProtectedRoute>
-            <RoleRoute allowedRoles={['freelancer']}>
-              <FreelancerLayout />
-            </RoleRoute>
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<Navigate to="/freelancer/dashboard" replace />} />
-        <Route path="dashboard" element={<FreelancerDashboard />} />
-        <Route path="profile" element={<FreelancerProfile />} />
-        <Route path="browse-gigs" element={<BrowseGigs />} />
-        <Route path="my-proposals" element={<MyProposals />} />
-        <Route path="messages" element={<Navigate to="/messages" replace />} />
-        <Route path="earnings" element={<Placeholder title="Earnings Ledger & Invoices" />} />
-        <Route path="settings" element={<Placeholder title="Freelancer Settings" />} />
-      </Route>
+          {/* Freelancer Routes */}
+          <Route
+            path="/freelancer"
+            element={
+              <ProtectedRoute>
+                <RoleRoute allowedRoles={['freelancer']}>
+                  <FreelancerLayout />
+                </RoleRoute>
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="/freelancer/dashboard" replace />} />
+            <Route path="dashboard" element={<FreelancerDashboard />} />
+            <Route path="profile" element={<FreelancerProfile />} />
+            <Route path="browse-gigs" element={<BrowseGigs />} />
+            <Route path="my-proposals" element={<MyProposals />} />
+            <Route path="messages" element={<Navigate to="/messages" replace />} />
+            <Route path="earnings" element={<FreelancerEarnings />} />
+            <Route path="settings" element={<Placeholder title="Freelancer Settings" />} />
+          </Route>
 
-      {/* Gig Marketplace & Search Routes */}
-      <Route
-        path="/gigs"
-        element={
-          <ProtectedRoute>
-            <RoleRoute allowedRoles={['freelancer']}>
-              <BrowseGigs />
-            </RoleRoute>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/gigs/:id"
-        element={
-          <ProtectedRoute>
-            <RoleRoute allowedRoles={['freelancer']}>
-              <GigDetail />
-            </RoleRoute>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/search"
-        element={
-          <ProtectedRoute>
-            <SearchPage />
-          </ProtectedRoute>
-        }
-      />
+          {/* Gig Marketplace & Search Routes */}
+          <Route
+            path="/gigs"
+            element={
+              <ProtectedRoute>
+                <RoleRoute allowedRoles={['freelancer']}>
+                  <BrowseGigs />
+                </RoleRoute>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/gigs/:id"
+            element={
+              <ProtectedRoute>
+                <RoleRoute allowedRoles={['freelancer']}>
+                  <GigDetail />
+                </RoleRoute>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/search"
+            element={
+              <ProtectedRoute>
+                <SearchPage />
+              </ProtectedRoute>
+            }
+          />
 
-      {/* Admin Routes */}
-      <Route
-        path="/admin"
-        element={
-          <ProtectedRoute>
-            <RoleRoute allowedRoles={['admin']}>
-              <AdminLayout />
-            </RoleRoute>
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<Navigate to="/admin/dashboard" replace />} />
-        <Route path="dashboard" element={<AdminDashboard />} />
-        <Route path="users" element={<Placeholder title="User Management Panel" />} />
-        <Route path="gigs" element={<Placeholder title="Gig Moderation Queue" />} />
-        <Route path="payments" element={<Placeholder title="Transaction Ledger Log" />} />
-        <Route path="disputes" element={<Placeholder title="Dispute Resolution Room" />} />
-        <Route path="analytics" element={<Placeholder title="Admin Stats Analytics" />} />
-        <Route path="settings" element={<Placeholder title="Global System Settings" />} />
-      </Route>
+          {/* Admin Routes */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <RoleRoute allowedRoles={['admin']}>
+                  <AdminLayout />
+                </RoleRoute>
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="/admin/dashboard" replace />} />
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="gigs" element={<AdminGigs />} />
+            <Route path="payments" element={<Placeholder title="Transaction Ledger Log" />} />
+            <Route path="disputes" element={<AdminDisputes />} />
+            <Route path="revenue" element={<AdminRevenue />} />
+            <Route path="settings" element={<Placeholder title="Global System Settings" />} />
+          </Route>
 
-      {/* Week 3 Routes */}
-      <Route
-        path="/messages"
-        element={
-          <ProtectedRoute>
-            <Messages />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/messages/:conversationId"
-        element={
-          <ProtectedRoute>
-            <Messages />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/notifications"
-        element={
-          <ProtectedRoute>
-            <Notifications />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/freelancer/:id/reviews"
-        element={
-          <ProtectedRoute>
-            <FreelancerReviews />
-          </ProtectedRoute>
-        }
-      />
+          {/* Shared Tracker & Dispute Routes */}
+          <Route
+            path="/project/:gigId/tracker"
+            element={
+              <ProtectedRoute>
+                <ProjectTracker />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dispute/raise/:paymentId"
+            element={
+              <ProtectedRoute>
+                <RaiseDispute />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dispute/:id"
+            element={
+              <ProtectedRoute>
+                <DisputeDetail />
+              </ProtectedRoute>
+            }
+          />
 
-      {/* Fallback */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+          {/* Week 3 Routes */}
+          <Route
+            path="/messages"
+            element={
+              <ProtectedRoute>
+                <Messages />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/messages/:conversationId"
+            element={
+              <ProtectedRoute>
+                <Messages />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/notifications"
+            element={
+              <ProtectedRoute>
+                <Notifications />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/freelancer/:id/reviews"
+            element={
+              <ProtectedRoute>
+                <FreelancerReviews />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </React.Suspense>
+    </ErrorBoundary>
   );
 }
+
 
 export default App;

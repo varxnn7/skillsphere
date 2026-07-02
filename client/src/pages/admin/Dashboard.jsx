@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Users, CreditCard, ShieldAlert, Award, FileText, Calendar, MessageSquare } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Users, CreditCard, ShieldAlert, Award, FileText, Calendar, MessageSquare, Scale, BarChart2 } from 'lucide-react';
 import api from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
@@ -100,6 +100,53 @@ const AdminDashboard = () => {
         })}
       </div>
 
+      {/* Quick Action Navigation Grid */}
+      <div className="space-y-4">
+        <h2 className="text-sm font-bold text-white uppercase tracking-wider">Quick Actions</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Link
+            to="/admin/users"
+            className="p-4 bg-dark-surface rounded-xl border border-dark-border hover:border-brand-indigo/50 transition-smooth flex items-center justify-between text-xs font-bold text-[#94A3B8] hover:text-white"
+          >
+            <span className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-brand-indigo" />
+              Manage Platform Users
+            </span>
+            <ChevronRight className="h-4 w-4" />
+          </Link>
+          <Link
+            to="/admin/gigs"
+            className="p-4 bg-dark-surface rounded-xl border border-dark-border hover:border-brand-indigo/50 transition-smooth flex items-center justify-between text-xs font-bold text-[#94A3B8] hover:text-white"
+          >
+            <span className="flex items-center gap-2">
+              <FileText className="h-4 w-4 text-brand-purple" />
+              Moderate Gigs Queue
+            </span>
+            <ChevronRight className="h-4 w-4" />
+          </Link>
+          <Link
+            to="/admin/disputes"
+            className="p-4 bg-dark-surface rounded-xl border border-dark-border hover:border-brand-indigo/50 transition-smooth flex items-center justify-between text-xs font-bold text-[#94A3B8] hover:text-white"
+          >
+            <span className="flex items-center gap-2">
+              <Scale className="h-4 w-4 text-red-400" />
+              Escrow Dispute Chamber
+            </span>
+            <ChevronRight className="h-4 w-4" />
+          </Link>
+          <Link
+            to="/admin/revenue"
+            className="p-4 bg-dark-surface rounded-xl border border-dark-border hover:border-brand-indigo/50 transition-smooth flex items-center justify-between text-xs font-bold text-[#94A3B8] hover:text-white"
+          >
+            <span className="flex items-center gap-2">
+              <BarChart2 className="h-4 w-4 text-[#10B981]" />
+              Platform Revenue Ledger
+            </span>
+            <ChevronRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </div>
+
       {/* Signups Table */}
       <div className="bg-dark-surface rounded-2xl border border-dark-border shadow-[0_0_20px_rgba(0,0,0,0.2)] overflow-hidden">
         <div className="px-6 py-5 border-b border-dark-border flex justify-between items-center bg-[rgba(255,255,255,0.02)]">
@@ -107,9 +154,12 @@ const AdminDashboard = () => {
             <h2 className="font-bold text-white text-md">Recent Signups</h2>
             <p className="text-xs text-[#94A3B8]">Newly registered user profiles awaiting audit</p>
           </div>
-          <span className="text-xs font-bold text-brand-indigo hover:text-white transition-colors cursor-pointer">
+          <Link
+            to="/admin/users"
+            className="text-xs font-bold text-brand-indigo hover:text-white transition-colors cursor-pointer"
+          >
             View All Users →
-          </span>
+          </Link>
         </div>
 
         <div className="overflow-x-auto">

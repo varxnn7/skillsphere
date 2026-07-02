@@ -1,3 +1,5 @@
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Calendar, CreditCard, MessageSquare, ShieldCheck, ChevronDown, ChevronUp, Star, Trash2, HelpCircle, FileText, ExternalLink } from 'lucide-react';
 import StatusBadge from '../ui/StatusBadge';
 import Modal from '../ui/Modal';
@@ -166,7 +168,7 @@ const ProposalCard = ({ proposal, onAccept, onReject, onNegotiate, onWithdraw, i
       )}
 
       {/* Action buttons */}
-      {proposal.status === 'pending' && (
+      {proposal.status === 'pending' ? (
         <div className="border-t border-dark-border/40 pt-4 flex flex-wrap gap-3">
           {/* Client Specific Actions */}
           {isClientOwner && (
@@ -210,6 +212,17 @@ const ProposalCard = ({ proposal, onAccept, onReject, onNegotiate, onWithdraw, i
             </>
           )}
         </div>
+      ) : (
+        proposal.status === 'accepted' && (
+          <div className="border-t border-dark-border/40 pt-4">
+            <Link
+              to={`/project/${proposal.gig?._id || proposal.gig}/tracker`}
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-green-500/10 border border-green-500/25 hover:bg-[#10B981] hover:text-white text-green-400 text-xs font-bold rounded-xl transition-all cursor-pointer"
+            >
+              Track Project Details
+            </Link>
+          </div>
+        )
       )}
 
       {/* Negotiation Input Box (Inline Drawer style) */}

@@ -188,12 +188,21 @@ const MyGigs = () => {
                 </div>
 
                 <div className="flex gap-2 mt-4 pt-4 border-t border-dark-border/40">
-                  <RouterLink
-                    to={`/client/gigs/${gig._id}/proposals`}
-                    className="flex-1 text-center py-2 bg-brand-indigo/10 border border-brand-indigo/25 hover:bg-brand-indigo hover:text-white rounded-xl text-[11px] font-bold text-brand-indigo transition-all cursor-pointer"
-                  >
-                    View Proposals
-                  </RouterLink>
+                  {gig.status === 'in-progress' || gig.status === 'completed' ? (
+                    <RouterLink
+                      to={`/project/${gig._id}/tracker`}
+                      className="flex-1 text-center py-2 bg-green-500/10 border border-green-500/25 hover:bg-[#10B981] hover:text-white rounded-xl text-[11px] font-bold text-green-400 transition-all cursor-pointer"
+                    >
+                      Track Project
+                    </RouterLink>
+                  ) : (
+                    <RouterLink
+                      to={`/client/gigs/${gig._id}/proposals`}
+                      className="flex-1 text-center py-2 bg-brand-indigo/10 border border-brand-indigo/25 hover:bg-brand-indigo hover:text-white rounded-xl text-[11px] font-bold text-brand-indigo transition-all cursor-pointer"
+                    >
+                      View Proposals
+                    </RouterLink>
+                  )}
                   <RouterLink
                     to={`/client/post-gig?edit=${gig._id}`}
                     className="p-2 bg-white/5 border border-dark-border hover:border-slate-400 rounded-xl text-[#94A3B8] hover:text-white transition-all cursor-pointer"
@@ -231,9 +240,15 @@ const MyGigs = () => {
                   {filteredGigs.map((gig) => (
                     <tr key={gig._id} className="hover:bg-white/5 transition-colors">
                       <td className="p-4">
-                        <RouterLink to={`/client/gigs/${gig._id}/proposals`} className="font-bold text-white hover:text-brand-indigo">
-                          {gig.title}
-                        </RouterLink>
+                        {gig.status === 'in-progress' || gig.status === 'completed' ? (
+                          <RouterLink to={`/project/${gig._id}/tracker`} className="font-bold text-white hover:text-green-400">
+                            {gig.title}
+                          </RouterLink>
+                        ) : (
+                          <RouterLink to={`/client/gigs/${gig._id}/proposals`} className="font-bold text-white hover:text-brand-indigo">
+                            {gig.title}
+                          </RouterLink>
+                        )}
                       </td>
                       <td className="p-4 text-slate-300">{gig.category}</td>
                       <td className="p-4 font-semibold text-white">
@@ -245,12 +260,21 @@ const MyGigs = () => {
                         <StatusBadge status={gig.status} />
                       </td>
                       <td className="p-4 text-right flex justify-end gap-2 items-center">
-                        <RouterLink
-                          to={`/client/gigs/${gig._id}/proposals`}
-                          className="px-3 py-1.5 bg-brand-indigo/10 border border-brand-indigo/25 hover:bg-brand-indigo hover:text-white rounded-lg text-[10px] font-bold text-brand-indigo transition-all cursor-pointer"
-                        >
-                          View Proposals
-                        </RouterLink>
+                        {gig.status === 'in-progress' || gig.status === 'completed' ? (
+                          <RouterLink
+                            to={`/project/${gig._id}/tracker`}
+                            className="px-3 py-1.5 bg-green-500/10 border border-green-500/25 hover:bg-[#10B981] hover:text-white rounded-lg text-[10px] font-bold text-green-400 transition-all cursor-pointer"
+                          >
+                            Track Project
+                          </RouterLink>
+                        ) : (
+                          <RouterLink
+                            to={`/client/gigs/${gig._id}/proposals`}
+                            className="px-3 py-1.5 bg-brand-indigo/10 border border-brand-indigo/25 hover:bg-brand-indigo hover:text-white rounded-lg text-[10px] font-bold text-brand-indigo transition-all cursor-pointer"
+                          >
+                            View Proposals
+                          </RouterLink>
+                        )}
                         <RouterLink
                           to={`/client/post-gig?edit=${gig._id}`}
                           className="p-1.5 bg-white/5 border border-dark-border hover:border-slate-400 rounded-lg text-[#94A3B8] hover:text-white transition-all cursor-pointer"
