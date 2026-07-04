@@ -7,7 +7,7 @@ import { gigsStart, gigsSuccess, gigsFailure } from '../../store/gigsSlice';
 import GigCard from '../../components/gigs/GigCard';
 import GigFilters from '../../components/gigs/GigFilters';
 import Pagination from '../../components/ui/Pagination';
-import Navbar from '../../components/Navbar';
+
 import LoadingSpinner from '../../components/LoadingSpinner';
 
 const BrowseGigs = () => {
@@ -109,8 +109,6 @@ const BrowseGigs = () => {
 
   return (
     <div className="min-h-screen bg-[#0A0A0F] text-white flex flex-col transition-smooth">
-      <Navbar />
-
       <div className="flex-1 max-w-7xl w-full mx-auto p-6 space-y-6 relative z-10 animate-fade-up">
         {/* Top Header Banner search */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

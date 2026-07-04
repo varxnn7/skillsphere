@@ -21,12 +21,7 @@ if (isCloudinaryConfigured) {
 
 // Middleware to check configuration and return clear error
 const checkCloudinaryConfig = (req, res, next) => {
-  if (!isCloudinaryConfigured) {
-    return res.status(500).json({
-      success: false,
-      message: 'Cloudinary not configured - add credentials to .env'
-    });
-  }
+  // Proceed to allow mock file uploads if Cloudinary is not configured
   next();
 };
 

@@ -227,6 +227,7 @@ const Login = () => {
             />
           </div>
 
+
           {/* Register Link */}
           <p className="text-center text-xs text-[#94A3B8] mt-8">
             New to SkillSphere?{' '}

@@ -74,21 +74,25 @@ exports.submitReview = async (req, res, next) => {
     if (role === 'client-to-freelancer') {
       const allReviews = await Review.find({ reviewee: revieweeId, role: 'client-to-freelancer' });
       const avg = allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
+      const formattedAvg = Number(avg.toFixed(1));
       
       await FreelancerProfile.findOneAndUpdate(
         { user: revieweeId },
-        { averageRating: avg.toFixed(1), totalReviews: allReviews.length },
+        { averageRating: formattedAvg, totalReviews: allReviews.length },
         { upsert: true }
       );
+      await User.findByIdAndUpdate(revieweeId, { averageRating: formattedAvg });
     } else {
       const allReviews = await Review.find({ reviewee: revieweeId, role: 'freelancer-to-client' });
       const avg = allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
+      const formattedAvg = Number(avg.toFixed(1));
 
       await ClientProfile.findOneAndUpdate(
         { user: revieweeId },
-        { averageRating: avg.toFixed(1) },
+        { averageRating: formattedAvg },
         { upsert: true }
       );
+      await User.findByIdAndUpdate(revieweeId, { averageRating: formattedAvg });
     }
 
     // 6. Notify reviewee

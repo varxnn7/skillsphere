@@ -128,11 +128,7 @@ function App() {
           <Route
             path="/gigs"
             element={
-              <ProtectedRoute>
-                <RoleRoute allowedRoles={['freelancer']}>
-                  <BrowseGigs />
-                </RoleRoute>
-              </ProtectedRoute>
+              <Navigate to="/freelancer/browse-gigs" replace />
             }
           />
           <Route

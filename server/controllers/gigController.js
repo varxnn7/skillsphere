@@ -320,6 +320,9 @@ exports.getMyGigs = async (req, res, next) => {
 // @desc    Get gigs by category
 // @route   GET /api/gigs/category/:category
 // @access  Public
+// @desc    Get gigs by category
+// @route   GET /api/gigs/category/:category
+// @access  Public
 exports.getGigsByCategory = async (req, res, next) => {
   try {
     const gigs = await Gig.find({ category: req.params.category, isApproved: true }).sort({ createdAt: -1 });
@@ -329,3 +332,130 @@ exports.getGigsByCategory = async (req, res, next) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+// @desc    Update milestone status to in-progress
+// @route   PUT /api/gigs/:id/milestones/:index/in-progress
+// @access  Private (Freelancer)
+exports.updateMilestoneInProgress = async (req, res, next) => {
+  try {
+    const Proposal = require('../models/Proposal');
+    const index = parseInt(req.params.index, 10);
+    const gig = await Gig.findById(req.params.id);
+
+    if (!gig) {
+      return res.status(404).json({ success: false, message: 'Gig not found' });
+    }
+
+    const proposal = await Proposal.findOne({ gig: gig._id, status: 'accepted' });
+    if (!proposal || proposal.freelancer.toString() !== req.user.id) {
+      return res.status(403).json({ success: false, message: 'Only the assigned freelancer can update milestone status' });
+    }
+
+    if (!gig.milestones || !gig.milestones[index]) {
+      return res.status(404).json({ success: false, message: 'Milestone not found' });
+    }
+
+    gig.milestones[index].status = 'in-progress';
+    await gig.save();
+
+    res.status(200).json({ success: true, message: 'Milestone marked as in progress', gig });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// @desc    Submit milestone deliverables
+// @route   PUT /api/gigs/:id/milestones/:index/submit
+// @access  Private (Freelancer)
+exports.updateMilestoneSubmit = async (req, res, next) => {
+  try {
+    const Proposal = require('../models/Proposal');
+    const Notification = require('../models/Notification');
+    const index = parseInt(req.params.index, 10);
+    const { notes, fileUrl, fileName } = req.body;
+    const gig = await Gig.findById(req.params.id);
+
+    if (!gig) {
+      return res.status(404).json({ success: false, message: 'Gig not found' });
+    }
+
+    const proposal = await Proposal.findOne({ gig: gig._id, status: 'accepted' });
+    if (!proposal || proposal.freelancer.toString() !== req.user.id) {
+      return res.status(403).json({ success: false, message: 'Only the assigned freelancer can submit deliverables' });
+    }
+
+    if (!gig.milestones || !gig.milestones[index]) {
+      return res.status(404).json({ success: false, message: 'Milestone not found' });
+    }
+
+    gig.milestones[index].status = 'submitted';
+    // Append deliverable info to milestone description (or store it in description)
+    const deliverableText = `\n[DELIVERABLE: ${fileName || 'Deliverable file'} | URL: ${fileUrl}]` + (notes ? `\nNotes: ${notes}` : '');
+    gig.milestones[index].description = (gig.milestones[index].description || '') + deliverableText;
+
+    await gig.save();
+
+    // Notify client
+    await Notification.create({
+      user: gig.client,
+      type: 'milestone_submitted',
+      title: 'Milestone Submitted for Review',
+      message: `Freelancer submitted deliverables for Milestone #${index + 1} of "${gig.title}".`,
+      link: `/project/${gig._id}/tracker`
+    });
+
+    res.status(200).json({ success: true, message: 'Milestone deliverables submitted successfully', gig });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// @desc    Request revision for milestone
+// @route   PUT /api/gigs/:id/milestones/:index/revision
+// @access  Private (Client)
+exports.updateMilestoneRevision = async (req, res, next) => {
+  try {
+    const Proposal = require('../models/Proposal');
+    const Notification = require('../models/Notification');
+    const index = parseInt(req.params.index, 10);
+    const { notes } = req.body;
+    const gig = await Gig.findById(req.params.id);
+
+    if (!gig) {
+      return res.status(404).json({ success: false, message: 'Gig not found' });
+    }
+
+    if (gig.client.toString() !== req.user.id) {
+      return res.status(403).json({ success: false, message: 'Only the client can request milestone revision' });
+    }
+
+    const proposal = await Proposal.findOne({ gig: gig._id, status: 'accepted' });
+    if (!proposal) {
+      return res.status(400).json({ success: false, message: 'No active contract found for this gig' });
+    }
+
+    if (!gig.milestones || !gig.milestones[index]) {
+      return res.status(404).json({ success: false, message: 'Milestone not found' });
+    }
+
+    gig.milestones[index].status = 'in-progress';
+    const revisionText = `\n[Revision requested: ${notes || 'Please refine the work.'}]`;
+    gig.milestones[index].description = (gig.milestones[index].description || '') + revisionText;
+
+    await gig.save();
+
+    // Notify freelancer
+    await Notification.create({
+      user: proposal.freelancer,
+      type: 'milestone_revision',
+      title: 'Revision Requested on Milestone',
+      message: `Client requested a revision for Milestone #${index + 1} of "${gig.title}".`,
+      link: `/project/${gig._id}/tracker`
+    });
+
+    res.status(200).json({ success: true, message: 'Milestone revision requested successfully', gig });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+

@@ -25,7 +25,7 @@ const Register = () => {
   const [validationErrors, setValidationErrors] = useState({});
   const [toastConfig, setToastConfig] = useState(null);
   const [isRegistered, setIsRegistered] = useState(false);
-  const [countdown, setCountdown] = useState(4);
+  const [countdown, setCountdown] = useState(3);
 
   // Set initial role from query parameter
   useEffect(() => {
@@ -118,10 +118,6 @@ const Register = () => {
       });
 
       if (response.data.success) {
-        dispatch(authSuccess({
-          token: response.data.token,
-          user: response.data.user
-        }));
         setIsRegistered(true);
         setToastConfig({
           message: 'Registration successful! Verification email has been simulated.',
@@ -162,7 +158,7 @@ const Register = () => {
               <div className="mt-2 h-1 bg-[rgba(255,255,255,0.08)] rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-brand-indigo to-brand-purple rounded-full transition-all duration-1000"
-                  style={{ width: `${((4 - countdown) / 4) * 100}%` }}
+                  style={{ width: `${((3 - countdown) / 3) * 100}%` }}
                 />
               </div>
             </div>

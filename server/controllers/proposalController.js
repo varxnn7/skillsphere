@@ -92,8 +92,12 @@ exports.getGigProposals = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Gig not found' });
     }
 
-    // Verify ownership
-    if (gig.client.toString() !== req.user.id) {
+    // Find accepted proposal to verify freelancer participation
+    const acceptedProposal = await Proposal.findOne({ gig: req.params.gigId, status: 'accepted' });
+    const freelancerId = acceptedProposal ? acceptedProposal.freelancer.toString() : null;
+
+    // Verify ownership or accepted freelancer participation
+    if (gig.client.toString() !== req.user.id && freelancerId !== req.user.id) {
       return res.status(401).json({ success: false, message: 'Not authorized to view proposals for this gig' });
     }
 
@@ -182,13 +186,22 @@ exports.acceptProposal = async (req, res, next) => {
     // Update Gig status to in-progress
     const gig = await Gig.findById(proposal.gig._id);
     gig.status = 'in-progress';
-    // Optionally setup gig milestones based on proposal milestones
+    // Setup gig milestones based on proposal milestones
     if (proposal.milestones && proposal.milestones.length > 0) {
       gig.milestones = proposal.milestones.map(m => ({
         title: m.title,
+        description: m.description || '',
         amount: m.amount,
+        dueDate: m.dueDate || null,
         status: 'pending'
       }));
+    } else {
+      gig.milestones = [{
+        title: 'Full Project Contract',
+        description: 'Complete all deliverables according to the project scope and specification.',
+        amount: proposal.bidAmount,
+        status: 'pending'
+      }];
     }
     await gig.save();
 

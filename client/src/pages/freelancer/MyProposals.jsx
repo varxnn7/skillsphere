@@ -5,7 +5,7 @@ import { FileText, AlertCircle, MessageSquare } from 'lucide-react';
 import api from '../../utils/api';
 import { myProposalsSuccess, proposalsStart, proposalsFailure } from '../../store/proposalsSlice';
 import ProposalCard from '../../components/gigs/ProposalCard';
-import Navbar from '../../components/Navbar';
+
 import LoadingSpinner from '../../components/LoadingSpinner';
 import Toast from '../../components/Toast';
 
@@ -63,8 +63,6 @@ const MyProposals = () => {
 
   return (
     <div className="min-h-screen bg-[#0A0A0F] text-white flex flex-col transition-smooth">
-      <Navbar />
-
       <div className="flex-1 max-w-4xl w-full mx-auto p-6 space-y-8 relative z-10 animate-fade-up">
         {/* Header */}
         <div>

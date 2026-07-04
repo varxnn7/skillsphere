@@ -137,6 +137,11 @@ const GigDetail = () => {
       return;
     }
 
+    if (proposalForm.coverLetter.trim().length < 100) {
+      setToastConfig({ message: 'Cover letter must be at least 100 characters long.', type: 'error' });
+      return;
+    }
+
     setIsSubmittingProposal(true);
     try {
       const response = await api.post('/proposals', {

@@ -5,7 +5,7 @@ import { Briefcase, Eye, Users, AlertCircle, PlusCircle, LayoutGrid, List, Edit3
 import api from '../../utils/api';
 import { myGigsSuccess, gigsStart, gigsFailure } from '../../store/gigsSlice';
 import StatusBadge from '../../components/ui/StatusBadge';
-import Navbar from '../../components/Navbar';
+
 import LoadingSpinner from '../../components/LoadingSpinner';
 import Toast from '../../components/Toast';
 import Modal from '../../components/ui/Modal';
@@ -55,8 +55,6 @@ const MyGigs = () => {
 
   return (
     <div className="min-h-screen bg-[#0A0A0F] text-white flex flex-col transition-smooth">
-      <Navbar />
-
       <div className="flex-1 max-w-7xl w-full mx-auto p-6 space-y-8 relative z-10 animate-fade-up">
         {/* Header section */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

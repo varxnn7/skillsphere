@@ -51,6 +51,22 @@ const UserSchema = new mongoose.Schema(
       type: String,
       select: false
     },
+    isSuspended: {
+      type: Boolean,
+      default: false
+    },
+    completedGigs: {
+      type: Number,
+      default: 0
+    },
+    totalSpent: {
+      type: Number,
+      default: 0
+    },
+    averageRating: {
+      type: Number,
+      default: 0
+    },
     resetPasswordToken: String,
     resetPasswordExpire: Date
   },

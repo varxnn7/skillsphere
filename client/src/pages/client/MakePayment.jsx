@@ -148,10 +148,9 @@ const MakePayment = () => {
 
   const milestoneArr = proposal.milestones || [];
   const milestone = milestoneArr[milestoneIndex];
-  const milestoneAmount = milestone ? milestone.amount : proposal.bidAmount;
-  const platformFee = Math.round(milestoneAmount * 0.10);
-  const freelancerNet = milestoneAmount - platformFee;
-  const totalAmount = milestoneAmount + platformFee;
+  const totalAmount = milestone ? milestone.amount : proposal.bidAmount;
+  const platformFee = Math.round(totalAmount * 0.10);
+  const freelancerNet = totalAmount - platformFee;
 
   // Show already paid banner
   if (existingPayment && existingPayment.status !== 'refunded') {
@@ -234,7 +233,7 @@ const MakePayment = () => {
             <div className="space-y-3.5 text-xs">
               <div className="flex justify-between">
                 <span className="text-[#94A3B8]">Gig Amount</span>
-                <span className="font-bold text-white">₹{milestoneAmount.toLocaleString('en-IN')}</span>
+                <span className="font-bold text-white">₹{freelancerNet.toLocaleString('en-IN')}</span>
               </div>
               <div className="flex justify-between items-center">
                 <div>

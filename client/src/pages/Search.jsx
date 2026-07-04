@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import { Search as SearchIcon, Users, Briefcase, SlidersHorizontal, ArrowRight } from 'lucide-react';
 import api from '../utils/api';
 import Navbar from '../components/Navbar';
@@ -9,7 +10,16 @@ import GigFilters from '../components/gigs/GigFilters';
 import Pagination from '../components/ui/Pagination';
 
 const SearchPage = () => {
+  const { user } = useSelector((state) => state.auth);
   const [activeTab, setActiveTab] = useState('gigs'); // 'gigs' or 'freelancers'
+
+  useEffect(() => {
+    if (user?.role === 'client') {
+      setActiveTab('freelancers');
+    } else {
+      setActiveTab('gigs');
+    }
+  }, [user]);
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState({ categories: [], skills: [] });
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -161,34 +171,36 @@ const SearchPage = () => {
 
       <div className="flex-1 max-w-7xl w-full mx-auto p-6 space-y-6 relative z-10 animate-fade-up">
         {/* Toggle tabs */}
-        <div className="flex justify-center">
-          <div className="flex gap-2 p-1 bg-dark-surface/50 border border-dark-border rounded-2xl">
-            <button
-              onClick={() => {
-                setActiveTab('gigs');
-                handleReset();
-              }}
-              className={`px-6 py-3 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
-                activeTab === 'gigs' ? 'bg-gradient-brand text-white shadow-lg' : 'text-[#94A3B8] hover:text-white'
-              } cursor-pointer`}
-            >
-              <Briefcase className="h-4.5 w-4.5" />
-              Find Gigs
-            </button>
-            <button
-              onClick={() => {
-                setActiveTab('freelancers');
-                handleReset();
-              }}
-              className={`px-6 py-3 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
-                activeTab === 'freelancers' ? 'bg-gradient-brand text-white shadow-lg' : 'text-[#94A3B8] hover:text-white'
-              } cursor-pointer`}
-            >
-              <Users className="h-4.5 w-4.5" />
-              Find Freelancers
-            </button>
+        {user?.role !== 'freelancer' && (
+          <div className="flex justify-center">
+            <div className="flex gap-2 p-1 bg-dark-surface/50 border border-dark-border rounded-2xl">
+              <button
+                onClick={() => {
+                  setActiveTab('gigs');
+                  handleReset();
+                }}
+                className={`px-6 py-3 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+                  activeTab === 'gigs' ? 'bg-gradient-brand text-white shadow-lg' : 'text-[#94A3B8] hover:text-white'
+                } cursor-pointer`}
+              >
+                <Briefcase className="h-4.5 w-4.5" />
+                Find Gigs
+              </button>
+              <button
+                onClick={() => {
+                  setActiveTab('freelancers');
+                  handleReset();
+                }}
+                className={`px-6 py-3 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+                  activeTab === 'freelancers' ? 'bg-gradient-brand text-white shadow-lg' : 'text-[#94A3B8] hover:text-white'
+                } cursor-pointer`}
+              >
+                <Users className="h-4.5 w-4.5" />
+                Find Freelancers
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Unified Search Input & Autocomplete suggestions */}
         <div className="relative max-w-2xl mx-auto w-full">

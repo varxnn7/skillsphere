@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Users, CreditCard, ShieldAlert, Award, FileText, Calendar, MessageSquare, Scale, BarChart2 } from 'lucide-react';
+import { Users, CreditCard, ShieldAlert, Award, FileText, Calendar, MessageSquare, Scale, BarChart2, ChevronRight } from 'lucide-react';
 import api from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 

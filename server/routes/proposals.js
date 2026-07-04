@@ -18,7 +18,7 @@ router.use(protect);
 
 router.post('/', isFreelancer, submitProposal);
 router.get('/my-proposals', isFreelancer, getMyProposals);
-router.get('/gig/:gigId', isClient, getGigProposals);
+router.get('/gig/:gigId', getGigProposals);
 
 router.get('/:id', getProposal);
 router.put('/:id/accept', isClient, acceptProposal);

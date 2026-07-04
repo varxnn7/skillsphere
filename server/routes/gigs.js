@@ -10,7 +10,10 @@ const {
   deleteGig,
   incrementViews,
   getMyGigs,
-  getGigsByCategory
+  getGigsByCategory,
+  updateMilestoneInProgress,
+  updateMilestoneSubmit,
+  updateMilestoneRevision
 } = require('../controllers/gigController');
 
 // Public search/browse routes
@@ -29,4 +32,10 @@ router.put('/:id', protect, isClient, updateGig);
 router.delete('/:id', protect, deleteGig);
 router.post('/:id/view', incrementViews);
 
+// Milestone Tracking routes
+router.put('/:id/milestones/:index/in-progress', protect, updateMilestoneInProgress);
+router.put('/:id/milestones/:index/submit', protect, updateMilestoneSubmit);
+router.put('/:id/milestones/:index/revision', protect, updateMilestoneRevision);
+
 module.exports = router;
+

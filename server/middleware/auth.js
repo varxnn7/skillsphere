@@ -25,6 +25,9 @@ const protect = async (req, res, next) => {
     if (!req.user) {
       return res.status(404).json({ success: false, message: 'No user found with this id' });
     }
+    if (req.user.isSuspended) {
+      return res.status(403).json({ success: false, message: 'Your account has been suspended' });
+    }
 
     next();
   } catch (err) {
@@ -45,7 +48,10 @@ const optionalProtect = async (req, res, next) => {
   if (token) {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'skillsphere_secret_key_12345');
-      req.user = await User.findById(decoded.id);
+      const user = await User.findById(decoded.id);
+      if (user && !user.isSuspended) {
+        req.user = user;
+      }
     } catch (err) {
       // Ignore validation errors for optional authentication
     }
