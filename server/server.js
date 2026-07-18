@@ -80,6 +80,26 @@ if (!isProduction) {
   app.use(morgan('dev'));
 }
 
+// Health check route
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'SkillSphere API is running',
+    environment: process.env.NODE_ENV,
+    timestamp: new Date().toISOString()
+  })
+})
+
+// Also add this alternative path
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'SkillSphere API is running',
+    environment: process.env.NODE_ENV,
+    timestamp: new Date().toISOString()
+  })
+})
+
 // ─────────────────────────────────────────────
 // Rate Limiting
 // ─────────────────────────────────────────────
@@ -114,18 +134,6 @@ app.use('/api', generalLimiter);
 // Serve uploaded static files
 // ─────────────────────────────────────────────
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// ─────────────────────────────────────────────
-// Health Check Route (required by Render)
-// ─────────────────────────────────────────────
-app.get('/health', (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: 'SkillSphere API is running',
-    environment: process.env.NODE_ENV,
-    timestamp: new Date().toISOString()
-  });
-});
 
 // ─────────────────────────────────────────────
 // API Routes
