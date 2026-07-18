@@ -237,16 +237,18 @@ const Login = () => {
           </p>
 
           {/* Demo Credentials Box */}
-          <div className="mt-6 p-4 rounded-xl bg-amber-500/8 border border-amber-500/20">
-            <p className="text-[10px] font-extrabold text-amber-400 uppercase tracking-widest mb-2">🔑 Demo Credentials</p>
-            <div className="space-y-1 text-[11px] text-[#94A3B8]">
-              <div className="flex justify-between">
-                <span className="text-amber-400 font-semibold">Admin</span>
-                <span className="font-mono text-white">admin@skillsphere.com / Admin@123</span>
+          {import.meta.env.DEV && (
+            <div className="mt-6 p-4 rounded-xl bg-amber-500/8 border border-amber-500/20">
+              <p className="text-[10px] font-extrabold text-amber-400 uppercase tracking-widest mb-2">🔑 Demo Credentials</p>
+              <div className="space-y-1 text-[11px] text-[#94A3B8]">
+                <div className="flex justify-between">
+                  <span className="text-amber-400 font-semibold">Admin</span>
+                  <span className="font-mono text-white">admin@skillsphere.com / Admin@123</span>
+                </div>
+                <p className="text-[10px] text-[#64748B] mt-1">Register as Client or Freelancer to test those flows.</p>
               </div>
-              <p className="text-[10px] text-[#64748B] mt-1">Register as Client or Freelancer to test those flows.</p>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
