@@ -1,5 +1,6 @@
 const Review = require('../models/Review');
 const Gig = require('../models/Gig');
+const User = require('../models/User');
 const FreelancerProfile = require('../models/FreelancerProfile');
 const ClientProfile = require('../models/ClientProfile');
 const Notification = require('../models/Notification');

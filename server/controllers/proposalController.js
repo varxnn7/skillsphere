@@ -1,6 +1,7 @@
 const Proposal = require('../models/Proposal');
 const Gig = require('../models/Gig');
 const User = require('../models/User');
+const Notification = require('../models/Notification');
 const sendEmail = require('../utils/email');
 
 // @desc    Submit a proposal to a gig
@@ -44,6 +45,21 @@ exports.submitProposal = async (req, res, next) => {
     // Increment proposal count on Gig
     gig.proposals = (gig.proposals || 0) + 1;
     await gig.save();
+
+    // Create in-app notification for client
+    const clientNotif = await Notification.create({
+      user: gig.client._id,
+      type: 'new_proposal',
+      title: 'New Proposal Received',
+      message: `You received a new proposal for your gig "${gig.title}" with a bid of ₹${bidAmount}.`,
+      link: `/client/gigs/${gig._id}/proposals`
+    });
+
+    // Send real-time notification
+    const sendNotification = req.app.get('sendRealTimeNotification');
+    if (sendNotification) {
+      await sendNotification(gig.client._id.toString(), clientNotif);
+    }
 
     // Send notification email to client
     try {
@@ -241,6 +257,21 @@ exports.acceptProposal = async (req, res, next) => {
       console.error('Notification to accepted freelancer failed:', mailErr.message);
     }
 
+    // Create in-app notification for accepted freelancer
+    try {
+      const freelancerNotif = await Notification.create({
+        user: proposal.freelancer._id,
+        type: 'proposal_accepted',
+        title: '🎉 Proposal Accepted!',
+        message: `Your proposal for "${gig.title}" has been accepted! Bid: ₹${proposal.bidAmount}. Start working now.`,
+        link: `/freelancer/my-proposals`
+      });
+      const sendNotification = req.app.get('sendRealTimeNotification');
+      if (sendNotification) await sendNotification(proposal.freelancer._id.toString(), freelancerNotif);
+    } catch (notifErr) {
+      console.error('In-app notification for accepted proposal failed:', notifErr.message);
+    }
+
     res.status(200).json({ success: true, message: 'Proposal accepted and project started successfully', proposal });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -279,6 +310,21 @@ exports.rejectProposal = async (req, res, next) => {
       }
     } catch (err) {
       console.error(err.message);
+    }
+
+    // Create in-app notification for rejected freelancer
+    try {
+      const rejectedNotif = await Notification.create({
+        user: proposal.freelancer._id,
+        type: 'proposal_rejected',
+        title: 'Proposal Not Selected',
+        message: `Your proposal for "${proposal.gig.title}" was not selected. Keep applying to other gigs!`,
+        link: `/freelancer/browse-gigs`
+      });
+      const sendNotification = req.app.get('sendRealTimeNotification');
+      if (sendNotification) await sendNotification(proposal.freelancer._id.toString(), rejectedNotif);
+    } catch (notifErr) {
+      console.error('In-app notification for rejected proposal failed:', notifErr.message);
     }
 
     res.status(200).json({ success: true, message: 'Proposal rejected successfully', proposal });

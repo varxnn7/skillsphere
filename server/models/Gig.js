@@ -77,7 +77,7 @@ const GigSchema = new mongoose.Schema(
         dueDate: { type: Date },
         status: {
           type: String,
-          enum: ['pending', 'funded', 'released', 'cancelled'],
+          enum: ['pending', 'funded', 'in-progress', 'submitted', 'approved', 'released', 'cancelled'],
           default: 'pending'
         }
       }
@@ -99,5 +99,12 @@ const GigSchema = new mongoose.Schema(
     timestamps: true
   }
 );
+
+// Indexes for performance
+GigSchema.index({ skills: 1 });
+GigSchema.index({ status: 1 });
+GigSchema.index({ location: 1 });
+GigSchema.index({ client: 1 });
+GigSchema.index({ isApproved: 1, status: 1 });
 
 module.exports = mongoose.model('Gig', GigSchema);

@@ -1,6 +1,7 @@
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('cloudinary').v2;
+const os = require('os');
 
 const isCloudinaryConfigured = 
   process.env.CLOUDINARY_CLOUD_NAME && 
@@ -42,7 +43,7 @@ if (isCloudinaryConfigured) {
   // Dummy storage engine to prevent multer startup errors when not configured
   storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, '/tmp');
+      cb(null, os.tmpdir());
     },
     filename: (req, file, cb) => {
       cb(null, file.originalname);

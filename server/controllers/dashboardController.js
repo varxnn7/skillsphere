@@ -139,8 +139,9 @@ exports.getDashboardStats = async (req, res, next) => {
       const totalSpentVal = allAccepted.reduce((sum, p) => sum + (p.bidAmount || 0), 0);
       const platformRevenue = Math.round(totalSpentVal * 0.1);
 
-      // 4. Disputes Pending (mocked)
-      const disputesPending = 0;
+      // 4. Disputes Pending (open + under-review)
+      const Dispute = require('../models/Dispute');
+      const disputesPending = await Dispute.countDocuments({ status: { $in: ['open', 'under-review'] } });
 
       // 5. Recent signups list
       const recentUsers = await User.find({ role: { $ne: 'admin' } })

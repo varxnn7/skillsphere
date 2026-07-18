@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  timeout: 30000,
   headers: {
     'Content-Type': 'application/json'
   }
@@ -21,7 +22,7 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle errors
+// Response interceptor to handle errors globally
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -29,7 +30,7 @@ api.interceptors.response.use(
       // Clear storage and logout if unauthorized
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      // We can also trigger a window event or let Redux slice handle it
+      // Dispatch event so Redux/auth layer can respond
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new Event('auth-unauthorized'));
       }

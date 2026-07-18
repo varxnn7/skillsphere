@@ -16,10 +16,20 @@ const NotificationSchema = new mongoose.Schema(
         'new_message',
         'payment_received',
         'payment_released',
+        'payment_refunded',
         'gig_posted',
+        'gig_approved',
+        'gig_rejected',
         'review_added',
         'dispute_opened',
-        'account_verified'
+        'dispute_filed',
+        'dispute_resolved',
+        'account_verified',
+        'account_suspended',
+        'account_activated',
+        'profile_verified',
+        'milestone_submitted',
+        'milestone_revision'
       ],
       required: true
     },
@@ -48,5 +58,9 @@ const NotificationSchema = new mongoose.Schema(
     timestamps: true
   }
 );
+
+// Indexes for performance
+NotificationSchema.index({ user: 1, isRead: 1 });
+NotificationSchema.index({ user: 1, createdAt: -1 });
 
 module.exports = mongoose.model('Notification', NotificationSchema);

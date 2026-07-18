@@ -144,6 +144,14 @@ exports.login = async (req, res, next) => {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
 
+    // Block unverified accounts (admin always verified; Google OAuth users are pre-verified)
+    if (!user.isEmailVerified && user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Please verify your email address before logging in. Check your inbox for the verification link.'
+      });
+    }
+
     const token = generateToken(user._id);
 
     res.status(200).json({

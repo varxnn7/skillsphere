@@ -25,10 +25,13 @@ router.post('/refund/:paymentId', isAdmin, refundPayment);
 router.get('/my-payments', getMyPayments);
 router.get('/my-earnings', getMyEarnings);
 router.get('/gig/:gigId', getGigPayments);
-router.get('/:paymentId', getPaymentDetail);
 
+// Admin routes MUST come before /:paymentId wildcard
 router.get('/admin/all', isAdmin, getAdminPayments);
 router.get('/admin/stats', isAdmin, getAdminStats);
+
+// Wildcard route last
+router.get('/:paymentId', getPaymentDetail);
 
 module.exports = router;
 

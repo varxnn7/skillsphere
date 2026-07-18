@@ -1,8 +1,10 @@
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import ProtectedRoute from './components/ProtectedRoute';
 import RoleRoute from './components/RoleRoute';
 import ErrorBoundary from './components/ui/ErrorBoundary';
+import { logout } from './store/authSlice';
 
 // Public Pages
 import Landing from './pages/Landing';
@@ -11,6 +13,7 @@ import Register from './pages/Register';
 import VerifyEmail from './pages/VerifyEmail';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import NotFound from './pages/NotFound';
 
 // Layouts
 import ClientLayout from './layouts/ClientLayout';
@@ -68,6 +71,19 @@ const Placeholder = ({ title }) => (
 );
 
 function App() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // Global 401 handler: fires when any API call gets 401 Unauthorized
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      dispatch(logout());
+      navigate('/login', { replace: true });
+    };
+    window.addEventListener('auth-unauthorized', handleUnauthorized);
+    return () => window.removeEventListener('auth-unauthorized', handleUnauthorized);
+  }, [dispatch, navigate]);
+
   return (
     <ErrorBoundary>
       <React.Suspense fallback={<PageLoader />}>
@@ -231,8 +247,8 @@ function App() {
             }
           />
 
-          {/* Fallback */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          {/* Fallback 404 */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </React.Suspense>
     </ErrorBoundary>

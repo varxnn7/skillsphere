@@ -9,7 +9,8 @@ const fmt = (n) => `₹${Number(n || 0).toLocaleString('en-IN')}`;
 const MakePayment = () => {
   const { proposalId } = useParams();
   const [searchParams] = useSearchParams();
-  const milestoneIndex = Number(searchParams.get('milestone')) || 0;
+  const milestoneParam = searchParams.get('milestone');
+  const milestoneIndex = milestoneParam !== null ? Number(milestoneParam) : null;
 
   const navigate = useNavigate();
   const [proposal, setProposal] = useState(null);
@@ -147,7 +148,7 @@ const MakePayment = () => {
   }
 
   const milestoneArr = proposal.milestones || [];
-  const milestone = milestoneArr[milestoneIndex];
+  const milestone = milestoneIndex !== null ? milestoneArr[milestoneIndex] : null;
   const totalAmount = milestone ? milestone.amount : proposal.bidAmount;
   const platformFee = Math.round(totalAmount * 0.10);
   const freelancerNet = totalAmount - platformFee;

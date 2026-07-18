@@ -7,13 +7,16 @@ const User = require('../models/User');
 
 const onlineUsers = new Map(); // userId -> socket.id
 
-const initSocket = (server) => {
+const initSocket = (server, allowedOrigins) => {
   const io = socketio(server, {
     cors: {
-      origin: '*', // For development, allow all origins
+      origin: allowedOrigins && allowedOrigins.length > 0 ? allowedOrigins : '*',
       methods: ['GET', 'POST'],
       credentials: true
-    }
+    },
+    transports: ['websocket', 'polling'],
+    pingTimeout: 60000,
+    pingInterval: 25000
   });
 
   // Authentication Middleware
