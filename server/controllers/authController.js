@@ -197,6 +197,62 @@ exports.verifyEmail = async (req, res, next) => {
   }
 };
 
+// ── @desc    Resend email verification link ──────────────────────────
+// ── @route   POST /api/auth/resend-verification ──────────────────────
+// ── @access  Public ──────────────────────────────────────────────────
+exports.resendVerificationEmail = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Email address is required' });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      // Don't reveal whether email exists — just say "sent" for security
+      return res.status(200).json({ success: true, message: 'If this email is registered, a verification link has been sent.' });
+    }
+
+    if (user.isEmailVerified) {
+      return res.status(400).json({ success: false, message: 'This email is already verified. You can log in normally.' });
+    }
+
+    // Generate a fresh token
+    const emailVerificationToken = crypto.randomBytes(20).toString('hex');
+    user.emailVerificationToken = emailVerificationToken;
+    await user.save();
+
+    const verificationUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/verify-email/${emailVerificationToken}`;
+    const message = `Hi ${user.name}, please verify your email by clicking: ${verificationUrl}`;
+    const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 24px; border: 1px solid #E2E8F0; border-radius: 12px;">
+        <h2 style="color: #6366F1; margin-bottom: 8px;">SkillSphere — Verify Your Email</h2>
+        <p style="color: #475569;">Hi <strong>${user.name}</strong>,</p>
+        <p style="color: #475569;">You requested a new verification link. Click the button below to activate your account:</p>
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="${verificationUrl}" style="background: linear-gradient(135deg, #6366F1, #8B5CF6); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; font-size: 15px;">
+            Verify Email Address
+          </a>
+        </div>
+        <p style="color: #64748B; font-size: 13px;">Or copy this link: <a href="${verificationUrl}">${verificationUrl}</a></p>
+        <hr style="border: 0; border-top: 1px solid #E2E8F0; margin: 20px 0;" />
+        <p style="font-size: 12px; color: #94A3B8;">If you didn't request this, you can safely ignore this email.</p>
+      </div>
+    `;
+
+    try {
+      await sendEmail({ email: user.email, subject: 'SkillSphere — Resend: Email Verification', message, html });
+    } catch (err) {
+      console.error('Resend verification email failed:', err.message);
+      return res.status(500).json({ success: false, message: 'Failed to send verification email. Please check your connection and try again.' });
+    }
+
+    res.status(200).json({ success: true, message: 'Verification email sent! Check your inbox and spam folder.' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 // ── @desc    Forgot Password ─────────────────────────────────────────
 // ── @route   POST /api/auth/forgot-password ──────────────────────────
 // ── @access  Public ──────────────────────────────────────────────────
@@ -346,12 +402,14 @@ exports.googleOAuth = async (req, res, next) => {
         });
       }
 
-      // Security Check: Block password-based accounts from using Google Auth
-      if (!user.isGoogleAuth) {
-        return res.status(401).json({
-          success: false,
-          message: 'This email is registered with a password. Please log in using your password credentials.'
-        });
+      // Link Google Auth and ensure email is marked verified since Google verified it
+      if (!user.isGoogleAuth || !user.isEmailVerified) {
+        user.isGoogleAuth = true;
+        user.isEmailVerified = true;
+        if (googleAvatar && !user.avatar) {
+          user.avatar = googleAvatar;
+        }
+        await user.save();
       }
 
       // Existing user — just log them in

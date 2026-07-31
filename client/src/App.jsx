@@ -62,10 +62,10 @@ const AdminRevenue = React.lazy(() => import('./pages/admin/Revenue'));
 
 // Placeholder Component for sub-routes
 const Placeholder = ({ title }) => (
-  <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm">
+  <div className="bg-white p-8 rounded-2xl border border-surface-border shadow-card">
     <h2 className="text-xl font-bold text-slate-800 mb-2">{title}</h2>
-    <p className="text-slate-500 text-sm">
-      This module is scheduled for development in subsequent sprint phases. Verify authentication, profile creation, and core dashboards in the current view.
+    <p className="text-slate-400 text-sm">
+      This module is scheduled for development in subsequent sprint phases.
     </p>
   </div>
 );

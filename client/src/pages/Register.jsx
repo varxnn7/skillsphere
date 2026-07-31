@@ -1,112 +1,80 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { GoogleLogin } from '@react-oauth/google';
 import { authStart, authSuccess, authFailure, clearError } from '../store/authSlice';
 import api from '../utils/api';
 import Navbar from '../components/Navbar';
 import Toast from '../components/Toast';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { User, Briefcase, ShieldAlert, CheckCircle, Mail } from 'lucide-react';
+import {
+  User, Briefcase, ShieldAlert, CheckCircle,
+  Mail, Lock, UserCircle, ArrowRight, Zap
+} from 'lucide-react';
 
 const Register = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
-  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
+  const { loading, isAuthenticated, user } = useSelector((state) => state.auth);
 
-  // Form State
   const [role, setRole] = useState('client');
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  });
+  const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
   const [validationErrors, setValidationErrors] = useState({});
   const [toastConfig, setToastConfig] = useState(null);
   const [isRegistered, setIsRegistered] = useState(false);
-  const [countdown, setCountdown] = useState(3);
+  const [registeredEmail, setRegisteredEmail] = useState('');
+  const [countdown, setCountdown] = useState(4);
 
-  // Set initial role from query parameter
+  // Pick role from URL param
   useEffect(() => {
     const roleParam = searchParams.get('role');
-    if (roleParam && ['client', 'freelancer'].includes(roleParam)) {
-      setRole(roleParam);
-    }
+    if (roleParam && ['client', 'freelancer'].includes(roleParam)) setRole(roleParam);
   }, [searchParams]);
 
-  // Clean error state on unmount
-  useEffect(() => {
-    return () => {
-      dispatch(clearError());
-    };
-  }, [dispatch]);
+  useEffect(() => { return () => { dispatch(clearError()); }; }, [dispatch]);
 
-  // Redirect if already logged in — cover all roles
+  // If already logged in redirect to dashboard
   useEffect(() => {
-    if (isAuthenticated) {
-      if (role === 'admin') navigate('/admin/dashboard', { replace: true });
-      else if (role === 'client') navigate('/client/dashboard', { replace: true });
-      else navigate('/freelancer/dashboard', { replace: true });
+    if (isAuthenticated && user) {
+      if (user.role === 'admin') navigate('/admin/dashboard', { replace: true });
+      else if (user.role === 'freelancer') navigate('/freelancer/dashboard', { replace: true });
+      else navigate('/client/dashboard', { replace: true });
     }
-  }, [isAuthenticated, navigate, role]);
+  }, [isAuthenticated, user, navigate]);
 
-  // 3-second countdown redirect to /login after successful registration
+  // Auto-redirect after success screen
   useEffect(() => {
     if (!isRegistered) return;
-    if (countdown <= 0) {
-      navigate('/login', { replace: true });
-      return;
-    }
-    const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
-    return () => clearTimeout(timer);
+    if (countdown <= 0) { navigate('/login', { replace: true }); return; }
+    const t = setTimeout(() => setCountdown((c) => c - 1), 1000);
+    return () => clearTimeout(t);
   }, [isRegistered, countdown, navigate]);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-    // Clear field-specific validation errors as user types
+    setFormData({ ...formData, [e.target.name]: e.target.value });
     if (validationErrors[e.target.name]) {
-      setValidationErrors({
-        ...validationErrors,
-        [e.target.name]: ''
-      });
+      setValidationErrors({ ...validationErrors, [e.target.name]: '' });
     }
   };
 
   const validate = () => {
     const errors = {};
-    if (!formData.name.trim()) errors.name = 'Name is required';
-    if (!formData.email.trim()) {
-      errors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = 'Please provide a valid email';
-    }
-    if (!formData.password) {
-      errors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      errors.password = 'Password must be at least 6 characters';
-    }
-    if (formData.password !== formData.confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
-    }
+    if (!formData.name.trim()) errors.name = 'Full name is required';
+    if (!formData.email.trim()) errors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = 'Enter a valid email address';
+    if (!formData.password) errors.password = 'Password is required';
+    else if (formData.password.length < 6) errors.password = 'Password must be at least 6 characters';
+    if (formData.password !== formData.confirmPassword) errors.confirmPassword = 'Passwords do not match';
     return errors;
   };
 
+  // ── Email/Password Register ─────────────────────────────────────────
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Clear global error
     dispatch(clearError());
-
-    // Client-side validations
     const errors = validate();
-    if (Object.keys(errors).length > 0) {
-      setValidationErrors(errors);
-      return;
-    }
+    if (Object.keys(errors).length > 0) { setValidationErrors(errors); return; }
 
     dispatch(authStart());
     try {
@@ -114,66 +82,92 @@ const Register = () => {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        role: role
+        role,
       });
-
       if (response.data.success) {
+        setRegisteredEmail(formData.email);
         setIsRegistered(true);
-        setToastConfig({
-          message: 'Registration successful! Verification email has been simulated.',
-          type: 'success'
-        });
+        dispatch(authFailure('')); // clear loading
       }
     } catch (err) {
-      const errMsg = err.response?.data?.message || 'Registration failed. Please try again.';
-      dispatch(authFailure(errMsg));
-      setToastConfig({ message: errMsg, type: 'error' });
+      const msg = err.response?.data?.message || 'Registration failed. Please try again.';
+      dispatch(authFailure(msg));
+      setToastConfig({ message: msg, type: 'error' });
     }
   };
 
+  // ── Google OAuth Register/Login ─────────────────────────────────────
+  const handleGoogleSuccess = async (credentialResponse) => {
+    dispatch(clearError());
+    dispatch(authStart());
+    try {
+      const response = await api.post('/auth/google-oauth', {
+        credential: credentialResponse.credential,
+        role, // pass selected role for new accounts
+      });
+      if (response.data.success) {
+        dispatch(authSuccess({ token: response.data.token, user: response.data.user }));
+        setToastConfig({ message: 'Google sign-up successful! Welcome to SkillSphere!', type: 'success' });
+        const r = response.data.user.role;
+        setTimeout(() => {
+          if (r === 'admin') navigate('/admin/dashboard', { replace: true });
+          else if (r === 'freelancer') navigate('/freelancer/dashboard', { replace: true });
+          else navigate('/client/dashboard', { replace: true });
+        }, 600);
+      }
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Google sign-up failed. Please try again.';
+      dispatch(authFailure(msg));
+      setToastConfig({ message: msg, type: 'error' });
+    }
+  };
+
+  const handleGoogleError = () => {
+    setToastConfig({ message: 'Google sign-up was cancelled or failed.', type: 'error' });
+    dispatch(authFailure(''));
+  };
+
+  // ── Success Screen ──────────────────────────────────────────────────
   if (isRegistered) {
     return (
-      <div className="min-h-screen bg-[#0A0A0F] flex flex-col transition-smooth">
+      <div className="min-h-screen bg-surface-subtle flex flex-col">
         <Navbar />
         <div className="flex-1 flex items-center justify-center p-4">
-          <div className="bg-dark-surface rounded-2xl p-8 border border-dark-border shadow-xl max-w-md w-full text-center">
-            {/* Animated checkmark */}
-            <div className="h-16 w-16 bg-[#10B981]/10 rounded-full flex items-center justify-center text-[#10B981] mx-auto mb-6 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+          <div className="bg-white rounded-3xl border border-surface-border shadow-[0_20px_60px_rgba(0,0,0,0.08)] max-w-md w-full p-10 text-center animate-blur-in">
+            <div className="h-16 w-16 bg-emerald-50 border-2 border-emerald-200 rounded-full flex items-center justify-center text-emerald-600 mx-auto mb-5">
               <CheckCircle className="h-8 w-8" />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-3">Account Created!</h2>
-            <p className="text-[#94A3B8] text-sm mb-4 leading-relaxed">
-              We've sent a verification email to{' '}
-              <span className="font-semibold text-white">{formData.email}</span>.
-              Please click the link inside to verify your account.
+            <h2 className="text-2xl font-black text-slate-900 mb-2">Account Created!</h2>
+            <p className="text-slate-400 text-sm mb-5 leading-relaxed">
+              We've sent a verification link to{' '}
+              <span className="font-bold text-slate-700">{registeredEmail}</span>.
+              <br />Check your inbox and click the link to activate your account.
             </p>
 
-            {/* Countdown indicator */}
-            <div className="bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.25)] rounded-xl p-4 mb-6">
-              <p className="text-sm text-[#818CF8] font-semibold">
+            <div className="bg-brand-50 border border-brand-200 rounded-2xl p-4 mb-6">
+              <p className="text-sm text-brand-700 font-semibold">
                 Redirecting to login in{' '}
-                <span className="text-white text-lg font-bold">{countdown}</span>s...
+                <span className="text-2xl font-black text-brand-600">{countdown}</span>s
               </p>
-              {/* Progress bar */}
-              <div className="mt-2 h-1 bg-[rgba(255,255,255,0.08)] rounded-full overflow-hidden">
+              <div className="mt-2 h-1.5 bg-brand-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-brand-indigo to-brand-purple rounded-full transition-all duration-1000"
-                  style={{ width: `${((3 - countdown) / 3) * 100}%` }}
+                  className="h-full bg-gradient-brand rounded-full transition-all duration-1000"
+                  style={{ width: `${((4 - countdown) / 4) * 100}%` }}
                 />
               </div>
             </div>
 
-            <div className="bg-[rgba(255,255,255,0.03)] border border-dark-border rounded-lg p-4 mb-6 text-left">
-              <p className="text-xs text-[#94A3B8] font-medium leading-normal">
-                💡 <span className="font-semibold text-white">Local Sandbox Mode:</span> If you are testing locally, check the backend console log where the verification URL has been printed.
+            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6 text-left">
+              <p className="text-xs text-amber-700 font-medium leading-relaxed">
+                💡 <span className="font-bold">Can't find the email?</span> Check your spam/junk folder. You can also request a new verification link from the login page.
               </p>
             </div>
 
             <button
               onClick={() => navigate('/login', { replace: true })}
-              className="block w-full py-3 bg-gradient-brand text-white rounded-xl font-bold shadow-md hover:scale-[1.02] hover-glow-purple transition-all text-center text-sm cursor-pointer"
+              className="btn-brand w-full py-3.5 text-sm"
             >
-              Go to Login Now
+              Go to Login <ArrowRight className="h-4 w-4" />
             </button>
           </div>
         </div>
@@ -181,207 +175,230 @@ const Register = () => {
     );
   }
 
+  // ── Registration Form ───────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[#0A0A0F] flex flex-col text-white transition-smooth">
+    <div className="min-h-screen bg-surface-subtle flex flex-col">
       <Navbar />
 
-      <div className="flex-1 flex items-center justify-center p-6 md:py-12 relative overflow-hidden">
-        {/* Ambient orbs */}
-        <div className="absolute top-10 left-10 w-96 h-96 rounded-full bg-brand-purple/20 blur-[100px] pointer-events-none animate-float" />
-        <div className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-brand-indigo/20 blur-[100px] pointer-events-none animate-float" style={{animationDelay: '2s'}} />
+      <div className="flex-1 flex items-center justify-center p-4 md:py-10 relative overflow-hidden">
+        {/* Decorative blobs */}
+        <div className="absolute top-10 left-10 w-72 h-72 rounded-full bg-brand-100 blur-3xl opacity-50 pointer-events-none animate-float" />
+        <div className="absolute bottom-10 right-10 w-64 h-64 rounded-full bg-violet-100 blur-3xl opacity-40 pointer-events-none animate-float" style={{ animationDelay: '2s' }} />
 
-        <div className="bg-dark-surface rounded-3xl border border-dark-border shadow-2xl max-w-4xl w-full overflow-hidden flex flex-col md:flex-row relative z-10 animate-fade-up">
-          
-          {/* Left panel design */}
-          <div className="bg-gradient-brand p-8 text-white md:w-5/12 flex flex-col justify-between relative overflow-hidden">
-            {/* Pattern overlay */}
-            <div className="absolute inset-0 opacity-10" style={{backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px'}}></div>
-            
+        <div className="bg-white rounded-3xl border border-surface-border shadow-[0_20px_60px_rgba(0,0,0,0.07)] max-w-4xl w-full overflow-hidden flex flex-col md:flex-row relative z-10 animate-blur-in">
+
+          {/* ── Left Panel ─────────────────────────────────────── */}
+          <div className="bg-gradient-cta p-8 text-white md:w-5/12 flex flex-col justify-between relative overflow-hidden">
+            <div
+              className="absolute inset-0 opacity-[0.07]"
+              style={{
+                backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
+                backgroundSize: '24px 24px'
+              }}
+            />
             <div className="relative z-10">
-              <h2 className="text-3xl font-extrabold tracking-tight mb-4">Start your journey today.</h2>
-              <p className="text-white/80 text-sm leading-relaxed mb-6">
-                Join a premium hyperlocal freelance workspace mapping experts directly to neighboring businesses.
+              <div className="flex items-center gap-2.5 mb-8">
+                <div className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
+                  <Zap className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-lg font-black text-white">SkillSphere</span>
+              </div>
+              <h2 className="text-3xl font-black tracking-tight mb-4 leading-tight">
+                Start your journey today.
+              </h2>
+              <p className="text-white/75 text-sm leading-relaxed">
+                Join thousands of professionals connecting locally for secure, efficient, hyperlocal work.
               </p>
             </div>
-            
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-white/90 flex-shrink-0" />
-                <span className="text-sm font-medium">Verify credentials and skills</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-white/90 flex-shrink-0" />
-                <span className="text-sm font-medium">Escrow protected payments</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-white/90 flex-shrink-0" />
-                <span className="text-sm font-medium">Hyperlocal geolocation match</span>
-              </div>
+
+            <div className="space-y-3 relative z-10 mt-8">
+              {[
+                'Free to join — no hidden fees',
+                'Milestone-based escrow payments',
+                'Verified local freelancers',
+                'Real-time messaging',
+              ].map((item) => (
+                <div key={item} className="flex items-center gap-3">
+                  <CheckCircle className="h-4 w-4 text-white/80 flex-shrink-0" />
+                  <span className="text-sm text-white/85 font-medium">{item}</span>
+                </div>
+              ))}
             </div>
-            
-            <p className="text-xs text-white/60 mt-8 relative z-10">© 2026 SkillSphere Inc.</p>
+
+            <p className="text-xs text-white/40 mt-8 relative z-10">© 2026 SkillSphere Inc.</p>
           </div>
 
-          {/* Right panel form */}
-          <div className="p-8 md:w-7/12">
-            <h1 className="text-2xl font-bold text-white mb-6">Create Account</h1>
+          {/* ── Right Panel ────────────────────────────────────── */}
+          <div className="p-8 md:w-7/12 overflow-y-auto max-h-[90vh] md:max-h-none">
+            <h1 className="text-2xl font-black text-slate-900 mb-1">Create your account</h1>
+            <p className="text-slate-400 text-sm mb-6">Choose how you'd like to join SkillSphere</p>
 
-            {/* Role Cards */}
-            <div className="grid grid-cols-3 gap-3 mb-6">
-              {/* Card Client */}
+            {/* ── Role Selector ─────────────────────────────── */}
+            <div className="grid grid-cols-2 gap-3 mb-6">
               <button
                 type="button"
                 onClick={() => setRole('client')}
-                className={`flex flex-col items-center justify-center p-4 rounded-xl border text-center transition-all duration-200 cursor-pointer ${
+                className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 text-center transition-all duration-200 cursor-pointer ${
                   role === 'client'
-                    ? 'border-brand-indigo bg-brand-indigo/10 ring-1 ring-brand-indigo shadow-[0_0_15px_rgba(99,102,241,0.2)]'
-                    : 'border-dark-border bg-[rgba(255,255,255,0.02)] hover:border-[rgba(255,255,255,0.2)] hover:bg-[rgba(255,255,255,0.05)]'
+                    ? 'border-brand-500 bg-brand-50 shadow-sm'
+                    : 'border-surface-border bg-surface-subtle hover:border-brand-200 hover:bg-brand-50/50'
                 }`}
               >
-                <User className={`h-6 w-6 mb-2 ${role === 'client' ? 'text-brand-indigo' : 'text-[#64748B]'}`} />
-                <span className={`text-xs font-bold ${role === 'client' ? 'text-white' : 'text-[#94A3B8]'}`}>Client</span>
+                <User className={`h-6 w-6 mb-2 ${role === 'client' ? 'text-brand-600' : 'text-slate-400'}`} />
+                <span className={`text-sm font-bold ${role === 'client' ? 'text-brand-700' : 'text-slate-500'}`}>I'm a Client</span>
+                <span className={`text-[10px] mt-0.5 ${role === 'client' ? 'text-brand-500' : 'text-slate-400'}`}>I want to hire</span>
               </button>
 
-              {/* Card Freelancer */}
               <button
                 type="button"
                 onClick={() => setRole('freelancer')}
-                className={`flex flex-col items-center justify-center p-4 rounded-xl border text-center transition-all duration-200 cursor-pointer ${
+                className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 text-center transition-all duration-200 cursor-pointer ${
                   role === 'freelancer'
-                    ? 'border-brand-purple bg-brand-purple/10 ring-1 ring-brand-purple shadow-[0_0_15px_rgba(139,92,246,0.2)]'
-                    : 'border-dark-border bg-[rgba(255,255,255,0.02)] hover:border-[rgba(255,255,255,0.2)] hover:bg-[rgba(255,255,255,0.05)]'
+                    ? 'border-violet-500 bg-violet-50 shadow-sm'
+                    : 'border-surface-border bg-surface-subtle hover:border-violet-200 hover:bg-violet-50/50'
                 }`}
               >
-                <Briefcase className={`h-6 w-6 mb-2 ${role === 'freelancer' ? 'text-brand-purple' : 'text-[#64748B]'}`} />
-                <span className={`text-xs font-bold ${role === 'freelancer' ? 'text-white' : 'text-[#94A3B8]'}`}>Freelancer</span>
-              </button>
-
-              {/* Card Admin */}
-              <button
-                type="button"
-                onClick={() => setRole('admin')}
-                className={`flex flex-col items-center justify-center p-4 rounded-xl border text-center transition-all duration-200 cursor-pointer ${
-                  role === 'admin'
-                    ? 'border-amber-500 bg-amber-500/10 ring-1 ring-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
-                    : 'border-dark-border bg-[rgba(255,255,255,0.02)] hover:border-[rgba(255,255,255,0.2)] hover:bg-[rgba(255,255,255,0.05)]'
-                }`}
-              >
-                <ShieldAlert className={`h-6 w-6 mb-2 ${role === 'admin' ? 'text-amber-500' : 'text-[#64748B]'}`} />
-                <span className={`text-xs font-bold ${role === 'admin' ? 'text-white' : 'text-[#94A3B8]'}`}>Admin</span>
+                <Briefcase className={`h-6 w-6 mb-2 ${role === 'freelancer' ? 'text-violet-600' : 'text-slate-400'}`} />
+                <span className={`text-sm font-bold ${role === 'freelancer' ? 'text-violet-700' : 'text-slate-500'}`}>I'm a Freelancer</span>
+                <span className={`text-[10px] mt-0.5 ${role === 'freelancer' ? 'text-violet-500' : 'text-slate-400'}`}>I want to work</span>
               </button>
             </div>
 
-            {role === 'admin' ? (
-              <div className="bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.2)] rounded-xl p-6 text-center shadow-[0_0_20px_rgba(245,158,11,0.1)]">
-                <ShieldAlert className="h-10 w-10 text-amber-500 mx-auto mb-3" />
-                <h3 className="text-md font-bold text-amber-400 mb-1">Administrative Access Only</h3>
-                <p className="text-xs text-[#94A3B8] leading-normal max-w-sm mx-auto">
-                  Administrator profiles cannot be created through the public registration interface. Please contact system IT operations for credential generation or link invitation templates.
-                </p>
-                <Link
-                  to="/login"
-                  className="inline-block mt-4 text-xs font-bold text-amber-500 hover:text-amber-400 underline"
-                >
-                  Log in with admin credentials
-                </Link>
+            {/* ── Google Sign-Up ─────────────────────────────── */}
+            <div className="mb-5">
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
+                Quick sign-up with Google
+              </p>
+              <div className="w-full flex justify-center">
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleError}
+                  theme="outline"
+                  shape="rectangular"
+                  width="368"
+                  text="signup_with"
+                  logo_alignment="left"
+                />
               </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Name */}
-                <div>
-                  <label className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wide mb-1.5">Full Name</label>
+            </div>
+
+            {/* ── Divider ───────────────────────────────────── */}
+            <div className="relative my-5">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-surface-border" />
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="bg-white px-3 text-slate-400 font-medium">Or register with email</span>
+              </div>
+            </div>
+
+            {/* ── Email/Password Form ────────────────────────── */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Full Name */}
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                  Full Name
+                </label>
+                <div className="relative">
+                  <UserCircle className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 rounded-xl border bg-[rgba(255,255,255,0.03)] text-white text-sm focus:outline-none focus:ring-2 transition-smooth ${
-                      validationErrors.name
-                        ? 'border-[#EF4444] focus:ring-[#EF4444]/30 focus:border-[#EF4444]'
-                        : 'border-dark-border focus:ring-brand-indigo/30 focus:border-brand-indigo'
-                    }`}
-                    placeholder="Enter your name"
+                    placeholder="Your full name"
+                    autoComplete="name"
+                    className={`input-clean pl-10 ${validationErrors.name ? 'error' : ''}`}
                   />
-                  {validationErrors.name && (
-                    <p className="text-xs text-rose-500 mt-1 font-medium">{validationErrors.name}</p>
-                  )}
                 </div>
+                {validationErrors.name && (
+                  <p className="text-xs text-red-500 mt-1 font-medium">{validationErrors.name}</p>
+                )}
+              </div>
 
-                {/* Email */}
-                <div>
-                  <label className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wide mb-1.5">Email Address</label>
+              {/* Email */}
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 rounded-xl border bg-[rgba(255,255,255,0.03)] text-white text-sm focus:outline-none focus:ring-2 transition-smooth ${
-                      validationErrors.email
-                        ? 'border-[#EF4444] focus:ring-[#EF4444]/30 focus:border-[#EF4444]'
-                        : 'border-dark-border focus:ring-brand-indigo/30 focus:border-brand-indigo'
-                    }`}
-                    placeholder="example@email.com"
+                    placeholder="you@example.com"
+                    autoComplete="email"
+                    className={`input-clean pl-10 ${validationErrors.email ? 'error' : ''}`}
                   />
-                  {validationErrors.email && (
-                    <p className="text-xs text-rose-500 mt-1 font-medium">{validationErrors.email}</p>
-                  )}
                 </div>
+                {validationErrors.email && (
+                  <p className="text-xs text-red-500 mt-1 font-medium">{validationErrors.email}</p>
+                )}
+              </div>
 
-                {/* Password */}
-                <div>
-                  <label className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wide mb-1.5">Password</label>
+              {/* Password */}
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <input
                     type="password"
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 rounded-xl border bg-[rgba(255,255,255,0.03)] text-white text-sm focus:outline-none focus:ring-2 transition-smooth ${
-                      validationErrors.password
-                        ? 'border-[#EF4444] focus:ring-[#EF4444]/30 focus:border-[#EF4444]'
-                        : 'border-dark-border focus:ring-brand-indigo/30 focus:border-brand-indigo'
-                    }`}
-                    placeholder="••••••••"
+                    placeholder="Min. 6 characters"
+                    autoComplete="new-password"
+                    className={`input-clean pl-10 ${validationErrors.password ? 'error' : ''}`}
                   />
-                  {validationErrors.password && (
-                    <p className="text-xs text-rose-500 mt-1 font-medium">{validationErrors.password}</p>
-                  )}
                 </div>
+                {validationErrors.password && (
+                  <p className="text-xs text-red-500 mt-1 font-medium">{validationErrors.password}</p>
+                )}
+              </div>
 
-                {/* Confirm Password */}
-                <div>
-                  <label className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wide mb-1.5">Confirm Password</label>
+              {/* Confirm Password */}
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <input
                     type="password"
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 rounded-xl border bg-[rgba(255,255,255,0.03)] text-white text-sm focus:outline-none focus:ring-2 transition-smooth ${
-                      validationErrors.confirmPassword
-                        ? 'border-[#EF4444] focus:ring-[#EF4444]/30 focus:border-[#EF4444]'
-                        : 'border-dark-border focus:ring-brand-indigo/30 focus:border-brand-indigo'
-                    }`}
-                    placeholder="••••••••"
+                    placeholder="Repeat your password"
+                    autoComplete="new-password"
+                    className={`input-clean pl-10 ${validationErrors.confirmPassword ? 'error' : ''}`}
                   />
-                  {validationErrors.confirmPassword && (
-                    <p className="text-xs text-rose-500 mt-1 font-medium">{validationErrors.confirmPassword}</p>
-                  )}
                 </div>
+                {validationErrors.confirmPassword && (
+                  <p className="text-xs text-red-500 mt-1 font-medium">{validationErrors.confirmPassword}</p>
+                )}
+              </div>
 
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full flex items-center justify-center py-4 mt-2 bg-gradient-brand text-white rounded-xl font-bold shadow-lg hover-glow-purple hover:scale-[1.01] active:scale-95 transition-all duration-200 text-sm cursor-pointer disabled:opacity-70 disabled:hover:scale-100"
-                >
-                  {loading ? <LoadingSpinner size="sm" color="white" /> : 'Register Account'}
-                </button>
-              </form>
-            )}
+              {/* Submit */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn-brand w-full py-3.5 text-sm mt-1"
+              >
+                {loading
+                  ? <LoadingSpinner size="sm" color="white" />
+                  : <><UserCircle className="h-4 w-4" /> Create Account</>
+                }
+              </button>
+            </form>
 
             {/* Login Link */}
-            <p className="text-center text-xs text-[#94A3B8] mt-6">
+            <p className="text-center text-xs text-slate-400 mt-6">
               Already have an account?{' '}
-              <Link to="/login" className="text-brand-indigo font-bold hover:text-white transition-colors">
+              <Link to="/login" className="text-brand-600 font-bold hover:text-brand-700 transition-colors">
                 Log in
               </Link>
             </p>
@@ -390,11 +407,7 @@ const Register = () => {
       </div>
 
       {toastConfig && (
-        <Toast
-          message={toastConfig.message}
-          type={toastConfig.type}
-          onClose={() => setToastConfig(null)}
-        />
+        <Toast message={toastConfig.message} type={toastConfig.type} onClose={() => setToastConfig(null)} />
       )}
     </div>
   );

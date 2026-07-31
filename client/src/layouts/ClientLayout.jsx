@@ -24,7 +24,7 @@ const ClientLayout = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-bgLight">
+    <div className="min-h-screen flex flex-col bg-surface-subtle">
       <Navbar />
       <div className="flex-1 flex overflow-hidden">
         <Sidebar links={clientLinks} />

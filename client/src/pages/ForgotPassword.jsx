@@ -41,37 +41,37 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] flex flex-col text-white transition-smooth">
+    <div className="min-h-screen bg-surface-subtle flex flex-col">
       <Navbar />
 
       <div className="flex-1 flex items-center justify-center p-6 relative overflow-hidden">
-        {/* Ambient orbs */}
-        <div className="absolute top-20 right-20 w-96 h-96 rounded-full bg-brand-purple/20 blur-[100px] pointer-events-none animate-float" />
+        {/* Decorative blobs */}
+        <div className="absolute top-20 right-20 w-72 h-72 rounded-full bg-brand-100 blur-3xl opacity-50 pointer-events-none animate-float" />
 
-        <div className="bg-dark-surface rounded-3xl border border-dark-border shadow-2xl max-w-md w-full p-8 relative z-10 animate-fade-up">
+        <div className="bg-white rounded-3xl border border-surface-border shadow-[0_20px_60px_rgba(0,0,0,0.08)] max-w-md w-full p-8 relative z-10 animate-blur-in">
           
           <div className="flex items-center gap-2 mb-6">
-            <Link to="/login" className="text-[#94A3B8] hover:text-white transition-colors">
+            <Link to="/login" className="text-slate-400 hover:text-slate-700 transition-colors">
               <ArrowLeft className="h-5 w-5" />
             </Link>
-            <span className="text-xs font-bold uppercase text-[#94A3B8] tracking-wider">Back to Login</span>
+            <span className="text-xs font-bold uppercase text-slate-400 tracking-wider">Back to Login</span>
           </div>
 
           {!submitted ? (
             <>
               <div className="text-center mb-8">
-                <div className="h-16 w-16 bg-brand-purple/10 rounded-full flex items-center justify-center text-brand-purple mx-auto mb-6 shadow-[0_0_20px_rgba(139,92,246,0.2)]">
+                <div className="h-16 w-16 bg-brand-50 border-2 border-brand-200 rounded-full flex items-center justify-center text-brand-600 mx-auto mb-6">
                   <KeyRound className="h-8 w-8" />
                 </div>
-                <h1 className="text-2xl font-bold text-white mb-2">Reset Password</h1>
-                <p className="text-[#94A3B8] text-sm leading-normal">
-                  Enter your email and we'll transmit a password reset URL to reset your account.
+                <h1 className="text-2xl font-black text-slate-900 mb-2">Reset Password</h1>
+                <p className="text-slate-400 text-sm leading-normal">
+                  Enter your email and we'll send a password reset link to your email address.
                 </p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wide mb-1.5">Email Address</label>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Email Address</label>
                   <input
                     type="email"
                     value={email}
@@ -79,20 +79,16 @@ const ForgotPassword = () => {
                       setEmail(e.target.value);
                       if (error) setError('');
                     }}
-                    className={`w-full px-4 py-3 rounded-xl border bg-[rgba(255,255,255,0.03)] text-white text-sm focus:outline-none focus:ring-2 transition-smooth ${
-                      error
-                        ? 'border-[#EF4444] focus:ring-[#EF4444]/30 focus:border-[#EF4444]'
-                        : 'border-dark-border focus:ring-brand-indigo/30 focus:border-brand-indigo'
-                    }`}
-                    placeholder="example@email.com"
+                    className={`input-clean ${error ? 'error' : ''}`}
+                    placeholder="you@example.com"
                   />
-                  {error && <p className="text-xs text-[#EF4444] mt-1 font-medium">{error}</p>}
+                  {error && <p className="text-xs text-red-500 mt-1 font-medium">{error}</p>}
                 </div>
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full flex items-center justify-center py-4 mt-2 bg-gradient-brand text-white rounded-xl font-bold shadow-lg hover-glow-purple hover:scale-[1.01] active:scale-95 transition-all duration-200 text-sm cursor-pointer disabled:opacity-70 disabled:hover:scale-100"
+                  className="btn-brand w-full py-3.5 text-sm mt-2"
                 >
                   {loading ? <LoadingSpinner size="sm" color="white" /> : 'Send Reset Link'}
                 </button>
@@ -100,21 +96,16 @@ const ForgotPassword = () => {
             </>
           ) : (
             <div className="text-center py-4">
-              <div className="h-16 w-16 bg-[#10B981]/10 rounded-full flex items-center justify-center text-[#10B981] mx-auto mb-6 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+              <div className="h-16 w-16 bg-emerald-50 border-2 border-emerald-200 rounded-full flex items-center justify-center text-emerald-600 mx-auto mb-6">
                 <Mail className="h-8 w-8" />
               </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Instructions Sent</h2>
-              <p className="text-[#94A3B8] text-sm mb-6 leading-relaxed">
-                We've sent recovery details to <span className="font-semibold text-white">{email}</span>. Click the link inside the email to finalize password setups.
+              <h2 className="text-2xl font-black text-slate-900 mb-2">Instructions Sent</h2>
+              <p className="text-slate-400 text-sm mb-6 leading-relaxed">
+                We've sent recovery details to <span className="font-bold text-slate-700">{email}</span>. Click the link inside the email to reset your password.
               </p>
-              <div className="bg-[rgba(255,255,255,0.03)] border border-dark-border rounded-lg p-4 mb-6 text-left">
-                <p className="text-xs text-[#94A3B8] font-medium leading-normal">
-                  💡 <span className="font-semibold text-white">Development Log:</span> The reset verification URL is printed in the Node backend console screen.
-                </p>
-              </div>
               <Link
                 to="/login"
-                className="block w-full py-3 bg-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.1)] text-white rounded-xl font-bold transition-all duration-200 text-center text-sm"
+                className="btn-brand block w-full py-3.5 text-sm"
               >
                 Return to Login
               </Link>

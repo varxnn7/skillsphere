@@ -4,6 +4,7 @@ const {
   register,
   login,
   verifyEmail,
+  resendVerificationEmail,
   forgotPassword,
   resetPassword,
   googleOAuth,
@@ -15,6 +16,7 @@ const { protect } = require('../middleware/auth');
 router.post('/register', register);
 router.post('/login', login);
 router.get('/verify-email/:token', verifyEmail);
+router.post('/resend-verification', resendVerificationEmail);
 router.post('/forgot-password', forgotPassword);
 router.put('/reset-password/:token', resetPassword);
 router.post('/google-oauth', googleOAuth);
