@@ -73,20 +73,20 @@ const WriteReview = ({ isOpen, onClose, gigId, revieweeId, gigTitle, onReviewSub
       />
 
       {/* Modal Container */}
-      <div className="bg-[#111118] border border-dark-border/80 w-full max-w-lg rounded-3xl p-6 relative z-10 shadow-[0_0_50px_rgba(139,92,246,0.15)] animate-scale-up space-y-6">
+      <div className="bg-white border border-surface-border/80 w-full max-w-lg rounded-3xl p-6 relative z-10 shadow-[0_0_50px_rgba(139,92,246,0.15)] animate-scale-up space-y-6">
         
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-dark-border/40 pb-4">
+        <div className="flex items-center justify-between border-b border-surface-border/40 pb-4">
           <div className="flex items-center gap-2.5">
             <Award className="h-5 w-5 text-brand-purple" />
             <div>
-              <h3 className="text-md font-extrabold text-white">Leave Feedback</h3>
-              <p className="text-[#94A3B8] text-xs mt-0.5">Share your experience for: <span className="text-white">{gigTitle}</span></p>
+              <h3 className="text-md font-extrabold text-slate-900">Leave Feedback</h3>
+              <p className="text-slate-500 text-xs mt-0.5">Share your experience for: <span className="text-slate-900">{gigTitle}</span></p>
             </div>
           </div>
           <button 
             onClick={onClose}
-            className="p-1.5 rounded-xl border border-dark-border hover:border-white/20 text-[#94A3B8] hover:text-white transition-colors cursor-pointer"
+            className="p-1.5 rounded-xl border border-surface-border hover:border-surface-border text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
           >
             <X className="h-4 w-4" />
           </button>
@@ -96,8 +96,8 @@ const WriteReview = ({ isOpen, onClose, gigId, revieweeId, gigTitle, onReviewSub
         <form onSubmit={handleSubmit} className="space-y-6">
           
           {/* Star Selection */}
-          <div className="space-y-2 text-center bg-white/5 border border-dark-border/40 p-4 rounded-2xl">
-            <span className="block text-xs font-bold text-[#64748B] uppercase tracking-widest">Rate Your Experience</span>
+          <div className="space-y-2 text-center bg-surface-muted border border-surface-border/40 p-4 rounded-2xl">
+            <span className="block text-xs font-bold text-slate-500 uppercase tracking-widest">Rate Your Experience</span>
             <div className="flex justify-center my-1.5">
               <StarRating rating={rating} onChange={setRating} interactive={true} size={32} />
             </div>
@@ -108,7 +108,7 @@ const WriteReview = ({ isOpen, onClose, gigId, revieweeId, gigTitle, onReviewSub
 
           {/* Tag Chips */}
           <div className="space-y-2">
-            <label className="text-xs font-bold text-[#94A3B8] uppercase tracking-wider">Highlight Qualities</label>
+            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Highlight Qualities</label>
             <div className="flex flex-wrap gap-2">
               {availableTags.map((tag) => {
                 const isSelected = selectedTags.includes(tag);
@@ -120,7 +120,7 @@ const WriteReview = ({ isOpen, onClose, gigId, revieweeId, gigTitle, onReviewSub
                     className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
                       isSelected
                         ? 'bg-brand-purple/15 border-brand-purple/40 text-brand-purple shadow-md'
-                        : 'border-dark-border bg-white/5 text-[#94A3B8] hover:border-white/20 hover:text-white'
+                        : 'border-surface-border bg-surface-muted text-slate-500 hover:border-surface-border hover:text-slate-900'
                     }`}
                   >
                     {tag}
@@ -132,7 +132,7 @@ const WriteReview = ({ isOpen, onClose, gigId, revieweeId, gigTitle, onReviewSub
 
           {/* Feedback Comment */}
           <div className="space-y-2">
-            <label className="text-xs font-bold text-[#94A3B8] uppercase tracking-wider flex items-center gap-1.5">
+            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
               <MessageSquare className="h-3.5 w-3.5" />
               Written Review
             </label>
@@ -142,27 +142,27 @@ const WriteReview = ({ isOpen, onClose, gigId, revieweeId, gigTitle, onReviewSub
               placeholder="What was it like working with them? Be detailed, polite, and constructive."
               rows={4}
               maxLength={2000}
-              className="w-full px-4 py-3 rounded-xl border border-dark-border bg-[rgba(255,255,255,0.03)] text-white text-xs placeholder:text-[#475569] focus:outline-none focus:ring-2 focus:ring-brand-purple/30 focus:border-brand-purple transition-smooth resize-none"
+              className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-subtle text-slate-900 text-xs placeholder:text-[#475569] focus:outline-none focus:ring-2 focus:ring-orange-purple/30 focus:border-orange-purple transition-smooth resize-none"
             />
-            <div className="flex justify-between items-center text-[10px] text-[#64748B] font-bold">
+            <div className="flex justify-between items-center text-[10px] text-slate-500 font-bold">
               <span>Min. 10 characters</span>
               <span>{comment.length}/2000</span>
             </div>
           </div>
 
           {/* Footer Submit */}
-          <div className="flex justify-end gap-3 pt-2 border-t border-dark-border/40">
+          <div className="flex justify-end gap-3 pt-2 border-t border-surface-border/40">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2.5 rounded-xl border border-dark-border hover:border-white/20 text-[#94A3B8] hover:text-white font-bold text-xs cursor-pointer transition-colors"
+              className="px-4 py-2.5 rounded-xl border border-surface-border hover:border-surface-border text-slate-500 hover:text-slate-900 font-bold text-xs cursor-pointer transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-5 py-2.5 rounded-xl bg-gradient-brand text-white font-bold text-xs hover-glow-purple flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              className="px-5 py-2.5 rounded-xl bg-gradient-orange text-slate-900 font-bold text-xs hover-glow-orange flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
             >
               {submitting ? 'Submitting...' : 'Submit Feedback'}
               {!submitting && <Send className="h-3.5 w-3.5" />}

@@ -227,15 +227,15 @@ const ProjectTracker = () => {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-2">
-        <div className="w-8 h-8 border-3 border-brand-indigo border-t-transparent rounded-full animate-spin" />
-        <span className="text-xs font-bold text-[#64748B] uppercase tracking-wide">Syncing Project Tracker...</span>
+        <div className="w-8 h-8 border-3 border-orange-600 border-t-transparent rounded-full animate-spin" />
+        <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">Syncing Project Tracker...</span>
       </div>
     );
   }
 
   if (!gig) {
     return (
-      <div className="text-center py-12 text-xs font-bold text-[#64748B]">
+      <div className="text-center py-12 text-xs font-bold text-slate-500">
         Failed to fetch gig project tracker.
       </div>
     );
@@ -268,30 +268,30 @@ const ProjectTracker = () => {
       )}
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-dark-border/40 pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-surface-border/40 pb-6">
         <div>
           <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/30 mb-2">
             🚀 Active Project Board
           </span>
-          <h1 className="text-xl md:text-2xl font-extrabold text-white">{gig.title}</h1>
-          <div className="flex flex-wrap gap-4 text-xs text-[#94A3B8] mt-1.5 font-medium">
-            <span>Client: <strong className="text-white">{gig.client?.name}</strong></span>
-            <span>Freelancer: <strong className="text-white">{acceptedProposal?.freelancer?.name || 'Unassigned'}</strong></span>
-            <span>Status: <strong className="text-brand-indigo capitalize">{gig.status}</strong></span>
+          <h1 className="text-xl md:text-2xl font-extrabold text-slate-900">{gig.title}</h1>
+          <div className="flex flex-wrap gap-4 text-xs text-slate-500 mt-1.5 font-medium">
+            <span>Client: <strong className="text-slate-900">{gig.client?.name}</strong></span>
+            <span>Freelancer: <strong className="text-slate-900">{acceptedProposal?.freelancer?.name || 'Unassigned'}</strong></span>
+            <span>Status: <strong className="text-orange-600 capitalize">{gig.status}</strong></span>
           </div>
         </div>
 
         {/* Progress Bar and Indicator */}
-        <div className="flex items-center gap-4 bg-dark-surface p-4 rounded-xl border border-dark-border w-full md:w-auto min-w-[200px]">
-          <div className="w-12 h-12 rounded-full border-4 border-brand-indigo/10 border-t-brand-indigo flex items-center justify-center font-extrabold text-sm text-white shrink-0">
+        <div className="flex items-center gap-4 bg-white p-4 rounded-xl border border-surface-border w-full md:w-auto min-w-[200px]">
+          <div className="w-12 h-12 rounded-full border-4 border-orange-600/10 border-t-orange-600 flex items-center justify-center font-extrabold text-sm text-slate-900 shrink-0">
             {progressPercent}%
           </div>
           <div className="w-full">
-            <h4 className="text-xs font-bold text-white">Project Progress</h4>
-            <span className="text-[10px] text-[#64748B] font-bold uppercase tracking-wider block mt-0.5">
+            <h4 className="text-xs font-bold text-slate-900">Project Progress</h4>
+            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mt-0.5">
               {completedMilestones} of {totalMilestones} Milestones Approved
             </span>
-            <div className="w-full bg-white/5 rounded-full h-1.5 mt-2 overflow-hidden border border-dark-border">
+            <div className="w-full bg-surface-muted rounded-full h-1.5 mt-2 overflow-hidden border border-surface-border">
               <div className="bg-[#10B981] h-1.5 rounded-full transition-all duration-500" style={{ width: `${progressPercent}%` }}></div>
             </div>
           </div>
@@ -300,7 +300,7 @@ const ProjectTracker = () => {
 
       {/* Milestones List */}
       <div className="space-y-6">
-        <h2 className="text-md font-bold text-white uppercase tracking-wider">Milestone Board</h2>
+        <h2 className="text-md font-bold text-slate-900 uppercase tracking-wider">Milestone Board</h2>
         
         <div className="grid grid-cols-1 gap-6">
           {milestonesList.map((m, idx) => {
@@ -320,7 +320,7 @@ const ProjectTracker = () => {
             return (
               <div
                 key={idx}
-                className="bg-dark-surface p-6 rounded-2xl border border-dark-border flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-[rgba(255,255,255,0.05)] transition-all"
+                className="bg-white p-6 rounded-2xl border border-surface-border flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-[rgba(255,255,255,0.05)] transition-all"
               >
                 {/* Left Side: Status Circle and Info */}
                 <div className="flex items-start gap-4 flex-1">
@@ -340,30 +340,30 @@ const ProjectTracker = () => {
                         <div className="w-2.5 h-2.5 rounded-full bg-blue-400 animate-pulse" />
                       </div>
                     ) : (
-                      <div className="w-5 h-5 rounded-full bg-white/5 border border-dark-border flex items-center justify-center text-[#64748B]" />
+                      <div className="w-5 h-5 rounded-full bg-surface-muted border border-surface-border flex items-center justify-center text-slate-500" />
                     )}
                   </div>
 
                   {/* Milestone Details */}
                   <div className="space-y-2 flex-1">
                     <div className="flex flex-wrap items-center gap-3">
-                      <span className="text-xs font-bold text-white uppercase tracking-wide">
+                      <span className="text-xs font-bold text-slate-900 uppercase tracking-wide">
                         Milestone #{idx + 1}: {m.title}
                       </span>
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wide border ${
                         displayStatus === 'approved' || displayStatus === 'released' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                        displayStatus === 'submitted' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
+                        displayStatus === 'submitted' ? 'bg-orange-500/10 text-purple-400 border-orange-500/20' :
                         displayStatus === 'in-progress' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
                         displayStatus === 'funded' ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' :
                         displayStatus === 'disputed' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
-                        'bg-white/5 text-[#94A3B8] border-dark-border'
+                        'bg-surface-muted text-slate-500 border-surface-border'
                       }`}>
                         {displayStatus}
                       </span>
                     </div>
-                    <p className="text-xs text-[#94A3B8] leading-relaxed whitespace-pre-line">{m.description || 'No detailed instructions.'}</p>
+                    <p className="text-xs text-slate-500 leading-relaxed whitespace-pre-line">{m.description || 'No detailed instructions.'}</p>
                     
-                    <div className="flex flex-wrap gap-4 pt-1 text-[10px] font-bold text-[#64748B] uppercase tracking-wide">
+                    <div className="flex flex-wrap gap-4 pt-1 text-[10px] font-bold text-slate-500 uppercase tracking-wide">
                       {m.dueDate && (
                         <span>Est. Due: {new Date(m.dueDate).toLocaleDateString('en-IN')}</span>
                       )}
@@ -381,7 +381,7 @@ const ProjectTracker = () => {
                       {displayStatus === 'pending' && acceptedProposal && (
                         <button
                           onClick={() => navigate(`/client/pay/${acceptedProposal._id}?milestone=${idx}`)}
-                          className="px-4 py-2 bg-gradient-brand text-white text-xs font-bold rounded-xl text-center hover-glow-purple cursor-pointer flex items-center justify-center gap-1.5"
+                          className="px-4 py-2 bg-gradient-orange text-slate-900 text-xs font-bold rounded-xl text-center hover-glow-orange cursor-pointer flex items-center justify-center gap-1.5"
                         >
                           <Play className="h-3.5 w-3.5" />
                           Fund Escrow
@@ -392,13 +392,13 @@ const ProjectTracker = () => {
                         <div className="flex gap-2">
                           <button
                             onClick={() => setShowRevisionModal(idx)}
-                            className="px-3 py-2 bg-white/5 border border-dark-border hover:border-yellow-500/30 text-[#94A3B8] hover:text-yellow-400 text-xs font-bold rounded-xl cursor-pointer transition-colors"
+                            className="px-3 py-2 bg-surface-muted border border-surface-border hover:border-yellow-500/30 text-slate-500 hover:text-yellow-400 text-xs font-bold rounded-xl cursor-pointer transition-colors"
                           >
                             Request Revision
                           </button>
                           <button
                             onClick={() => openApproveConfirm(idx)}
-                            className="px-3 py-2 bg-[#10B981] hover:bg-[#10B981]/90 text-white text-xs font-bold rounded-xl cursor-pointer flex items-center gap-1 shadow-lg shadow-green-500/10"
+                            className="px-3 py-2 bg-[#10B981] hover:bg-[#10B981]/90 text-slate-900 text-xs font-bold rounded-xl cursor-pointer flex items-center gap-1 shadow-lg shadow-green-500/10"
                           >
                             <CheckCircle2 className="h-3.5 w-3.5" />
                             Approve Milestone
@@ -415,7 +415,7 @@ const ProjectTracker = () => {
                       {(displayStatus === 'funded' || displayStatus === 'pending') && milestonePayment?.status === 'escrow' && (
                         <button
                           onClick={() => handleMarkInProgress(idx)}
-                          className="px-4 py-2 bg-brand-indigo hover:bg-brand-indigo/90 text-white text-xs font-bold rounded-xl cursor-pointer transition-colors text-center"
+                          className="px-4 py-2 bg-orange-600 hover:bg-orange-600/90 text-slate-900 text-xs font-bold rounded-xl cursor-pointer transition-colors text-center"
                         >
                           Mark as In Progress
                         </button>
@@ -425,7 +425,7 @@ const ProjectTracker = () => {
                       {displayStatus === 'in-progress' && (
                         <button
                           onClick={() => setSubmitModalIndex(idx)}
-                          className="px-4 py-2 bg-brand-indigo hover:bg-brand-indigo/90 text-white text-xs font-bold rounded-xl cursor-pointer flex items-center gap-1.5 text-center"
+                          className="px-4 py-2 bg-orange-600 hover:bg-orange-600/90 text-slate-900 text-xs font-bold rounded-xl cursor-pointer flex items-center gap-1.5 text-center"
                         >
                           <FileUp className="h-3.5 w-3.5" />
                           Submit for Review
@@ -457,36 +457,36 @@ const ProjectTracker = () => {
       {/* Freelancer Submit Deliverables Modal */}
       {submitModalIndex !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <form onSubmit={handleDeliverableSubmit} className="bg-dark-surface w-full max-w-md rounded-2xl border border-dark-border p-6 space-y-4 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-            <h3 className="text-md font-bold text-white">Submit Milestone Deliverables</h3>
-            <p className="text-xs text-[#94A3B8]">Upload the deliverable files and include explanation notes. The client will review these to release escrow payment.</p>
+          <form onSubmit={handleDeliverableSubmit} className="bg-white w-full max-w-md rounded-2xl border border-surface-border p-6 space-y-4 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+            <h3 className="text-md font-bold text-slate-900">Submit Milestone Deliverables</h3>
+            <p className="text-xs text-slate-500">Upload the deliverable files and include explanation notes. The client will review these to release escrow payment.</p>
             
             <div className="space-y-1.5">
-              <label className="block text-[10px] font-bold text-[#64748B] uppercase tracking-wide">Attach File (ZIP, PDF, Image)</label>
-              <div className="p-4 border border-dashed border-dark-border rounded-xl flex flex-col items-center justify-center text-center gap-2">
-                <FileUp className="h-6 w-6 text-[#64748B]" />
+              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide">Attach File (ZIP, PDF, Image)</label>
+              <div className="p-4 border border-dashed border-surface-border rounded-xl flex flex-col items-center justify-center text-center gap-2">
+                <FileUp className="h-6 w-6 text-slate-500" />
                 <input
                   type="file"
                   onChange={(e) => setDeliverableFile(e.target.files[0])}
-                  className="text-xs text-[#94A3B8] file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-xs file:bg-white/5 file:text-white file:cursor-pointer w-full"
+                  className="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-xs file:bg-surface-muted file:text-slate-900 file:cursor-pointer w-full"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-[10px] font-bold text-[#64748B] uppercase tracking-wide">Submission Notes</label>
+              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide">Submission Notes</label>
               <textarea
                 rows="3"
                 value={submissionNotes}
                 onChange={(e) => setSubmissionNotes(e.target.value)}
                 placeholder="Explain the work done, design decisions, or file paths..."
-                className="w-full px-4 py-3 rounded-xl border border-dark-border bg-dark-surface text-white text-xs focus:ring-2 focus:ring-brand-indigo resize-none"
+                className="w-full px-4 py-3 rounded-xl border border-surface-border bg-white text-slate-900 text-xs focus:ring-2 focus:ring-orange-600 resize-none"
                 required
               />
             </div>
 
-            <div className="flex gap-3 justify-end border-t border-dark-border/40 pt-4">
+            <div className="flex gap-3 justify-end border-t border-surface-border/40 pt-4">
               <button
                 type="button"
                 onClick={() => {
@@ -494,14 +494,14 @@ const ProjectTracker = () => {
                   setDeliverableFile(null);
                   setSubmissionNotes('');
                 }}
-                className="px-4 py-2 text-xs font-bold rounded-xl bg-white/5 border border-dark-border text-[#94A3B8]"
+                className="px-4 py-2 text-xs font-bold rounded-xl bg-surface-muted border border-surface-border text-slate-500"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={submittingFile}
-                className="px-4 py-2 text-xs font-bold rounded-xl bg-brand-indigo text-white disabled:opacity-50"
+                className="px-4 py-2 text-xs font-bold rounded-xl bg-orange-600 text-slate-900 disabled:opacity-50"
               >
                 {submittingFile ? 'Uploading deliverables...' : 'Submit Review'}
               </button>
@@ -513,36 +513,36 @@ const ProjectTracker = () => {
       {/* Client Revision Modal */}
       {showRevisionModal !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-dark-surface w-full max-w-md rounded-2xl border border-dark-border p-6 space-y-4 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-            <h3 className="text-md font-bold text-white flex items-center gap-2">
+          <div className="bg-white w-full max-w-md rounded-2xl border border-surface-border p-6 space-y-4 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+            <h3 className="text-md font-bold text-slate-900 flex items-center gap-2">
               <Undo className="h-5 w-5 text-yellow-500" />
               <span>Revision Instructions</span>
             </h3>
-            <p className="text-xs text-[#94A3B8]">Describe what improvements or changes the freelancer needs to deliver for Milestone #{showRevisionModal + 1}.</p>
+            <p className="text-xs text-slate-500">Describe what improvements or changes the freelancer needs to deliver for Milestone #{showRevisionModal + 1}.</p>
             
             <textarea
               rows="4"
               value={revisionNotes}
               onChange={(e) => setRevisionNotes(e.target.value)}
               placeholder="Provide clear details on what was missing or needs refinement..."
-              className="w-full px-4 py-3 rounded-xl border border-dark-border bg-dark-surface text-white text-xs focus:ring-2 focus:ring-brand-indigo resize-none"
+              className="w-full px-4 py-3 rounded-xl border border-surface-border bg-white text-slate-900 text-xs focus:ring-2 focus:ring-orange-600 resize-none"
               required
             />
 
-            <div className="flex gap-3 justify-end border-t border-dark-border/40 pt-4">
+            <div className="flex gap-3 justify-end border-t border-surface-border/40 pt-4">
               <button
                 onClick={() => {
                   setShowRevisionModal(null);
                   setRevisionNotes('');
                 }}
-                className="px-4 py-2 text-xs font-bold rounded-xl bg-white/5 border border-dark-border text-[#94A3B8]"
+                className="px-4 py-2 text-xs font-bold rounded-xl bg-surface-muted border border-surface-border text-slate-500"
               >
                 Cancel
               </button>
               <button
                 onClick={handleRequestRevision}
                 disabled={sendingRevision}
-                className="px-4 py-2 text-xs font-bold rounded-xl bg-brand-indigo text-white disabled:opacity-50"
+                className="px-4 py-2 text-xs font-bold rounded-xl bg-orange-600 text-slate-900 disabled:opacity-50"
               >
                 {sendingRevision ? 'Sending...' : 'Send Request'}
               </button>

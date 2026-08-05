@@ -202,19 +202,19 @@ const Messages = () => {
   const messageGroups = groupMessagesByDate(messages);
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] text-white flex flex-col transition-smooth">
+    <div className="min-h-screen bg-surface-subtle text-slate-900 flex flex-col transition-smooth">
       <Navbar />
 
       <div className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 flex relative z-10 h-[calc(100vh-70px)] overflow-hidden">
         
         {/* Main portal grid container */}
-        <div className="w-full flex bg-[#111118] border border-dark-border/80 rounded-3xl overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.3)]">
+        <div className="w-full flex bg-white border border-surface-border/80 rounded-3xl overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.3)]">
           
           {/* LEFT PANEL: Conversation lists */}
-          <div className={`w-full md:w-80 border-r border-dark-border/50 flex flex-col ${conversationId ? 'hidden md:flex' : 'flex'}`}>
+          <div className={`w-full md:w-80 border-r border-surface-border/50 flex flex-col ${conversationId ? 'hidden md:flex' : 'flex'}`}>
             {/* Search Header */}
-            <div className="p-4 border-b border-dark-border/40 space-y-4">
-              <h2 className="text-lg font-extrabold text-white">Inbox Chat</h2>
+            <div className="p-4 border-b border-surface-border/40 space-y-4">
+              <h2 className="text-lg font-extrabold text-slate-900">Inbox Chat</h2>
               <div className="relative">
                 <Search className="absolute left-3.5 top-3 h-4 w-4 text-[#475569]" />
                 <input
@@ -222,15 +222,15 @@ const Messages = () => {
                   placeholder="Search chats..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-dark-border bg-[rgba(255,255,255,0.02)] text-white text-xs placeholder:text-[#475569] focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple transition-smooth"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-surface-border bg-surface-subtle text-slate-900 text-xs placeholder:text-[#475569] focus:outline-none focus:ring-2 focus:ring-orange-purple/20 focus:border-orange-purple transition-smooth"
                 />
               </div>
             </div>
 
             {/* Convo List */}
-            <div className="flex-1 overflow-y-auto divide-y divide-dark-border/30 scrollbar-premium">
+            <div className="flex-1 overflow-y-auto divide-y divide-surface-border/30 ">
               {filteredConversations.length === 0 ? (
-                <div className="py-20 text-center text-xs text-[#94A3B8] flex flex-col items-center justify-center gap-2">
+                <div className="py-20 text-center text-xs text-slate-500 flex flex-col items-center justify-center gap-2">
                   <UserIcon className="h-6 w-6 text-slate-600" />
                   No conversations found
                 </div>
@@ -245,8 +245,8 @@ const Messages = () => {
                     <div
                       key={conv._id}
                       onClick={() => navigate(`/messages/${conv._id}`)}
-                      className={`p-4 flex items-center gap-3 hover:bg-white/5 transition-all cursor-pointer relative ${
-                        isActive ? 'bg-white/5 border-l-4 border-brand-purple' : ''
+                      className={`p-4 flex items-center gap-3 hover:bg-surface-muted transition-all cursor-pointer relative ${
+                        isActive ? 'bg-surface-muted border-l-4 border-brand-purple' : ''
                       }`}
                     >
                       {/* Avatar with online dot */}
@@ -254,7 +254,7 @@ const Messages = () => {
                         <img
                           src={recipient.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=80'}
                           alt={recipient.name}
-                          className="h-10 w-10 rounded-full object-cover border border-dark-border/60"
+                          className="h-10 w-10 rounded-full object-cover border border-surface-border/60"
                         />
                         {isOnline && (
                           <span className="absolute bottom-0 right-0 h-3 w-3 bg-[#10B981] border-2 border-[#111118] rounded-full" />
@@ -264,19 +264,19 @@ const Messages = () => {
                       {/* Summary details */}
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-center">
-                          <h4 className="text-xs font-bold text-white truncate">{recipient.name}</h4>
-                          <span className="text-[10px] text-[#64748B] font-medium">
+                          <h4 className="text-xs font-bold text-slate-900 truncate">{recipient.name}</h4>
+                          <span className="text-[10px] text-slate-500 font-medium">
                             {conv.lastMessageAt ? new Date(conv.lastMessageAt).toLocaleDateString(undefined, { hour: '2-digit', minute: '2-digit' }) : ''}
                           </span>
                         </div>
-                        <p className={`text-[11px] truncate mt-1 leading-normal ${isUnread ? 'text-white font-extrabold' : 'text-[#94A3B8]'}`}>
+                        <p className={`text-[11px] truncate mt-1 leading-normal ${isUnread ? 'text-slate-900 font-extrabold' : 'text-slate-500'}`}>
                           {conv.lastMessage?.type === 'image' ? 'Sent an image' : conv.lastMessage?.type === 'file' ? 'Shared a document' : conv.lastMessage?.content || 'No messages yet'}
                         </p>
                       </div>
 
                       {/* Unread dot badge */}
                       {isUnread && (
-                        <span className="h-4 w-4 bg-brand-purple text-[9px] font-extrabold text-white flex items-center justify-center rounded-full">
+                        <span className="h-4 w-4 bg-brand-purple text-[9px] font-extrabold text-slate-900 flex items-center justify-center rounded-full">
                           {conv.unreadCountCurrent}
                         </span>
                       )}
@@ -292,11 +292,11 @@ const Messages = () => {
             {activeConv ? (
               <>
                 {/* Header */}
-                <div className="p-4 border-b border-dark-border/40 flex justify-between items-center bg-[#111118]/80 backdrop-blur-md">
+                <div className="p-4 border-b border-surface-border/40 flex justify-between items-center bg-white/80 backdrop-blur-md">
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => navigate('/messages')}
-                      className="md:hidden p-1.5 rounded-xl border border-dark-border text-[#94A3B8] hover:text-white cursor-pointer mr-1"
+                      className="md:hidden p-1.5 rounded-xl border border-surface-border text-slate-500 hover:text-slate-900 cursor-pointer mr-1"
                     >
                       <ArrowLeft className="h-4 w-4" />
                     </button>
@@ -305,7 +305,7 @@ const Messages = () => {
                       <img
                         src={getRecipient(activeConv).avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=80'}
                         alt={getRecipient(activeConv).name}
-                        className="h-10 w-10 rounded-full object-cover border border-dark-border/60"
+                        className="h-10 w-10 rounded-full object-cover border border-surface-border/60"
                       />
                       {onlineUsers.includes(getRecipient(activeConv)._id) && (
                         <span className="absolute bottom-0 right-0 h-3 w-3 bg-[#10B981] border-2 border-[#111118] rounded-full" />
@@ -313,8 +313,8 @@ const Messages = () => {
                     </div>
 
                     <div>
-                      <h3 className="text-xs font-bold text-white">{getRecipient(activeConv).name}</h3>
-                      <p className="text-[10px] text-[#94A3B8] mt-0.5 font-medium uppercase tracking-wider">
+                      <h3 className="text-xs font-bold text-slate-900">{getRecipient(activeConv).name}</h3>
+                      <p className="text-[10px] text-slate-500 mt-0.5 font-medium uppercase tracking-wider">
                         {onlineUsers.includes(getRecipient(activeConv)._id) ? 'Online' : 'Offline'}
                       </p>
                     </div>
@@ -324,18 +324,18 @@ const Messages = () => {
                   {activeConv.gig && (
                     <div className="hidden lg:flex flex-col items-end px-3 py-1.5 rounded-xl border border-brand-purple/20 bg-brand-purple/5 text-[10px] font-bold">
                       <span className="text-brand-purple uppercase tracking-wider">Gig Context</span>
-                      <span className="text-white mt-0.5 truncate max-w-[150px]">{activeConv.gig.title}</span>
+                      <span className="text-slate-900 mt-0.5 truncate max-w-[150px]">{activeConv.gig.title}</span>
                     </div>
                   )}
                 </div>
 
                 {/* Messages Ledger Display */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-premium bg-[#0A0A0F]/50">
+                <div className="flex-1 overflow-y-auto p-4 space-y-6  bg-surface-subtle/50">
                   {messageGroups.map(([date, msgs]) => (
                     <div key={date} className="space-y-4">
                       {/* Date separator */}
                       <div className="flex justify-center">
-                        <span className="px-3 py-1 rounded-full bg-white/5 border border-dark-border/30 text-[9px] font-extrabold text-[#64748B] uppercase tracking-wider">
+                        <span className="px-3 py-1 rounded-full bg-surface-muted border border-surface-border/30 text-[9px] font-extrabold text-slate-500 uppercase tracking-wider">
                           {date}
                         </span>
                       </div>
@@ -354,13 +354,13 @@ const Messages = () => {
                               <div
                                 className={`p-3 rounded-2xl text-xs leading-relaxed shadow-sm ${
                                   isMe
-                                    ? 'bg-brand-purple text-white rounded-tr-none'
-                                    : 'bg-dark-surface border border-dark-border/80 text-[#E2E8F0] rounded-tl-none'
+                                    ? 'bg-brand-purple text-slate-900 rounded-tr-none'
+                                    : 'bg-white border border-surface-border/80 text-slate-700 rounded-tl-none'
                                 }`}
                               >
                                 {/* Media attachment block */}
                                 {msg.type === 'image' && (
-                                  <div className="mb-2 overflow-hidden rounded-lg border border-dark-border/30">
+                                  <div className="mb-2 overflow-hidden rounded-lg border border-surface-border/30">
                                     <img src={msg.fileUrl} alt="attachment" className="max-h-48 object-cover w-full" />
                                   </div>
                                 )}
@@ -370,12 +370,12 @@ const Messages = () => {
                                     href={msg.fileUrl}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="mb-2 p-2 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2 hover:bg-white/10 transition-colors"
+                                    className="mb-2 p-2 rounded-xl bg-surface-muted border border-white/10 flex items-center gap-2 hover:bg-surface-subtle transition-colors"
                                   >
                                     <FileText className="h-5 w-5 text-brand-purple" />
                                     <div className="flex-1 min-w-0 text-left">
-                                      <p className="text-[11px] font-bold truncate text-white">{msg.fileName}</p>
-                                      <p className="text-[9px] text-[#94A3B8]">{(msg.fileSize / 1024).toFixed(1)} KB</p>
+                                      <p className="text-[11px] font-bold truncate text-slate-900">{msg.fileName}</p>
+                                      <p className="text-[9px] text-slate-500">{(msg.fileSize / 1024).toFixed(1)} KB</p>
                                     </div>
                                   </a>
                                 )}
@@ -384,7 +384,7 @@ const Messages = () => {
                               </div>
 
                               {/* Time + Receipt ticks */}
-                              <div className={`flex items-center gap-1.5 text-[9px] text-[#64748B] font-bold ${isMe ? 'justify-end' : 'justify-start'}`}>
+                              <div className={`flex items-center gap-1.5 text-[9px] text-slate-500 font-bold ${isMe ? 'justify-end' : 'justify-start'}`}>
                                 <span>
                                   {new Date(msg.createdAt).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
                                 </span>
@@ -406,7 +406,7 @@ const Messages = () => {
                   {/* Typing Indicator */}
                   {typingUsers[conversationId]?.length > 0 && (
                     <div className="flex justify-start">
-                      <div className="p-3 bg-dark-surface border border-dark-border/60 rounded-2xl rounded-tl-none flex items-center gap-1.5">
+                      <div className="p-3 bg-white border border-surface-border/60 rounded-2xl rounded-tl-none flex items-center gap-1.5">
                         <div className="h-2 w-2 bg-brand-purple rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                         <div className="h-2 w-2 bg-brand-purple rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                         <div className="h-2 w-2 bg-brand-purple rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -418,7 +418,7 @@ const Messages = () => {
                 </div>
 
                 {/* Input area */}
-                <div className="p-4 border-t border-dark-border/40 bg-[#111118]">
+                <div className="p-4 border-t border-surface-border/40 bg-white">
                   
                   {/* File Upload Progress */}
                   {uploading && (
@@ -436,18 +436,18 @@ const Messages = () => {
                     <div className="mb-3 p-3 rounded-2xl border border-brand-purple/20 bg-brand-purple/5 flex items-center justify-between">
                       <div className="flex items-center gap-2.5 min-w-0">
                         {attachment.type === 'image' ? (
-                          <img src={attachment.url} alt="preview" className="h-10 w-10 rounded-lg object-cover border border-dark-border" />
+                          <img src={attachment.url} alt="preview" className="h-10 w-10 rounded-lg object-cover border border-surface-border" />
                         ) : (
                           <FileText className="h-8 w-8 text-brand-purple flex-shrink-0" />
                         )}
                         <div className="min-w-0 text-left">
-                          <p className="text-[11px] font-bold text-white truncate">{attachment.name}</p>
-                          <p className="text-[9px] text-[#94A3B8]">{(attachment.size / 1024).toFixed(1)} KB</p>
+                          <p className="text-[11px] font-bold text-slate-900 truncate">{attachment.name}</p>
+                          <p className="text-[9px] text-slate-500">{(attachment.size / 1024).toFixed(1)} KB</p>
                         </div>
                       </div>
                       <button 
                         onClick={() => setAttachment(null)}
-                        className="text-[#64748B] hover:text-white text-xs font-bold cursor-pointer"
+                        className="text-slate-500 hover:text-slate-900 text-xs font-bold cursor-pointer"
                       >
                         Remove
                       </button>
@@ -459,7 +459,7 @@ const Messages = () => {
                     
                     {/* File Attachment Dropdowns */}
                     <div className="flex gap-1">
-                      <label className="p-2.5 rounded-xl border border-dark-border hover:border-white/20 text-[#94A3B8] hover:text-white cursor-pointer hover:bg-white/5 transition-colors">
+                      <label className="p-2.5 rounded-xl border border-surface-border hover:border-surface-border text-slate-500 hover:text-slate-900 cursor-pointer hover:bg-surface-muted transition-colors">
                         <Paperclip className="h-4 w-4" />
                         <input
                           type="file"
@@ -468,7 +468,7 @@ const Messages = () => {
                           accept=".pdf,.doc,.docx"
                         />
                       </label>
-                      <label className="p-2.5 rounded-xl border border-dark-border hover:border-white/20 text-[#94A3B8] hover:text-white cursor-pointer hover:bg-white/5 transition-colors">
+                      <label className="p-2.5 rounded-xl border border-surface-border hover:border-surface-border text-slate-500 hover:text-slate-900 cursor-pointer hover:bg-surface-muted transition-colors">
                         <ImageIcon className="h-4 w-4" />
                         <input
                           type="file"
@@ -485,13 +485,13 @@ const Messages = () => {
                       value={inputText}
                       onChange={handleInputChange}
                       disabled={uploading}
-                      className="flex-1 px-4 py-3 rounded-xl border border-dark-border bg-[rgba(255,255,255,0.02)] text-white text-xs focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple transition-smooth"
+                      className="flex-1 px-4 py-3 rounded-xl border border-surface-border bg-surface-subtle text-slate-900 text-xs focus:outline-none focus:ring-2 focus:ring-orange-purple/20 focus:border-orange-purple transition-smooth"
                     />
 
                     <button
                       type="submit"
                       disabled={uploading || (!inputText.trim() && !attachment)}
-                      className="p-3 bg-gradient-brand text-white rounded-xl shadow-lg hover-glow-purple flex items-center justify-center hover:scale-105 active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+                      className="p-3 bg-gradient-orange text-slate-900 rounded-xl shadow-lg hover-glow-orange flex items-center justify-center hover:scale-105 active:scale-95 transition-all cursor-pointer disabled:opacity-50"
                     >
                       <Send className="h-4 w-4" />
                     </button>
@@ -504,8 +504,8 @@ const Messages = () => {
                 <div className="h-16 w-16 bg-brand-purple/10 border border-brand-purple/25 rounded-3xl flex items-center justify-center text-brand-purple mx-auto">
                   <Send className="h-6 w-6" />
                 </div>
-                <h3 className="text-md font-extrabold text-white">Select a Conversation</h3>
-                <p className="text-xs text-[#94A3B8] leading-relaxed">
+                <h3 className="text-md font-extrabold text-slate-900">Select a Conversation</h3>
+                <p className="text-xs text-slate-500 leading-relaxed">
                   Start messaging freelancers and clients directly from your inbox list.
                 </p>
               </div>

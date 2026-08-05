@@ -15,7 +15,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       <button
         onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="p-2.5 rounded-xl border border-dark-border bg-dark-surface/50 text-[#94A3B8] hover:text-white hover:border-brand-indigo/50 disabled:opacity-40 disabled:hover:text-[#94A3B8] disabled:hover:border-dark-border transition-colors cursor-pointer"
+        className="p-2.5 rounded-xl border border-surface-border bg-white text-slate-400 hover:text-orange-600 hover:border-orange-300 disabled:opacity-40 disabled:hover:text-slate-400 disabled:hover:border-surface-border transition-colors cursor-pointer shadow-sm"
       >
         <ChevronLeft className="h-5 w-5" />
       </button>
@@ -25,11 +25,11 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         <button
           key={page}
           onClick={() => onPageChange(page)}
-          className={`h-10 w-10 rounded-xl font-bold transition-all ${
+          className={`h-10 w-10 rounded-xl font-bold transition-all cursor-pointer ${
             currentPage === page
-              ? 'bg-gradient-brand text-white shadow-md shadow-brand-indigo/25'
-              : 'border border-dark-border bg-dark-surface/30 text-[#94A3B8] hover:text-white hover:border-brand-indigo/50'
-          } cursor-pointer`}
+              ? 'bg-gradient-orange text-slate-900 shadow-md shadow-orange-500/25'
+              : 'border border-surface-border bg-white text-slate-500 hover:text-orange-600 hover:border-orange-300'
+          }`}
         >
           {page}
         </button>
@@ -39,7 +39,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       <button
         onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="p-2.5 rounded-xl border border-dark-border bg-dark-surface/50 text-[#94A3B8] hover:text-white hover:border-brand-indigo/50 disabled:opacity-40 disabled:hover:text-[#94A3B8] disabled:hover:border-dark-border transition-colors cursor-pointer"
+        className="p-2.5 rounded-xl border border-surface-border bg-white text-slate-400 hover:text-orange-600 hover:border-orange-300 disabled:opacity-40 disabled:hover:text-slate-400 disabled:hover:border-surface-border transition-colors cursor-pointer shadow-sm"
       >
         <ChevronRight className="h-5 w-5" />
       </button>

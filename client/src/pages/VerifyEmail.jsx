@@ -38,7 +38,7 @@ const VerifyEmail = () => {
 
       <div className="flex-1 flex items-center justify-center p-6 relative overflow-hidden">
         {/* Decorative blobs */}
-        <div className="absolute top-20 right-20 w-72 h-72 rounded-full bg-brand-100 blur-3xl opacity-50 pointer-events-none animate-float" />
+        <div className="absolute top-20 right-20 w-72 h-72 rounded-full bg-orange-100 blur-3xl opacity-50 pointer-events-none animate-float" />
         <div className="absolute bottom-20 left-20 w-64 h-64 rounded-full bg-emerald-100 blur-3xl opacity-40 pointer-events-none animate-float" style={{ animationDelay: '1s' }} />
 
         <div className="bg-white rounded-3xl border border-surface-border shadow-[0_20px_60px_rgba(0,0,0,0.08)] max-w-md w-full p-8 text-center relative z-10 animate-blur-in">
@@ -80,7 +80,7 @@ const VerifyEmail = () => {
                 <Link to="/register" className="btn-brand block w-full py-3 text-sm text-center">
                   Create New Account
                 </Link>
-                <Link to="/" className="text-xs font-semibold text-brand-600 hover:text-brand-700 transition-colors">
+                <Link to="/" className="text-xs font-semibold text-orange-600 hover:text-orange-700 transition-colors">
                   Go to Homepage
                 </Link>
               </div>

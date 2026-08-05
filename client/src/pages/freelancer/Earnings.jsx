@@ -91,8 +91,8 @@ const Earnings = () => {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-2">
-        <div className="w-8 h-8 border-3 border-brand-indigo border-t-transparent rounded-full animate-spin" />
-        <span className="text-xs font-bold text-[#64748B] uppercase tracking-wide">Loading Earnings...</span>
+        <div className="w-8 h-8 border-3 border-orange-600 border-t-transparent rounded-full animate-spin" />
+        <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">Loading Earnings...</span>
       </div>
     );
   }
@@ -102,16 +102,16 @@ const Earnings = () => {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-brand-indigo/15 text-brand-indigo border border-brand-indigo/30 mb-2">
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-orange-600/15 text-orange-600 border border-orange-600/30 mb-2">
             💸 Wallet Center
           </span>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-white">Earnings & Escrow Ledger</h1>
-          <p className="text-xs text-[#94A3B8] mt-1">Monitor released payouts, track funds held in client escrow, and view income stats.</p>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900">Earnings & Escrow Ledger</h1>
+          <p className="text-xs text-slate-500 mt-1">Monitor released payouts, track funds held in client escrow, and view income stats.</p>
         </div>
         <button
           onClick={() => fetchEarnings(true)}
           disabled={refreshing}
-          className="flex items-center gap-2 px-4 py-2 text-xs font-bold bg-white/5 border border-dark-border rounded-xl text-slate-300 hover:text-white hover:border-brand-indigo/50 transition-all cursor-pointer disabled:opacity-50"
+          className="flex items-center gap-2 px-4 py-2 text-xs font-bold bg-surface-muted border border-surface-border rounded-xl text-slate-300 hover:text-slate-900 hover:border-orange-600/50 transition-all cursor-pointer disabled:opacity-50"
         >
           <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin' : ''}`} />
           Refresh
@@ -120,52 +120,52 @@ const Earnings = () => {
 
       {/* Metrics Row (2x2 grid on mobile) */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-        <div className="bg-dark-surface p-4 md:p-6 rounded-2xl border border-dark-border flex items-center gap-4">
+        <div className="bg-white p-4 md:p-6 rounded-2xl border border-surface-border flex items-center gap-4">
           <div className="p-3.5 rounded-xl bg-[#10B981]/10 border border-[#10B981]/20 text-[#10B981] shrink-0">
             <Landmark className="h-5 w-5" />
           </div>
           <div>
-            <span className="block text-[10px] md:text-xs font-bold text-[#64748B] uppercase tracking-wide">Total Earned</span>
-            <span className="text-lg md:text-xl font-extrabold text-white">{fmt(stats.totalEarned)}</span>
+            <span className="block text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wide">Total Earned</span>
+            <span className="text-lg md:text-xl font-extrabold text-slate-900">{fmt(stats.totalEarned)}</span>
           </div>
         </div>
 
-        <div className="bg-dark-surface p-4 md:p-6 rounded-2xl border border-dark-border flex items-center gap-4">
-          <div className="p-3.5 rounded-xl bg-brand-indigo/10 border border-brand-indigo/20 text-brand-indigo shrink-0">
+        <div className="bg-white p-4 md:p-6 rounded-2xl border border-surface-border flex items-center gap-4">
+          <div className="p-3.5 rounded-xl bg-orange-600/10 border border-orange-600/20 text-orange-600 shrink-0">
             <Calendar className="h-5 w-5" />
           </div>
           <div>
-            <span className="block text-[10px] md:text-xs font-bold text-[#64748B] uppercase tracking-wide">This Month</span>
-            <span className="text-lg md:text-xl font-extrabold text-white">{fmt(stats.thisMonthEarnings)}</span>
+            <span className="block text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wide">This Month</span>
+            <span className="text-lg md:text-xl font-extrabold text-slate-900">{fmt(stats.thisMonthEarnings)}</span>
           </div>
         </div>
 
-        <div className="bg-dark-surface p-4 md:p-6 rounded-2xl border border-dark-border flex items-center gap-4">
+        <div className="bg-white p-4 md:p-6 rounded-2xl border border-surface-border flex items-center gap-4">
           <div className="p-3.5 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 shrink-0">
             <TrendingUp className="h-5 w-5" />
           </div>
           <div>
-            <span className="block text-[10px] md:text-xs font-bold text-[#64748B] uppercase tracking-wide">In Escrow</span>
-            <span className="text-lg md:text-xl font-extrabold text-white">{fmt(stats.pendingAmount)}</span>
+            <span className="block text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wide">In Escrow</span>
+            <span className="text-lg md:text-xl font-extrabold text-slate-900">{fmt(stats.pendingAmount)}</span>
           </div>
         </div>
 
-        <div className="bg-dark-surface p-4 md:p-6 rounded-2xl border border-dark-border flex items-center gap-4">
-          <div className="p-3.5 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 shrink-0">
+        <div className="bg-white p-4 md:p-6 rounded-2xl border border-surface-border flex items-center gap-4">
+          <div className="p-3.5 rounded-xl bg-orange-500/10 border border-orange-500/20 text-purple-400 shrink-0">
             <Briefcase className="h-5 w-5" />
           </div>
           <div>
-            <span className="block text-[10px] md:text-xs font-bold text-[#64748B] uppercase tracking-wide">Active Escrows</span>
-            <span className="text-lg md:text-xl font-extrabold text-white">{stats.pendingGigsCount} Gigs</span>
+            <span className="block text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wide">Active Escrows</span>
+            <span className="text-lg md:text-xl font-extrabold text-slate-900">{stats.pendingGigsCount} Gigs</span>
           </div>
         </div>
       </div>
 
       {/* Monthly Earnings Chart */}
-      <div className="bg-dark-surface p-6 rounded-2xl border border-dark-border space-y-4">
+      <div className="bg-white p-6 rounded-2xl border border-surface-border space-y-4">
         <div>
-          <h3 className="text-sm font-bold text-white">Income Spread (Last 6 Months)</h3>
-          <p className="text-[11px] text-[#64748B]">Bar distribution of released payouts across calendar months</p>
+          <h3 className="text-sm font-bold text-slate-900">Income Spread (Last 6 Months)</h3>
+          <p className="text-[11px] text-slate-500">Bar distribution of released payouts across calendar months</p>
         </div>
         <div className="h-64 w-full">
           <ResponsiveContainer width="100%" height="100%">
@@ -200,16 +200,16 @@ const Earnings = () => {
       {/* Earnings Table & Filters */}
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <h2 className="text-md font-bold text-white uppercase tracking-wider">Earnings & Escrows Ledger</h2>
-          <div className="flex gap-2 bg-white/5 border border-dark-border p-1 rounded-xl">
+          <h2 className="text-md font-bold text-slate-900 uppercase tracking-wider">Earnings & Escrows Ledger</h2>
+          <div className="flex gap-2 bg-surface-muted border border-surface-border p-1 rounded-xl">
             {['all', 'released', 'escrow'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold capitalize transition-colors cursor-pointer ${
                   activeTab === tab
-                    ? 'bg-brand-indigo text-white shadow-md'
-                    : 'text-[#94A3B8] hover:text-white'
+                    ? 'bg-orange-600 text-slate-900 shadow-md'
+                    : 'text-slate-500 hover:text-slate-900'
                 }`}
               >
                 {tab}
@@ -220,39 +220,39 @@ const Earnings = () => {
 
         {/* Ledger Table */}
         {!hasAnyPayments ? (
-          <div className="py-16 text-center bg-dark-surface/30 border border-dark-border rounded-3xl">
-            <Award className="h-12 w-12 text-[#64748B] mx-auto mb-4" />
-            <h3 className="text-md font-bold text-white">No Earnings Yet</h3>
-            <p className="text-xs text-[#94A3B8] mt-2 max-w-sm mx-auto">
+          <div className="py-16 text-center bg-white/30 border border-surface-border rounded-3xl">
+            <Award className="h-12 w-12 text-slate-500 mx-auto mb-4" />
+            <h3 className="text-md font-bold text-slate-900">No Earnings Yet</h3>
+            <p className="text-xs text-slate-500 mt-2 max-w-sm mx-auto">
               Complete your first gig to see earnings here. Browse available gigs to get started!
             </p>
             <button
               onClick={() => navigate('/search')}
-              className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-brand-indigo text-white text-xs font-bold rounded-xl hover:opacity-90 transition-all cursor-pointer"
+              className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-orange-600 text-slate-900 text-xs font-bold rounded-xl hover:opacity-90 transition-all cursor-pointer"
             >
               Browse Gig Catalog
             </button>
           </div>
         ) : filteredPayments.length === 0 ? (
-          <div className="py-8 text-center text-xs text-[#64748B] font-bold bg-dark-surface/30 border border-dark-border rounded-2xl">
+          <div className="py-8 text-center text-xs text-slate-500 font-bold bg-white/30 border border-surface-border rounded-2xl">
             No {activeTab !== 'all' ? activeTab : ''} transactions found.
           </div>
         ) : (
-          <div className="bg-dark-surface rounded-2xl border border-dark-border overflow-hidden">
+          <div className="bg-white rounded-2xl border border-surface-border overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-white/5 border-b border-dark-border text-xs">
-                    <th className="px-6 py-4 text-xs font-bold text-[#64748B] uppercase tracking-wider">Gig Title</th>
-                    <th className="px-6 py-4 text-xs font-bold text-[#64748B] uppercase tracking-wider">Client</th>
-                    <th className="px-6 py-4 text-xs font-bold text-[#64748B] uppercase tracking-wider">Amount</th>
-                    <th className="px-6 py-4 text-xs font-bold text-[#64748B] uppercase tracking-wider">Platform Fee</th>
-                    <th className="px-6 py-4 text-xs font-bold text-[#64748B] uppercase tracking-wider">Net Earned</th>
-                    <th className="px-6 py-4 text-xs font-bold text-[#64748B] uppercase tracking-wider">Date</th>
-                    <th className="px-6 py-4 text-xs font-bold text-[#64748B] uppercase tracking-wider">Status</th>
+                  <tr className="bg-surface-muted border-b border-surface-border text-xs">
+                    <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Gig Title</th>
+                    <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Client</th>
+                    <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Amount</th>
+                    <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Platform Fee</th>
+                    <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Net Earned</th>
+                    <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Date</th>
+                    <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-dark-border/40 text-xs text-slate-300">
+                <tbody className="divide-y divide-surface-border/40 text-xs text-slate-300">
                   {filteredPayments.map((p) => {
                     const formattedDate = new Date(p.releasedAt || p.paidAt || p.createdAt).toLocaleString('en-IN', {
                       day: 'numeric',
@@ -263,18 +263,18 @@ const Earnings = () => {
                     });
                     return (
                       <tr key={p._id} className="hover:bg-white/[0.01]">
-                        <td className="px-6 py-4 font-bold text-white">
+                        <td className="px-6 py-4 font-bold text-slate-900">
                           <div className="flex flex-col">
                             <span>{p.gig?.title || 'Gig Contract'}</span>
-                            <span className="text-[9px] text-[#64748B] font-semibold mt-0.5">
+                            <span className="text-[9px] text-slate-500 font-semibold mt-0.5">
                               {p.type === 'milestone' ? `Milestone #${(p.milestoneIndex ?? 0) + 1}` : 'Full Project'}
                             </span>
                           </div>
                         </td>
                         <td className="px-6 py-4 font-medium">{p.client?.name || 'Client'}</td>
                         <td className="px-6 py-4">{fmt(p.amount)}</td>
-                        <td className="px-6 py-4 text-[#64748B]">{fmt(p.platformFee)} <span className="text-[9px]">(10%)</span></td>
-                        <td className="px-6 py-4 font-bold text-[#10B981]">{fmt(p.freelancerAmount)} <span className="text-[9px] text-[#64748B]">(90%)</span></td>
+                        <td className="px-6 py-4 text-slate-500">{fmt(p.platformFee)} <span className="text-[9px]">(10%)</span></td>
+                        <td className="px-6 py-4 font-bold text-[#10B981]">{fmt(p.freelancerAmount)} <span className="text-[9px] text-slate-500">(90%)</span></td>
                         <td className="px-6 py-4 text-slate-400">{formattedDate}</td>
                         <td className="px-6 py-4">
                           <span className={`inline-flex px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wide ${

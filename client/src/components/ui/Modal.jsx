@@ -24,13 +24,13 @@ const Modal = ({ isOpen, onClose, title, children }) => {
       />
 
       {/* Modal Box */}
-      <div className="bg-dark-surface border border-dark-border w-full max-w-xl rounded-3xl shadow-2xl relative z-10 overflow-hidden max-h-[90vh] flex flex-col animate-fade-up">
+      <div className="bg-white border border-surface-border w-full max-w-xl rounded-3xl shadow-2xl relative z-10 overflow-hidden max-h-[90vh] flex flex-col animate-fade-up">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-dark-border">
-          <h3 className="text-lg font-bold text-white">{title}</h3>
+        <div className="flex items-center justify-between p-6 border-b border-surface-border">
+          <h3 className="text-lg font-bold text-slate-900">{title}</h3>
           <button 
             onClick={onClose} 
-            className="p-1.5 rounded-lg bg-white/5 text-[#94A3B8] hover:text-white hover:bg-white/10 transition-colors"
+            className="p-1.5 rounded-lg bg-surface-muted text-slate-500 hover:text-slate-900 hover:bg-surface-subtle transition-colors"
           >
             <X className="h-5 w-5" />
           </button>

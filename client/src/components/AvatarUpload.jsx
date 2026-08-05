@@ -42,13 +42,13 @@ const AvatarUpload = ({ currentAvatar, onUpload, isUploading = false }) => {
       
       {isUploading ? (
         <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-          <Loader2 className="h-6 w-6 text-white animate-spin" />
+          <Loader2 className="h-6 w-6 text-slate-900 animate-spin" />
         </div>
       ) : (
         <button
           type="button"
           onClick={triggerFileSelect}
-          className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white cursor-pointer"
+          className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-slate-900 cursor-pointer"
         >
           <Camera className="h-6 w-6" />
         </button>

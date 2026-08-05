@@ -21,11 +21,11 @@ const PageLoader = () => {
       {/* Top micro transition loading bar */}
       <div 
         id="nprogress-bar"
-        className="fixed top-0 left-0 h-[3px] bg-gradient-to-r from-brand-indigo to-brand-purple transition-all duration-300 ease-out z-50"
+        className="fixed top-0 left-0 h-[3px] bg-gradient-to-r from-orange-600 to-brand-purple transition-all duration-300 ease-out z-50"
         style={{ width: '0%' }}
       />
-      <div className="w-8 h-8 border-3 border-brand-indigo border-t-transparent rounded-full animate-spin" />
-      <span className="text-xs font-bold text-[#64748B] uppercase tracking-widest animate-pulse">Loading SkillSphere...</span>
+      <div className="w-8 h-8 border-3 border-orange-600 border-t-transparent rounded-full animate-spin" />
+      <span className="text-xs font-bold text-slate-500 uppercase tracking-widest animate-pulse">Loading SkillSphere...</span>
     </div>
   );
 };

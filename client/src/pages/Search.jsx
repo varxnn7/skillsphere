@@ -166,21 +166,21 @@ const SearchPage = () => {
   const filteredCategories = suggestions.categories.slice(0, 5);
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] text-white flex flex-col transition-smooth">
+    <div className="min-h-screen bg-surface-subtle text-slate-900 flex flex-col transition-smooth">
       <Navbar />
 
       <div className="flex-1 max-w-7xl w-full mx-auto p-6 space-y-6 relative z-10 animate-fade-up">
         {/* Toggle tabs */}
         {user?.role !== 'freelancer' && (
           <div className="flex justify-center">
-            <div className="flex gap-2 p-1 bg-dark-surface/50 border border-dark-border rounded-2xl">
+            <div className="flex gap-2 p-1 bg-surface-muted0 border border-surface-border rounded-2xl">
               <button
                 onClick={() => {
                   setActiveTab('gigs');
                   handleReset();
                 }}
                 className={`px-6 py-3 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
-                  activeTab === 'gigs' ? 'bg-gradient-brand text-white shadow-lg' : 'text-[#94A3B8] hover:text-white'
+                  activeTab === 'gigs' ? 'bg-gradient-orange text-slate-900 shadow-lg' : 'text-slate-500 hover:text-slate-900'
                 } cursor-pointer`}
               >
                 <Briefcase className="h-4.5 w-4.5" />
@@ -192,7 +192,7 @@ const SearchPage = () => {
                   handleReset();
                 }}
                 className={`px-6 py-3 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
-                  activeTab === 'freelancers' ? 'bg-gradient-brand text-white shadow-lg' : 'text-[#94A3B8] hover:text-white'
+                  activeTab === 'freelancers' ? 'bg-gradient-orange text-slate-900 shadow-lg' : 'text-slate-500 hover:text-slate-900'
                 } cursor-pointer`}
               >
                 <Users className="h-4.5 w-4.5" />
@@ -205,7 +205,7 @@ const SearchPage = () => {
         {/* Unified Search Input & Autocomplete suggestions */}
         <div className="relative max-w-2xl mx-auto w-full">
           <div className="relative">
-            <SearchIcon className="absolute left-4 top-3.5 h-5 w-5 text-[#64748B]" />
+            <SearchIcon className="absolute left-4 top-3.5 h-5 w-5 text-slate-500" />
             <input
               type="text"
               value={searchTerm}
@@ -219,25 +219,25 @@ const SearchPage = () => {
                   ? 'Search gigs by title, skills, keywords...'
                   : 'Search freelancers by skills, category...'
               }
-              className="w-full pl-12 pr-4 py-4.5 rounded-2xl border border-dark-border bg-dark-surface/80 text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-indigo/40 focus:border-brand-indigo transition-smooth shadow-lg"
+              className="w-full pl-12 pr-4 py-4.5 rounded-2xl border border-surface-border bg-white/80 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-orange-600/40 focus:border-orange-600 transition-smooth shadow-lg"
             />
           </div>
 
           {/* Autocomplete suggestions box */}
           {showSuggestions && (filteredSkills.length > 0 || filteredCategories.length > 0) && (
-            <div className="absolute top-16 left-0 w-full bg-dark-surface border border-dark-border rounded-2xl p-4 shadow-2xl z-20 space-y-3">
+            <div className="absolute top-16 left-0 w-full bg-white border border-surface-border rounded-2xl p-4 shadow-2xl z-20 space-y-3">
               {filteredCategories.length > 0 && (
                 <div>
-                  <span className="block text-[9px] font-bold text-[#64748B] uppercase tracking-wider mb-1.5">Categories Matches</span>
+                  <span className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Categories Matches</span>
                   <div className="flex flex-col gap-1.5">
                     {filteredCategories.map((cat, idx) => (
                       <button
                         key={idx}
                         onClick={() => selectSuggestion(cat)}
-                        className="w-full text-left text-xs font-bold text-slate-300 hover:text-white flex items-center justify-between hover:bg-white/5 p-2 rounded-lg cursor-pointer"
+                        className="w-full text-left text-xs font-bold text-slate-300 hover:text-slate-900 flex items-center justify-between hover:bg-surface-muted p-2 rounded-lg cursor-pointer"
                       >
                         <span>{cat}</span>
-                        <ArrowRight className="h-3.5 w-3.5 text-[#64748B]" />
+                        <ArrowRight className="h-3.5 w-3.5 text-slate-500" />
                       </button>
                     ))}
                   </div>
@@ -246,13 +246,13 @@ const SearchPage = () => {
 
               {filteredSkills.length > 0 && (
                 <div>
-                  <span className="block text-[9px] font-bold text-[#64748B] uppercase tracking-wider mb-1.5">Skills Matches</span>
+                  <span className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Skills Matches</span>
                   <div className="flex flex-wrap gap-2">
                     {filteredSkills.map((skill, idx) => (
                       <button
                         key={idx}
                         onClick={() => selectSuggestion(skill)}
-                        className="px-3 py-1.5 bg-brand-indigo/15 text-brand-indigo border border-brand-indigo/35 text-xs font-bold rounded-xl hover:bg-brand-indigo hover:text-white transition-all cursor-pointer"
+                        className="px-3 py-1.5 bg-orange-600/15 text-orange-600 border border-orange-600/35 text-xs font-bold rounded-xl hover:bg-orange-600 hover:text-slate-900 transition-all cursor-pointer"
                       >
                         {skill}
                       </button>
@@ -265,8 +265,8 @@ const SearchPage = () => {
         </div>
 
         {/* Sorting options & Mobile display Filters triggers */}
-        <div className="flex items-center justify-between border-b border-dark-border/60 pb-3">
-          <span className="text-xs font-bold text-[#64748B]">
+        <div className="flex items-center justify-between border-b border-surface-border/60 pb-3">
+          <span className="text-xs font-bold text-slate-500">
             Unified query engine: {activeTab === 'gigs' ? 'Gigs Listings' : 'Freelancer Accounts'}
           </span>
 
@@ -274,7 +274,7 @@ const SearchPage = () => {
             <select
               value={filters.sort}
               onChange={(e) => setFilters({ ...filters, sort: e.target.value, page: 1 })}
-              className="px-3 py-1.5 rounded-lg border border-dark-border bg-dark-surface text-xs font-bold text-slate-300 focus:outline-none"
+              className="px-3 py-1.5 rounded-lg border border-surface-border bg-white text-xs font-bold text-slate-300 focus:outline-none"
             >
               {activeTab === 'gigs' ? (
                 <>
@@ -293,7 +293,7 @@ const SearchPage = () => {
 
             <button
               onClick={() => setShowMobileFilters(!showMobileFilters)}
-              className="md:hidden p-2 bg-dark-surface border border-dark-border rounded-xl text-[#94A3B8] hover:text-white"
+              className="md:hidden p-2 bg-white border border-surface-border rounded-xl text-slate-500 hover:text-slate-900"
             >
               <SlidersHorizontal className="h-4.5 w-4.5" />
             </button>
@@ -312,52 +312,52 @@ const SearchPage = () => {
               />
             ) : (
               /* Freelancer sidebar filters */
-              <div className="bg-dark-surface border border-dark-border rounded-2xl p-6 space-y-6">
-                <div className="flex justify-between items-center border-b border-dark-border/60 pb-3">
-                  <span className="text-xs font-extrabold text-white">Freelancer Filters</span>
-                  <button onClick={handleReset} className="text-xs font-bold text-brand-indigo hover:text-white">Reset</button>
+              <div className="bg-white border border-surface-border rounded-2xl p-6 space-y-6">
+                <div className="flex justify-between items-center border-b border-surface-border/60 pb-3">
+                  <span className="text-xs font-extrabold text-slate-900">Freelancer Filters</span>
+                  <button onClick={handleReset} className="text-xs font-bold text-orange-600 hover:text-slate-900">Reset</button>
                 </div>
 
                 {/* Rates min/max */}
                 <div className="space-y-3">
-                  <h4 className="text-xs font-bold text-[#94A3B8] uppercase tracking-wide">Hourly Rate (₹)</h4>
+                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wide">Hourly Rate (₹)</h4>
                   <div className="grid grid-cols-2 gap-2">
                     <input
                       type="number"
                       placeholder="Min"
                       value={filters.minRate}
                       onChange={(e) => setFilters({ ...filters, minRate: e.target.value })}
-                      className="px-3 py-2 text-xs rounded-xl border border-dark-border bg-dark-surface text-white"
+                      className="px-3 py-2 text-xs rounded-xl border border-surface-border bg-white text-slate-900"
                     />
                     <input
                       type="number"
                       placeholder="Max"
                       value={filters.maxRate}
                       onChange={(e) => setFilters({ ...filters, maxRate: e.target.value })}
-                      className="px-3 py-2 text-xs rounded-xl border border-dark-border bg-dark-surface text-white"
+                      className="px-3 py-2 text-xs rounded-xl border border-surface-border bg-white text-slate-900"
                     />
                   </div>
                 </div>
 
                 {/* Location */}
                 <div className="space-y-2">
-                  <h4 className="text-xs font-bold text-[#94A3B8] uppercase tracking-wide">Location</h4>
+                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wide">Location</h4>
                   <input
                     type="text"
                     placeholder="e.g. Mumbai"
                     value={filters.location}
                     onChange={(e) => setFilters({ ...filters, location: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-dark-border bg-dark-surface text-white"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-surface-border bg-white text-slate-900"
                   />
                 </div>
 
                 {/* Minimum Star Rating */}
                 <div className="space-y-2">
-                  <h4 className="text-xs font-bold text-[#94A3B8] uppercase tracking-wide">Minimum Rating</h4>
+                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wide">Minimum Rating</h4>
                   <select
                     value={filters.rating}
                     onChange={(e) => setFilters({ ...filters, rating: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-dark-border bg-dark-surface text-white"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-surface-border bg-white text-slate-900"
                   >
                     <option value="0">Any Star</option>
                     <option value="4">4.0 Stars & Above</option>
@@ -377,10 +377,10 @@ const SearchPage = () => {
             ) : activeTab === 'gigs' ? (
               /* Gigs results layout */
               gigResults.length === 0 ? (
-                <div className="text-center py-20 bg-dark-surface/20 border border-dark-border rounded-3xl p-8 max-w-md mx-auto space-y-3">
-                  <Briefcase className="h-10 w-10 mx-auto text-[#64748B]" />
-                  <h3 className="text-sm font-bold text-white">No Gigs Found</h3>
-                  <p className="text-xs text-[#94A3B8] leading-relaxed">No matching gig results. Adjust parameters.</p>
+                <div className="text-center py-20 bg-white/20 border border-surface-border rounded-3xl p-8 max-w-md mx-auto space-y-3">
+                  <Briefcase className="h-10 w-10 mx-auto text-slate-500" />
+                  <h3 className="text-sm font-bold text-slate-900">No Gigs Found</h3>
+                  <p className="text-xs text-slate-500 leading-relaxed">No matching gig results. Adjust parameters.</p>
                 </div>
               ) : (
                 <>
@@ -401,10 +401,10 @@ const SearchPage = () => {
             ) : (
               /* Freelancer results layout */
               freelancerResults.length === 0 ? (
-                <div className="text-center py-20 bg-dark-surface/20 border border-dark-border rounded-3xl p-8 max-w-md mx-auto space-y-3">
-                  <Users className="h-10 w-10 mx-auto text-[#64748B]" />
-                  <h3 className="text-sm font-bold text-white">No Freelancers Found</h3>
-                  <p className="text-xs text-[#94A3B8] leading-relaxed">No matching partner results. Try widening filters.</p>
+                <div className="text-center py-20 bg-white/20 border border-surface-border rounded-3xl p-8 max-w-md mx-auto space-y-3">
+                  <Users className="h-10 w-10 mx-auto text-slate-500" />
+                  <h3 className="text-sm font-bold text-slate-900">No Freelancers Found</h3>
+                  <p className="text-xs text-slate-500 leading-relaxed">No matching partner results. Try widening filters.</p>
                 </div>
               ) : (
                 <>

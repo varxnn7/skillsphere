@@ -178,7 +178,7 @@ const GigDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0A0A0F] text-white flex justify-center items-center">
+      <div className="min-h-screen bg-surface-subtle text-slate-900 flex justify-center items-center">
         <LoadingSpinner size="lg" color="white" />
       </div>
     );
@@ -186,9 +186,9 @@ const GigDetail = () => {
 
   if (!gig) {
     return (
-      <div className="min-h-screen bg-[#0A0A0F] text-white flex flex-col justify-center items-center gap-4">
-        <p className="text-sm text-[#94A3B8]">Gig details not found or expired.</p>
-        <button onClick={() => navigate('/gigs')} className="px-4 py-2 bg-brand-indigo rounded-xl text-xs font-bold">
+      <div className="min-h-screen bg-surface-subtle text-slate-900 flex flex-col justify-center items-center gap-4">
+        <p className="text-sm text-slate-500">Gig details not found or expired.</p>
+        <button onClick={() => navigate('/gigs')} className="px-4 py-2 bg-orange-600 rounded-xl text-xs font-bold">
           Go Back
         </button>
       </div>
@@ -196,14 +196,14 @@ const GigDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] text-white flex flex-col transition-smooth">
+    <div className="min-h-screen bg-surface-subtle text-slate-900 flex flex-col transition-smooth">
       <Navbar />
 
       <div className="flex-1 max-w-6xl w-full mx-auto p-6 space-y-8 relative z-10 animate-fade-up">
         {/* Back button */}
         <button
           onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-2 text-xs font-bold text-[#94A3B8] hover:text-white transition-colors cursor-pointer"
+          className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Browse
@@ -212,15 +212,15 @@ const GigDetail = () => {
         {/* Hero Details Header */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-dark-surface border border-dark-border rounded-3xl p-6 md:p-8 space-y-6">
+            <div className="bg-white border border-surface-border rounded-3xl p-6 md:p-8 space-y-6">
               <div className="flex items-center justify-between gap-4 flex-wrap">
                 <div className="flex items-center gap-3">
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#64748B]">
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500">
                     {gig.category} {gig.subCategory ? `· ${gig.subCategory}` : ''}
                   </span>
                   <StatusBadge status={gig.status} />
                 </div>
-                <div className="text-[11px] font-bold text-[#64748B] flex items-center gap-3">
+                <div className="text-[11px] font-bold text-slate-500 flex items-center gap-3">
                   <span className="flex items-center gap-1">
                     <Clock className="h-3.5 w-3.5" />
                     Posted {new Date(gig.createdAt).toLocaleDateString()}
@@ -228,41 +228,41 @@ const GigDetail = () => {
                 </div>
               </div>
 
-              <h1 className="text-2xl md:text-3xl font-extrabold text-white leading-tight">{gig.title}</h1>
+              <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 leading-tight">{gig.title}</h1>
 
               {/* Specs parameters tag list */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 border-t border-b border-dark-border/40 py-4 text-xs">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 border-t border-b border-surface-border/40 py-4 text-xs">
                 <div className="space-y-0.5">
-                  <span className="block text-[#64748B] font-bold uppercase tracking-wider text-[9px]">Budget scale</span>
-                  <span className="text-white font-extrabold">
+                  <span className="block text-slate-500 font-bold uppercase tracking-wider text-[9px]">Budget scale</span>
+                  <span className="text-slate-900 font-extrabold">
                     ₹{gig.budgetMin?.toLocaleString()} - ₹{gig.budgetMax?.toLocaleString()}
                   </span>
-                  <span className="block text-[10px] text-[#64748B] font-medium uppercase">{gig.budgetType}</span>
+                  <span className="block text-[10px] text-slate-500 font-medium uppercase">{gig.budgetType}</span>
                 </div>
                 <div className="space-y-0.5">
-                  <span className="block text-[#64748B] font-bold uppercase tracking-wider text-[9px]">Experience Level</span>
-                  <span className="text-white font-extrabold capitalize">{gig.experienceLevel}</span>
+                  <span className="block text-slate-500 font-bold uppercase tracking-wider text-[9px]">Experience Level</span>
+                  <span className="text-slate-900 font-extrabold capitalize">{gig.experienceLevel}</span>
                 </div>
                 <div className="space-y-0.5">
-                  <span className="block text-[#64748B] font-bold uppercase tracking-wider text-[9px]">Project Duration</span>
-                  <span className="text-white font-extrabold">{gig.duration}</span>
+                  <span className="block text-slate-500 font-bold uppercase tracking-wider text-[9px]">Project Duration</span>
+                  <span className="text-slate-900 font-extrabold">{gig.duration}</span>
                 </div>
               </div>
 
               {/* Description */}
               <div className="space-y-3">
-                <h3 className="text-sm font-extrabold text-white">Job Scope & Requirements</h3>
-                <p className="text-xs text-[#94A3B8] leading-relaxed whitespace-pre-wrap">{gig.description}</p>
+                <h3 className="text-sm font-extrabold text-slate-900">Job Scope & Requirements</h3>
+                <p className="text-xs text-slate-500 leading-relaxed whitespace-pre-wrap">{gig.description}</p>
               </div>
 
               {/* Required Skills */}
               <div className="space-y-3">
-                <h3 className="text-sm font-extrabold text-white">Skills Required</h3>
+                <h3 className="text-sm font-extrabold text-slate-900">Skills Required</h3>
                 <div className="flex flex-wrap gap-2">
                   {gig.skills?.map((skill, idx) => (
                     <span
                       key={idx}
-                      className="text-xs font-bold px-3 py-1.5 rounded-xl bg-[rgba(255,255,255,0.03)] border border-dark-border text-slate-300"
+                      className="text-xs font-bold px-3 py-1.5 rounded-xl bg-surface-subtle border border-surface-border text-slate-300"
                     >
                       {skill}
                     </span>
@@ -272,8 +272,8 @@ const GigDetail = () => {
 
               {/* Attachments */}
               {gig.attachments?.length > 0 && (
-                <div className="space-y-3 border-t border-dark-border/40 pt-4">
-                  <h3 className="text-sm font-extrabold text-white">Documents & Attachments</h3>
+                <div className="space-y-3 border-t border-surface-border/40 pt-4">
+                  <h3 className="text-sm font-extrabold text-slate-900">Documents & Attachments</h3>
                   <div className="space-y-2">
                     {gig.attachments.map((file, idx) => (
                       <a
@@ -281,10 +281,10 @@ const GigDetail = () => {
                         href={file.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex items-center gap-3 p-3 rounded-xl border border-dark-border bg-dark-surface/50 text-xs hover:border-brand-indigo transition-colors cursor-pointer"
+                        className="flex items-center gap-3 p-3 rounded-xl border border-surface-border bg-surface-muted0 text-xs hover:border-orange-600 transition-colors cursor-pointer"
                       >
-                        <FileText className="h-4 w-4 text-brand-indigo" />
-                        <span className="text-slate-300 hover:text-white font-bold">{file.name}</span>
+                        <FileText className="h-4 w-4 text-orange-600" />
+                        <span className="text-slate-300 hover:text-slate-900 font-bold">{file.name}</span>
                       </a>
                     ))}
                   </div>
@@ -295,42 +295,42 @@ const GigDetail = () => {
 
           {/* Right Side: Client Profile Stats box */}
           <div className="space-y-6">
-            <div className="bg-dark-surface border border-dark-border rounded-3xl p-6 space-y-6">
-              <h3 className="text-sm font-extrabold text-white border-b border-dark-border/40 pb-3">About Client</h3>
+            <div className="bg-white border border-surface-border rounded-3xl p-6 space-y-6">
+              <h3 className="text-sm font-extrabold text-slate-900 border-b border-surface-border/40 pb-3">About Client</h3>
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-brand-indigo/10 border border-brand-indigo/20 flex items-center justify-center font-bold text-brand-indigo text-lg uppercase">
+                <div className="w-12 h-12 rounded-xl bg-orange-600/10 border border-orange-600/20 flex items-center justify-center font-bold text-orange-600 text-lg uppercase">
                   {gig.client?.name ? gig.client.name.substring(0, 2) : 'CL'}
                 </div>
                 <div>
-                  <h4 className="font-extrabold text-white text-sm">{gig.client?.name || 'Company Manager'}</h4>
-                  <p className="text-xs text-[#94A3B8]">{gig.client?.email}</p>
+                  <h4 className="font-extrabold text-slate-900 text-sm">{gig.client?.name || 'Company Manager'}</h4>
+                  <p className="text-xs text-slate-500">{gig.client?.email}</p>
                 </div>
               </div>
 
-              <div className="space-y-3 text-xs text-[#94A3B8] font-semibold border-t border-dark-border/40 pt-4">
+              <div className="space-y-3 text-xs text-slate-500 font-semibold border-t border-surface-border/40 pt-4">
                 <div className="flex justify-between items-center">
                   <span>Rating</span>
-                  <span className="text-white flex items-center gap-1">
+                  <span className="text-slate-900 flex items-center gap-1">
                     <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
                     {gig.client?.rating ? gig.client.rating.toFixed(1) : '5.0'} / 5.0
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span>Location</span>
-                  <span className="text-white flex items-center gap-1">
-                    <MapPin className="h-3.5 w-3.5 text-[#64748B]" />
+                  <span className="text-slate-900 flex items-center gap-1">
+                    <MapPin className="h-3.5 w-3.5 text-slate-500" />
                     {gig.isRemote ? 'Remote' : gig.client?.location || gig.location || 'Hybrid'}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span>Member Since</span>
-                  <span className="text-white">
+                  <span className="text-slate-900">
                     {gig.client?.createdAt ? new Date(gig.client.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short' }) : 'Recently'}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span>Total Gigs Posted</span>
-                  <span className="text-white">
+                  <span className="text-slate-900">
                     {gig.client?.totalPosted || 1}
                   </span>
                 </div>
@@ -345,7 +345,7 @@ const GigDetail = () => {
                     </div>
                     <button
                       onClick={() => navigate('/freelancer/my-proposals')}
-                      className="w-full py-2.5 rounded-xl border border-dark-border bg-dark-surface/50 text-[#94A3B8] hover:text-white text-xs font-bold transition-colors cursor-pointer text-center block"
+                      className="w-full py-2.5 rounded-xl border border-surface-border bg-surface-muted0 text-slate-500 hover:text-slate-900 text-xs font-bold transition-colors cursor-pointer text-center block"
                     >
                       View Your Proposal
                     </button>
@@ -354,7 +354,7 @@ const GigDetail = () => {
                   gig.status === 'open' && (
                     <button
                       onClick={() => setIsModalOpen(true)}
-                      className="w-full py-3.5 rounded-xl bg-gradient-brand hover-glow-purple text-white text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
+                      className="w-full py-3.5 rounded-xl bg-gradient-orange hover-glow-orange text-slate-900 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <Briefcase className="h-4 w-4" />
                       Submit a Proposal
@@ -370,7 +370,7 @@ const GigDetail = () => {
                   className={`w-full py-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
                     isBookmarked
                       ? 'border-brand-purple/40 bg-brand-purple/10 text-brand-purple'
-                      : 'border-dark-border bg-dark-surface/50 text-[#94A3B8] hover:text-white hover:border-[#94A3B8]/40'
+                      : 'border-surface-border bg-surface-muted0 text-slate-500 hover:text-slate-900 hover:border-[#94A3B8]/40'
                   }`}
                 >
                   <Heart className={`h-4 w-4 ${isBookmarked ? 'fill-current' : ''}`} />
@@ -383,8 +383,8 @@ const GigDetail = () => {
 
         {/* Similar Gigs at the bottom */}
         {similarGigs.length > 0 && (
-          <div className="space-y-4 border-t border-dark-border/40 pt-8">
-            <h3 className="text-sm font-extrabold text-white">Similar Opportunities</h3>
+          <div className="space-y-4 border-t border-surface-border/40 pt-8">
+            <h3 className="text-sm font-extrabold text-slate-900">Similar Opportunities</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {similarGigs.map((sim) => (
                 <div
@@ -393,13 +393,13 @@ const GigDetail = () => {
                     navigate(`/gigs/${sim._id}`);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className="p-5 border border-dark-border bg-dark-surface rounded-2xl hover:border-brand-indigo/40 hover-lift transition-all cursor-pointer space-y-3"
+                  className="p-5 border border-surface-border bg-white rounded-2xl hover:border-orange-600/40 hover-lift transition-all cursor-pointer space-y-3"
                 >
-                  <h4 className="text-sm font-bold text-white truncate">{sim.title}</h4>
-                  <p className="text-xs text-[#94A3B8] line-clamp-2">{sim.description}</p>
-                  <div className="flex justify-between items-center text-[11px] text-[#64748B] font-bold border-t border-dark-border/40 pt-3">
+                  <h4 className="text-sm font-bold text-slate-900 truncate">{sim.title}</h4>
+                  <p className="text-xs text-slate-500 line-clamp-2">{sim.description}</p>
+                  <div className="flex justify-between items-center text-[11px] text-slate-500 font-bold border-t border-surface-border/40 pt-3">
                     <span>₹{sim.budgetMin} - ₹{sim.budgetMax}</span>
-                    <span className="text-brand-indigo">{sim.duration}</span>
+                    <span className="text-orange-600">{sim.duration}</span>
                   </div>
                 </div>
               ))}
@@ -411,31 +411,31 @@ const GigDetail = () => {
       {/* Submit Proposal Modal overlay */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={`Apply to: ${gig.title}`}>
         <form onSubmit={handleProposalSubmit} className="space-y-6">
-          <div className="p-4 bg-brand-indigo/5 border border-brand-indigo/20 rounded-2xl text-xs space-y-1 text-[#94A3B8]">
-            <span className="block text-white font-bold">Recruiter's Budget scale:</span>
+          <div className="p-4 bg-orange-600/5 border border-orange-600/20 rounded-2xl text-xs space-y-1 text-slate-500">
+            <span className="block text-slate-900 font-bold">Recruiter's Budget scale:</span>
             <span>₹{gig.budgetMin?.toLocaleString()} - ₹{gig.budgetMax?.toLocaleString()} ({gig.budgetType === 'fixed' ? 'Fixed' : 'Hourly'})</span>
           </div>
 
           {/* Bid details inputs */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wide mb-1.5">My Bid (₹)</label>
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">My Bid (₹)</label>
               <input
                 type="number"
                 value={proposalForm.bidAmount}
                 onChange={(e) => setProposalForm({ ...proposalForm, bidAmount: e.target.value })}
-                className="w-full px-4 py-3 rounded-xl border border-dark-border bg-dark-surface text-white text-xs focus:ring-2 focus:ring-brand-indigo"
+                className="w-full px-4 py-3 rounded-xl border border-surface-border bg-white text-slate-900 text-xs focus:ring-2 focus:ring-orange-600"
                 placeholder="₹ Amount"
                 required
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wide mb-1.5">Est. Delivery Days</label>
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Est. Delivery Days</label>
               <input
                 type="number"
                 value={proposalForm.estimatedDays}
                 onChange={(e) => setProposalForm({ ...proposalForm, estimatedDays: e.target.value })}
-                className="w-full px-4 py-3 rounded-xl border border-dark-border bg-dark-surface text-white text-xs focus:ring-2 focus:ring-brand-indigo"
+                className="w-full px-4 py-3 rounded-xl border border-surface-border bg-white text-slate-900 text-xs focus:ring-2 focus:ring-orange-600"
                 placeholder="Days"
                 required
               />
@@ -445,23 +445,23 @@ const GigDetail = () => {
           {/* Cover Letter */}
           <div className="space-y-1.5">
             <div className="flex justify-between items-center">
-              <label className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wide">Cover Letter</label>
-              <span className="text-[10px] text-[#64748B] font-bold">{proposalForm.coverLetter.length}/5000 chars</span>
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide">Cover Letter</label>
+              <span className="text-[10px] text-slate-500 font-bold">{proposalForm.coverLetter.length}/5000 chars</span>
             </div>
             <textarea
               rows="5"
               maxLength="5000"
               value={proposalForm.coverLetter}
               onChange={(e) => setProposalForm({ ...proposalForm, coverLetter: e.target.value })}
-              className="w-full px-4 py-3 rounded-xl border border-dark-border bg-dark-surface text-white text-xs focus:ring-2 focus:ring-brand-indigo resize-none"
+              className="w-full px-4 py-3 rounded-xl border border-surface-border bg-white text-slate-900 text-xs focus:ring-2 focus:ring-orange-600 resize-none"
               placeholder="Tell the client why you're a good fit, your approach to solving their requirements, and highlight relevant experience..."
               required
             />
           </div>
 
           {/* Custom milestones proposal additions */}
-          <div className="space-y-3 border-t border-dark-border/40 pt-4">
-            <h4 className="text-xs font-bold text-white">Propose Project Milestones (Optional)</h4>
+          <div className="space-y-3 border-t border-surface-border/40 pt-4">
+            <h4 className="text-xs font-bold text-slate-900">Propose Project Milestones (Optional)</h4>
             
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <input
@@ -469,27 +469,27 @@ const GigDetail = () => {
                 placeholder="Milestone title"
                 value={newMilestone.title}
                 onChange={(e) => setNewMilestone({ ...newMilestone, title: e.target.value })}
-                className="px-3 py-2 text-xs rounded-xl border border-dark-border bg-dark-surface text-white"
+                className="px-3 py-2 text-xs rounded-xl border border-surface-border bg-white text-slate-900"
               />
               <input
                 type="number"
                 placeholder="Amount (₹)"
                 value={newMilestone.amount}
                 onChange={(e) => setNewMilestone({ ...newMilestone, amount: e.target.value })}
-                className="px-3 py-2 text-xs rounded-xl border border-dark-border bg-dark-surface text-white"
+                className="px-3 py-2 text-xs rounded-xl border border-surface-border bg-white text-slate-900"
               />
               <input
                 type="number"
                 placeholder="Timeline (Days)"
                 value={newMilestone.days}
                 onChange={(e) => setNewMilestone({ ...newMilestone, days: e.target.value })}
-                className="px-3 py-2 text-xs rounded-xl border border-dark-border bg-dark-surface text-white"
+                className="px-3 py-2 text-xs rounded-xl border border-surface-border bg-white text-slate-900"
               />
             </div>
             <button
               type="button"
               onClick={handleAddMilestone}
-              className="w-full py-2 bg-brand-indigo/15 text-brand-indigo border border-brand-indigo/25 hover:bg-brand-indigo hover:text-white transition-all text-xs font-bold rounded-xl cursor-pointer"
+              className="w-full py-2 bg-orange-600/15 text-orange-600 border border-orange-600/25 hover:bg-orange-600 hover:text-slate-900 transition-all text-xs font-bold rounded-xl cursor-pointer"
             >
               Propose Milestone
             </button>
@@ -497,17 +497,17 @@ const GigDetail = () => {
             {proposalForm.milestones.length > 0 && (
               <div className="space-y-1.5 pt-2">
                 {proposalForm.milestones.map((m, idx) => (
-                  <div key={idx} className="flex justify-between items-center p-2 rounded-xl border border-dark-border/60 text-xs">
+                  <div key={idx} className="flex justify-between items-center p-2 rounded-xl border border-surface-border/60 text-xs">
                     <div>
-                      <p className="font-bold text-white">{m.title}</p>
-                      <p className="text-[10px] text-[#64748B]">{m.days} days duration</p>
+                      <p className="font-bold text-slate-900">{m.title}</p>
+                      <p className="text-[10px] text-slate-500">{m.days} days duration</p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="font-extrabold text-brand-indigo">₹{m.amount.toLocaleString()}</span>
+                      <span className="font-extrabold text-orange-600">₹{m.amount.toLocaleString()}</span>
                       <button
                         type="button"
                         onClick={() => handleRemoveMilestone(idx)}
-                        className="text-[#64748B] hover:text-[#EF4444]"
+                        className="text-slate-500 hover:text-[#EF4444]"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -519,7 +519,7 @@ const GigDetail = () => {
           </div>
 
           {/* File attachments */}
-          <div className="border-t border-dark-border/40 pt-4">
+          <div className="border-t border-surface-border/40 pt-4">
             <FileUpload
               files={proposalForm.attachments}
               onChange={(attachments) => setProposalForm({ ...proposalForm, attachments })}
@@ -531,7 +531,7 @@ const GigDetail = () => {
           <button
             type="submit"
             disabled={isSubmittingProposal}
-            className="w-full py-3 bg-gradient-brand hover-glow-purple text-white text-xs font-bold rounded-xl transition-all cursor-pointer"
+            className="w-full py-3 bg-gradient-orange hover-glow-orange text-slate-900 text-xs font-bold rounded-xl transition-all cursor-pointer"
           >
             {isSubmittingProposal ? 'Submitting proposal...' : 'Confirm and Submit Application'}
           </button>

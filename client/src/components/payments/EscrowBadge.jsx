@@ -6,7 +6,7 @@ const EscrowBadge = ({ status }) => {
     escrow: 'bg-blue-500/10 text-blue-400 border border-blue-500/20',
     released: 'bg-green-500/10 text-green-400 border border-green-500/20',
     refunded: 'bg-red-500/10 text-red-400 border border-red-500/20',
-    disputed: 'bg-purple-500/10 text-purple-400 border border-purple-500/20'
+    disputed: 'bg-orange-500/10 text-purple-400 border border-orange-500/20'
   };
 
   const labels = {

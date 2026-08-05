@@ -46,7 +46,7 @@ const ForgotPassword = () => {
 
       <div className="flex-1 flex items-center justify-center p-6 relative overflow-hidden">
         {/* Decorative blobs */}
-        <div className="absolute top-20 right-20 w-72 h-72 rounded-full bg-brand-100 blur-3xl opacity-50 pointer-events-none animate-float" />
+        <div className="absolute top-20 right-20 w-72 h-72 rounded-full bg-orange-100 blur-3xl opacity-50 pointer-events-none animate-float" />
 
         <div className="bg-white rounded-3xl border border-surface-border shadow-[0_20px_60px_rgba(0,0,0,0.08)] max-w-md w-full p-8 relative z-10 animate-blur-in">
           
@@ -60,7 +60,7 @@ const ForgotPassword = () => {
           {!submitted ? (
             <>
               <div className="text-center mb-8">
-                <div className="h-16 w-16 bg-brand-50 border-2 border-brand-200 rounded-full flex items-center justify-center text-brand-600 mx-auto mb-6">
+                <div className="h-16 w-16 bg-orange-50 border-2 border-orange-200 rounded-full flex items-center justify-center text-orange-600 mx-auto mb-6">
                   <KeyRound className="h-8 w-8" />
                 </div>
                 <h1 className="text-2xl font-black text-slate-900 mb-2">Reset Password</h1>

@@ -95,7 +95,7 @@ const FreelancerReviews = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0A0A0F] text-white flex flex-col justify-center items-center">
+      <div className="min-h-screen bg-surface-subtle text-slate-900 flex flex-col justify-center items-center">
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
           <LoadingSpinner size="lg" color="white" />
@@ -105,21 +105,21 @@ const FreelancerReviews = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] text-white flex flex-col transition-smooth">
+    <div className="min-h-screen bg-surface-subtle text-slate-900 flex flex-col transition-smooth">
       <Navbar />
 
       <div className="flex-1 max-w-5xl w-full mx-auto p-4 md:p-6 space-y-8 relative z-10 animate-fade-up">
         
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-dark-border/40 pb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-surface-border/40 pb-6">
           <div>
             <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-brand-purple/15 text-brand-purple border border-brand-purple/30 mb-2">
               ⭐ Ratings & Feedback
             </span>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-white">
+            <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900">
               {isOwner ? 'My Reviews & Client Feedback' : `${profile?.user?.name || 'Freelancer'}'s Reviews`}
             </h1>
-            <p className="text-[#94A3B8] text-sm mt-1">Review evaluations submitted by bidded project clients.</p>
+            <p className="text-slate-500 text-sm mt-1">Review evaluations submitted by bidded project clients.</p>
           </div>
         </div>
 
@@ -127,21 +127,21 @@ const FreelancerReviews = () => {
           
           {/* Rating Breakdown sidebar */}
           <div className="space-y-6">
-            <div className="bg-dark-surface border border-dark-border p-6 rounded-3xl space-y-6 shadow-sm">
-              <h2 className="text-sm font-extrabold text-white uppercase tracking-wider">Overall Rating</h2>
+            <div className="bg-white border border-surface-border p-6 rounded-3xl space-y-6 shadow-sm">
+              <h2 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider">Overall Rating</h2>
               
               <div className="flex items-center gap-4">
-                <span className="text-5xl font-extrabold text-white">{Number(averageRating).toFixed(1)}</span>
+                <span className="text-5xl font-extrabold text-slate-900">{Number(averageRating).toFixed(1)}</span>
                 <div className="space-y-1">
                   <StarRating rating={averageRating} size={20} />
-                  <span className="text-[10px] text-[#64748B] font-bold uppercase tracking-wider block">
+                  <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">
                     Based on {totalReviews} reviews
                   </span>
                 </div>
               </div>
 
               {/* Bars */}
-              <div className="space-y-3.5 pt-4 border-t border-dark-border/40">
+              <div className="space-y-3.5 pt-4 border-t border-surface-border/40">
                 {ratingBreakdown.map((row) => (
                   <div key={row.stars} className="flex items-center gap-3 text-xs font-bold">
                     <span className="w-6 text-slate-300 flex items-center gap-0.5">
@@ -154,15 +154,15 @@ const FreelancerReviews = () => {
                         style={{ width: `${row.percentage}%` }}
                       />
                     </div>
-                    <span className="w-8 text-right text-[#64748B]">{row.count}</span>
+                    <span className="w-8 text-right text-slate-500">{row.count}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Filter buttons */}
-            <div className="bg-dark-surface border border-dark-border p-4 rounded-3xl space-y-3">
-              <h3 className="text-xs font-extrabold text-[#64748B] uppercase tracking-wide px-2">Filter Reviews</h3>
+            <div className="bg-white border border-surface-border p-4 rounded-3xl space-y-3">
+              <h3 className="text-xs font-extrabold text-slate-500 uppercase tracking-wide px-2">Filter Reviews</h3>
               <div className="flex flex-col gap-1">
                 {['all', '5', '4', '3', '2', '1'].map((stars) => (
                   <button
@@ -171,7 +171,7 @@ const FreelancerReviews = () => {
                     className={`px-3 py-2 rounded-xl text-xs font-bold text-left capitalize transition-all cursor-pointer ${
                       ratingFilter === stars
                         ? 'bg-brand-purple/15 text-brand-purple font-extrabold border border-brand-purple/20'
-                        : 'border border-transparent text-[#94A3B8] hover:bg-white/5 hover:text-white'
+                        : 'border border-transparent text-slate-500 hover:bg-surface-muted hover:text-slate-900'
                     }`}
                   >
                     {stars === 'all' ? 'All Reviews' : `${stars} Stars (${getRatingCount(Number(stars))})`}
@@ -184,10 +184,10 @@ const FreelancerReviews = () => {
           {/* Reviews List */}
           <div className="md:col-span-2 space-y-6">
             {filteredReviews.length === 0 ? (
-              <div className="text-center py-20 bg-dark-surface/40 border border-dark-border rounded-3xl p-8 max-w-md mx-auto space-y-3">
-                <MessageSquare className="h-10 w-10 mx-auto text-[#64748B]" />
-                <h3 className="text-sm font-bold text-white">No Reviews Yet</h3>
-                <p className="text-xs text-[#94A3B8] leading-relaxed">
+              <div className="text-center py-20 bg-white/40 border border-surface-border rounded-3xl p-8 max-w-md mx-auto space-y-3">
+                <MessageSquare className="h-10 w-10 mx-auto text-slate-500" />
+                <h3 className="text-sm font-bold text-slate-900">No Reviews Yet</h3>
+                <p className="text-xs text-slate-500 leading-relaxed">
                   {ratingFilter === 'all'
                     ? 'No client reviews have been left for this profile.'
                     : `No reviews found with rating "${ratingFilter}".`}
@@ -198,7 +198,7 @@ const FreelancerReviews = () => {
                 {filteredReviews.map((review) => (
                   <div 
                     key={review._id} 
-                    className="bg-dark-surface border border-dark-border rounded-3xl p-5 space-y-4 hover:border-[rgba(255,255,255,0.1)] transition-all"
+                    className="bg-white border border-surface-border rounded-3xl p-5 space-y-4 hover:border-[rgba(255,255,255,0.1)] transition-all"
                   >
                     {/* Header: Reviewer info */}
                     <div className="flex items-center justify-between gap-3">
@@ -206,16 +206,16 @@ const FreelancerReviews = () => {
                         <img 
                           src={review.reviewer?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=80'} 
                           alt={review.reviewer?.name}
-                          className="h-10 w-10 rounded-full object-cover border border-dark-border/40"
+                          className="h-10 w-10 rounded-full object-cover border border-surface-border/40"
                         />
                         <div>
-                          <h4 className="text-xs font-bold text-white">{review.reviewer?.name || 'Client'}</h4>
-                          <span className="text-[10px] text-[#64748B] font-bold block uppercase tracking-wider mt-0.5">
+                          <h4 className="text-xs font-bold text-slate-900">{review.reviewer?.name || 'Client'}</h4>
+                          <span className="text-[10px] text-slate-500 font-bold block uppercase tracking-wider mt-0.5">
                             Project: {review.gig?.title || 'Contract'}
                           </span>
                         </div>
                       </div>
-                      <span className="text-[10px] text-[#64748B] font-bold">
+                      <span className="text-[10px] text-slate-500 font-bold">
                         {new Date(review.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                       </span>
                     </div>
@@ -227,7 +227,7 @@ const FreelancerReviews = () => {
                     </div>
 
                     {/* Content Comment */}
-                    <p className="text-xs text-[#E2E8F0] leading-relaxed">{review.comment}</p>
+                    <p className="text-xs text-slate-700 leading-relaxed">{review.comment}</p>
 
                     {/* Review Quality Tags */}
                     {review.tags?.length > 0 && (
@@ -245,7 +245,7 @@ const FreelancerReviews = () => {
 
                     {/* Response reply block */}
                     {review.response ? (
-                      <div className="p-4 rounded-2xl bg-white/5 border border-dark-border/40 text-xs space-y-1.5">
+                      <div className="p-4 rounded-2xl bg-surface-muted border border-surface-border/40 text-xs space-y-1.5">
                         <p className="font-extrabold text-brand-purple uppercase tracking-wider text-[10px]">Response reply:</p>
                         <p className="text-slate-300 leading-relaxed">{review.response}</p>
                       </div>
@@ -262,24 +262,24 @@ const FreelancerReviews = () => {
 
                     {/* Reply Input Box */}
                     {activeReplyId === review._id && (
-                      <div className="space-y-3 pt-2 border-t border-dark-border/30">
+                      <div className="space-y-3 pt-2 border-t border-surface-border/30">
                         <textarea
                           placeholder="Write a constructive response reply..."
                           rows={2}
                           value={responseText[review._id] || ''}
                           onChange={(e) => setResponseText({ ...responseText, [review._id]: e.target.value })}
-                          className="w-full px-4 py-2.5 rounded-xl border border-dark-border bg-[rgba(255,255,255,0.02)] text-white text-xs placeholder:text-[#475569] focus:outline-none focus:ring-1 focus:ring-brand-purple/30 focus:border-brand-purple transition-smooth resize-none"
+                          className="w-full px-4 py-2.5 rounded-xl border border-surface-border bg-surface-subtle text-slate-900 text-xs placeholder:text-[#475569] focus:outline-none focus:ring-1 focus:ring-orange-purple/30 focus:border-orange-purple transition-smooth resize-none"
                         />
                         <div className="flex justify-end gap-2.5">
                           <button
                             onClick={() => setActiveReplyId(null)}
-                            className="px-3.5 py-1.5 rounded-lg border border-dark-border text-[#94A3B8] hover:text-white font-bold text-[10px] cursor-pointer"
+                            className="px-3.5 py-1.5 rounded-lg border border-surface-border text-slate-500 hover:text-slate-900 font-bold text-[10px] cursor-pointer"
                           >
                             Cancel
                           </button>
                           <button
                             onClick={() => handleSendResponse(review._id)}
-                            className="px-4 py-1.5 rounded-lg bg-gradient-brand text-white font-bold text-[10px] hover-glow-purple flex items-center gap-1 cursor-pointer"
+                            className="px-4 py-1.5 rounded-lg bg-gradient-orange text-slate-900 font-bold text-[10px] hover-glow-orange flex items-center gap-1 cursor-pointer"
                           >
                             Post Reply
                             <Send className="h-3 w-3" />
@@ -289,10 +289,10 @@ const FreelancerReviews = () => {
                     )}
 
                     {/* Actions: Helpful count */}
-                    <div className="flex items-center gap-4 pt-2 border-t border-dark-border/20">
+                    <div className="flex items-center gap-4 pt-2 border-t border-surface-border/20">
                       <button
                         onClick={() => handleHelpfulClick(review._id)}
-                        className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#64748B] hover:text-white transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 text-[10px] font-bold text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
                       >
                         <ThumbsUp className="h-3.5 w-3.5" />
                         Helpful ({review.helpfulCount || 0})

@@ -62,24 +62,24 @@ const MyProposals = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] text-white flex flex-col transition-smooth">
+    <div className="min-h-screen bg-surface-subtle text-slate-900 flex flex-col transition-smooth">
       <div className="flex-1 max-w-4xl w-full mx-auto p-6 space-y-8 relative z-10 animate-fade-up">
         {/* Header */}
         <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-white">My Submitted Proposals</h1>
-          <p className="text-[#94A3B8] text-sm mt-1">Track and negotiate active bidding contracts for your gigs</p>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900">My Submitted Proposals</h1>
+          <p className="text-slate-500 text-sm mt-1">Track and negotiate active bidding contracts for your gigs</p>
         </div>
 
         {/* Tab Filters */}
-        <div className="border-b border-dark-border/60 pb-3 flex flex-wrap gap-2">
+        <div className="border-b border-surface-border/60 pb-3 flex flex-wrap gap-2">
           {['all', 'pending', 'accepted', 'rejected', 'withdrawn'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 rounded-xl text-xs font-bold capitalize transition-all border ${
                 activeTab === tab
-                  ? 'bg-brand-indigo/15 border-brand-indigo/35 text-brand-indigo font-extrabold'
-                  : 'border-transparent text-[#94A3B8] hover:bg-white/5 hover:text-white'
+                  ? 'bg-orange-600/15 border-orange-600/35 text-orange-600 font-extrabold'
+                  : 'border-transparent text-slate-500 hover:bg-surface-muted hover:text-slate-900'
               } cursor-pointer`}
             >
               {tab}
@@ -93,10 +93,10 @@ const MyProposals = () => {
             <LoadingSpinner size="lg" color="white" />
           </div>
         ) : filteredProposals.length === 0 ? (
-          <div className="text-center py-20 bg-dark-surface/30 border border-dark-border rounded-3xl p-8 max-w-md mx-auto space-y-3">
-            <FileText className="h-10 w-10 mx-auto text-[#64748B]" />
-            <h3 className="text-sm font-bold text-white">No Proposals Found</h3>
-            <p className="text-xs text-[#94A3B8] leading-relaxed">
+          <div className="text-center py-20 bg-white/30 border border-surface-border rounded-3xl p-8 max-w-md mx-auto space-y-3">
+            <FileText className="h-10 w-10 mx-auto text-slate-500" />
+            <h3 className="text-sm font-bold text-slate-900">No Proposals Found</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
               {activeTab === 'all'
                 ? "You haven't submitted any proposals yet. Check the Marketplace and bid on gigs!"
                 : `You don't have any proposals with status "${activeTab}".`}
@@ -104,7 +104,7 @@ const MyProposals = () => {
             {activeTab === 'all' && (
               <button
                 onClick={() => navigate('/gigs')}
-                className="px-4 py-2.5 rounded-xl bg-brand-indigo text-white font-bold text-xs hover-glow-purple cursor-pointer"
+                className="px-4 py-2.5 rounded-xl bg-orange-600 text-slate-900 font-bold text-xs hover-glow-orange cursor-pointer"
               >
                 Browse Gigs
               </button>
@@ -115,11 +115,11 @@ const MyProposals = () => {
             {filteredProposals.map((proposal) => (
               <div key={proposal._id} className="space-y-2">
                 {/* Title indicator banner overlay */}
-                <div className="p-3 bg-dark-surface border border-dark-border rounded-t-2xl border-b-0 flex items-center justify-between text-xs font-bold text-brand-indigo">
+                <div className="p-3 bg-white border border-surface-border rounded-t-2xl border-b-0 flex items-center justify-between text-xs font-bold text-orange-600">
                   <span>
-                    Gig Bidded: <span className="text-white hover:underline cursor-pointer" onClick={() => navigate(`/gigs/${proposal.gig?._id}`)}>{proposal.gig?.title}</span>
+                    Gig Bidded: <span className="text-slate-900 hover:underline cursor-pointer" onClick={() => navigate(`/gigs/${proposal.gig?._id}`)}>{proposal.gig?.title}</span>
                   </span>
-                  <span className="text-[#64748B]">{proposal.gig?.category}</span>
+                  <span className="text-slate-500">{proposal.gig?.category}</span>
                 </div>
                 <div className="mt-[-8px]">
                   <ProposalCard

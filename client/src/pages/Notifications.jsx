@@ -49,7 +49,7 @@ const Notifications = () => {
       case 'review_added':
         return <Award className="h-5 w-5 text-yellow-400" />;
       default:
-        return <Bell className="h-5 w-5 text-[#94A3B8]" />;
+        return <Bell className="h-5 w-5 text-slate-500" />;
     }
   };
 
@@ -97,16 +97,16 @@ const Notifications = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] text-white flex flex-col transition-smooth">
+    <div className="min-h-screen bg-surface-subtle text-slate-900 flex flex-col transition-smooth">
       <Navbar />
 
       <div className="flex-1 max-w-4xl w-full mx-auto p-4 md:p-6 space-y-8 relative z-10 animate-fade-up">
         
         {/* Header bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-dark-border/40 pb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-border/40 pb-6">
           <div>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-white">Notifications Center</h1>
-            <p className="text-[#94A3B8] text-sm mt-1">Review alerts, contract status logs, and active chat indicators.</p>
+            <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900">Notifications Center</h1>
+            <p className="text-slate-500 text-sm mt-1">Review alerts, contract status logs, and active chat indicators.</p>
           </div>
           
           {unreadCount > 0 && (
@@ -121,7 +121,7 @@ const Notifications = () => {
         </div>
 
         {/* Tab filters */}
-        <div className="border-b border-dark-border/40 pb-3 flex flex-wrap gap-2">
+        <div className="border-b border-surface-border/40 pb-3 flex flex-wrap gap-2">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -129,7 +129,7 @@ const Notifications = () => {
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
                 activeTab === tab.id
                   ? 'bg-brand-purple/15 border-brand-purple/35 text-brand-purple font-extrabold'
-                  : 'border-transparent text-[#94A3B8] hover:bg-white/5 hover:text-white'
+                  : 'border-transparent text-slate-500 hover:bg-surface-muted hover:text-slate-900'
               } cursor-pointer`}
             >
               {tab.label}
@@ -143,10 +143,10 @@ const Notifications = () => {
             <LoadingSpinner size="lg" color="white" />
           </div>
         ) : filteredNotifications.length === 0 ? (
-          <div className="text-center py-20 bg-dark-surface/30 border border-dark-border rounded-3xl p-8 max-w-md mx-auto space-y-3">
-            <Bell className="h-10 w-10 mx-auto text-[#64748B]" />
-            <h3 className="text-sm font-bold text-white">All caught up!</h3>
-            <p className="text-xs text-[#94A3B8] leading-relaxed">
+          <div className="text-center py-20 bg-white/30 border border-surface-border rounded-3xl p-8 max-w-md mx-auto space-y-3">
+            <Bell className="h-10 w-10 mx-auto text-slate-500" />
+            <h3 className="text-sm font-bold text-slate-900">All caught up!</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
               No notifications found matching your active tab selection.
             </p>
           </div>
@@ -159,26 +159,26 @@ const Notifications = () => {
                 className={`p-4 flex items-center justify-between gap-4 rounded-2xl border transition-all cursor-pointer ${
                   !notif.isRead
                     ? 'bg-brand-purple/5 border-brand-purple/20 shadow-sm'
-                    : 'bg-dark-surface border-dark-border hover:border-white/10'
+                    : 'bg-white border-surface-border hover:border-white/10'
                 }`}
               >
                 <div className="flex items-start gap-4 min-w-0 flex-1">
-                  <div className="p-2 rounded-xl bg-white/5 border border-dark-border/40 flex-shrink-0 mt-0.5">
+                  <div className="p-2 rounded-xl bg-surface-muted border border-surface-border/40 flex-shrink-0 mt-0.5">
                     {getNotificationIcon(notif.type)}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <h3 className={`text-xs font-bold truncate ${!notif.isRead ? 'text-white' : 'text-[#E2E8F0]'}`}>
+                      <h3 className={`text-xs font-bold truncate ${!notif.isRead ? 'text-white' : 'text-slate-700'}`}>
                         {notif.title}
                       </h3>
                       {!notif.isRead && (
                         <Circle className="h-2 w-2 text-brand-purple fill-brand-purple flex-shrink-0" />
                       )}
                     </div>
-                    <p className="text-xs text-[#94A3B8] leading-relaxed mt-1">
+                    <p className="text-xs text-slate-500 leading-relaxed mt-1">
                       {notif.message}
                     </p>
-                    <span className="text-[10px] text-[#64748B] font-bold mt-1.5 block">
+                    <span className="text-[10px] text-slate-500 font-bold mt-1.5 block">
                       {formatTime(notif.createdAt)}
                     </span>
                   </div>
@@ -186,7 +186,7 @@ const Notifications = () => {
 
                 <button
                   onClick={(e) => handleDelete(e, notif._id)}
-                  className="p-2 rounded-xl border border-transparent hover:border-dark-border hover:bg-white/5 text-[#64748B] hover:text-[#EF4444] transition-all cursor-pointer"
+                  className="p-2 rounded-xl border border-transparent hover:border-surface-border hover:bg-surface-muted text-slate-500 hover:text-[#EF4444] transition-all cursor-pointer"
                   title="Delete Alert"
                 >
                   <Trash2 className="h-4 w-4" />

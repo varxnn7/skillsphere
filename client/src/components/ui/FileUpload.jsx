@@ -50,7 +50,7 @@ const FileUpload = ({ files, onChange, maxFiles = 3, label = 'Upload Attachments
 
   return (
     <div className="space-y-4">
-      <label className="text-xs font-bold text-[#94A3B8] uppercase tracking-wide">{label}</label>
+      <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">{label}</label>
 
       {/* Upload Drag Box */}
       {files.length < maxFiles ? (
@@ -61,15 +61,15 @@ const FileUpload = ({ files, onChange, maxFiles = 3, label = 'Upload Attachments
           onDrop={handleDrop}
           className={`border-2 border-dashed rounded-2xl p-6 text-center transition-all relative ${
             dragActive
-              ? 'border-brand-indigo bg-brand-indigo/5 text-white'
-              : 'border-dark-border bg-[rgba(255,255,255,0.01)] hover:border-dark-border/80 text-[#94A3B8]'
+              ? 'border-orange-600 bg-orange-600/5 text-white'
+              : 'border-surface-border bg-[rgba(255,255,255,0.01)] hover:border-surface-border/80 text-slate-500'
           }`}
         >
-          <UploadCloud className="h-10 w-10 mx-auto text-[#64748B] mb-2" />
+          <UploadCloud className="h-10 w-10 mx-auto text-slate-500 mb-2" />
           <p className="text-sm font-bold text-slate-200">Drag and drop files here</p>
-          <p className="text-xs text-[#64748B] mt-1 mb-3">PDF, DOCX, ZIP, or Image (Max {maxFiles} files)</p>
+          <p className="text-xs text-slate-500 mt-1 mb-3">PDF, DOCX, ZIP, or Image (Max {maxFiles} files)</p>
           
-          <label className="inline-block bg-dark-surface border border-dark-border hover:border-brand-indigo hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer">
+          <label className="inline-block bg-white border border-surface-border hover:border-orange-600 hover:text-slate-900 px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer">
             Browse Files
             <input
               type="file"
@@ -80,7 +80,7 @@ const FileUpload = ({ files, onChange, maxFiles = 3, label = 'Upload Attachments
           </label>
         </div>
       ) : (
-        <p className="text-xs text-[#64748B] font-medium">Maximum upload file limit reached ({maxFiles}/{maxFiles}).</p>
+        <p className="text-xs text-slate-500 font-medium">Maximum upload file limit reached ({maxFiles}/{maxFiles}).</p>
       )}
 
       {/* Uploaded List */}
@@ -89,10 +89,10 @@ const FileUpload = ({ files, onChange, maxFiles = 3, label = 'Upload Attachments
           {files.map((file, idx) => (
             <div
               key={idx}
-              className="flex items-center justify-between p-3 rounded-xl border border-dark-border bg-dark-surface/50 text-slate-200"
+              className="flex items-center justify-between p-3 rounded-xl border border-surface-border bg-surface-muted0 text-slate-200"
             >
               <div className="flex items-center gap-3 min-w-0">
-                <div className="p-2 rounded-lg bg-brand-indigo/15 text-brand-indigo">
+                <div className="p-2 rounded-lg bg-orange-600/15 text-orange-600">
                   <File className="h-4 w-4" />
                 </div>
                 <span className="text-xs font-bold truncate pr-4">{file.name}</span>
@@ -100,7 +100,7 @@ const FileUpload = ({ files, onChange, maxFiles = 3, label = 'Upload Attachments
               <button
                 type="button"
                 onClick={() => removeFile(idx)}
-                className="p-1.5 rounded-lg text-[#64748B] hover:text-[#EF4444] hover:bg-white/5 transition-colors cursor-pointer"
+                className="p-1.5 rounded-lg text-slate-500 hover:text-[#EF4444] hover:bg-surface-muted transition-colors cursor-pointer"
               >
                 <Trash2 className="h-4 w-4" />
               </button>

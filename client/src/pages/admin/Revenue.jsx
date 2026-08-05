@@ -124,8 +124,8 @@ const Revenue = () => {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-2">
-        <RefreshCw className="h-6 w-6 animate-spin text-brand-indigo" />
-        <span className="text-xs font-bold text-[#64748B] uppercase tracking-wide">Syncing Financial Ledgers...</span>
+        <RefreshCw className="h-6 w-6 animate-spin text-orange-600" />
+        <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">Syncing Financial Ledgers...</span>
       </div>
     );
   }
@@ -144,8 +144,8 @@ const Revenue = () => {
         <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-brand-purple/15 text-brand-purple border border-brand-purple/30 mb-2">
           🛡️ Admin Control Panel
         </span>
-        <h1 className="text-2xl font-extrabold text-white">Financial Analytics</h1>
-        <p className="text-xs text-[#94A3B8] mt-1">Audit platform revenue, track escrows, monitor top earners and full payment history.</p>
+        <h1 className="text-2xl font-extrabold text-slate-900">Financial Analytics</h1>
+        <p className="text-xs text-slate-500 mt-1">Audit platform revenue, track escrows, monitor top earners and full payment history.</p>
       </div>
 
       {/* Stats Cards Row */}
@@ -156,13 +156,13 @@ const Revenue = () => {
           { label: 'Transactions', value: `${totalTransactions} Orders`, icon: BarChart3, color: 'purple' },
           { label: 'Avg Ticket', value: fmt(avgTransactionValue), icon: TrendingUp, color: 'yellow' }
         ].map(({ label, value, icon: Icon, color }) => (
-          <div key={label} className="bg-dark-surface p-4 md:p-6 rounded-2xl border border-dark-border flex items-center gap-4">
+          <div key={label} className="bg-white p-4 md:p-6 rounded-2xl border border-surface-border flex items-center gap-4">
             <div className={`p-3.5 rounded-xl bg-${color}-500/10 border border-${color}-500/20 text-${color}-400 shrink-0`}>
               <Icon className="h-5 w-5" />
             </div>
             <div>
-              <span className="block text-[10px] md:text-xs font-bold text-[#64748B] uppercase tracking-wide">{label}</span>
-              <span className="text-lg md:text-xl font-extrabold text-white">{value}</span>
+              <span className="block text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wide">{label}</span>
+              <span className="text-lg md:text-xl font-extrabold text-slate-900">{value}</span>
             </div>
           </div>
         ))}
@@ -170,10 +170,10 @@ const Revenue = () => {
 
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-dark-surface p-6 rounded-2xl border border-dark-border space-y-4">
+        <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-surface-border space-y-4">
           <div>
-            <h3 className="text-sm font-bold text-white">Platform Revenue Trend</h3>
-            <p className="text-[11px] text-[#64748B]">Platform commission fee (10%) aggregated monthly</p>
+            <h3 className="text-sm font-bold text-slate-900">Platform Revenue Trend</h3>
+            <p className="text-[11px] text-slate-500">Platform commission fee (10%) aggregated monthly</p>
           </div>
           <div className="h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -198,14 +198,14 @@ const Revenue = () => {
           </div>
         </div>
 
-        <div className="bg-dark-surface p-6 rounded-2xl border border-dark-border flex flex-col justify-between space-y-4">
+        <div className="bg-white p-6 rounded-2xl border border-surface-border flex flex-col justify-between space-y-4">
           <div>
-            <h3 className="text-sm font-bold text-white">Category Spread</h3>
-            <p className="text-[11px] text-[#64748B]">Volume division across service sectors</p>
+            <h3 className="text-sm font-bold text-slate-900">Category Spread</h3>
+            <p className="text-[11px] text-slate-500">Volume division across service sectors</p>
           </div>
           <div className="h-56 w-full flex items-center justify-center">
             {categoryData.length === 0 ? (
-              <p className="text-xs text-[#64748B] font-bold">No categorical data available.</p>
+              <p className="text-xs text-slate-500 font-bold">No categorical data available.</p>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -224,10 +224,10 @@ const Revenue = () => {
       {/* ─── PAYMENT HISTORY TABLE ─── */}
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <h2 className="text-md font-bold text-white uppercase tracking-wider">Payment History</h2>
+          <h2 className="text-md font-bold text-slate-900 uppercase tracking-wider">Payment History</h2>
           <button
             onClick={handleExportCSV}
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold bg-white/5 border border-dark-border rounded-xl text-slate-300 hover:text-white hover:border-brand-indigo/50 transition-all cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold bg-surface-muted border border-surface-border rounded-xl text-slate-300 hover:text-slate-900 hover:border-orange-600/50 transition-all cursor-pointer"
           >
             <Download className="h-3.5 w-3.5" />
             Export CSV
@@ -237,20 +237,20 @@ const Revenue = () => {
         {/* Filters Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#64748B]" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
             <input
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search gig, client, freelancer..."
-              className="w-full pl-9 pr-4 py-2 text-xs bg-dark-surface border border-dark-border rounded-xl text-white placeholder-[#64748B] focus:outline-none focus:ring-2 focus:ring-brand-indigo/40"
+              className="w-full pl-9 pr-4 py-2 text-xs bg-white border border-surface-border rounded-xl text-slate-900 placeholder-[#64748B] focus:outline-none focus:ring-2 focus:ring-orange-600/40"
             />
           </div>
 
           <select
             value={statusFilter}
             onChange={e => setStatusFilter(e.target.value)}
-            className="px-3 py-2 text-xs bg-dark-surface border border-dark-border rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-indigo/40 cursor-pointer"
+            className="px-3 py-2 text-xs bg-white border border-surface-border rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-600/40 cursor-pointer"
           >
             <option value="">All Statuses</option>
             <option value="pending">Pending</option>
@@ -264,37 +264,37 @@ const Revenue = () => {
             type="date"
             value={startDate}
             onChange={e => setStartDate(e.target.value)}
-            className="px-3 py-2 text-xs bg-dark-surface border border-dark-border rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-indigo/40"
+            className="px-3 py-2 text-xs bg-white border border-surface-border rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-600/40"
             title="From Date"
           />
           <input
             type="date"
             value={endDate}
             onChange={e => setEndDate(e.target.value)}
-            className="px-3 py-2 text-xs bg-dark-surface border border-dark-border rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-indigo/40"
+            className="px-3 py-2 text-xs bg-white border border-surface-border rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-600/40"
             title="To Date"
           />
         </div>
 
         {/* Table */}
-        <div className="bg-dark-surface rounded-2xl border border-dark-border overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.2)]">
+        <div className="bg-white rounded-2xl border border-surface-border overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.2)]">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-white/5 border-b border-dark-border text-xs">
-                  <th className="px-4 py-4 text-[10px] font-bold text-[#64748B] uppercase tracking-wider">#</th>
-                  <th className="px-4 py-4 text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Gig Title</th>
-                  <th className="px-4 py-4 text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Client</th>
-                  <th className="px-4 py-4 text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Freelancer</th>
-                  <th className="px-4 py-4 text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Amount</th>
-                  <th className="px-4 py-4 text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Platform Fee</th>
-                  <th className="px-4 py-4 text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Net Freelancer</th>
-                  <th className="px-4 py-4 text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Status</th>
-                  <th className="px-4 py-4 text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Date</th>
-                  <th className="px-4 py-4 text-[10px] font-bold text-[#64748B] uppercase tracking-wider text-right">Action</th>
+                <tr className="bg-surface-muted border-b border-surface-border text-xs">
+                  <th className="px-4 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">#</th>
+                  <th className="px-4 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Gig Title</th>
+                  <th className="px-4 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Client</th>
+                  <th className="px-4 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Freelancer</th>
+                  <th className="px-4 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Amount</th>
+                  <th className="px-4 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Platform Fee</th>
+                  <th className="px-4 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Net Freelancer</th>
+                  <th className="px-4 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Date</th>
+                  <th className="px-4 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-dark-border/40 text-xs text-slate-300">
+              <tbody className="divide-y divide-surface-border/40 text-xs text-slate-300">
                 {paymentsLoading ? (
                   Array.from({ length: 5 }).map((_, i) => (
                     <tr key={i} className="animate-pulse">
@@ -305,7 +305,7 @@ const Revenue = () => {
                   ))
                 ) : payments.length === 0 ? (
                   <tr>
-                    <td colSpan={10} className="px-4 py-12 text-center text-[#64748B] font-bold">
+                    <td colSpan={10} className="px-4 py-12 text-center text-slate-500 font-bold">
                       No payment records found.
                     </td>
                   </tr>
@@ -317,38 +317,38 @@ const Revenue = () => {
                     });
                     return (
                       <tr key={p._id} className="hover:bg-white/[0.01] transition-colors">
-                        <td className="px-4 py-4 font-mono font-bold text-[#64748B]">{serial}</td>
-                        <td className="px-4 py-4 font-bold text-white max-w-[160px] truncate">
+                        <td className="px-4 py-4 font-mono font-bold text-slate-500">{serial}</td>
+                        <td className="px-4 py-4 font-bold text-slate-900 max-w-[160px] truncate">
                           {p.gig?.title || 'N/A'}
-                          <div className="text-[9px] text-[#64748B] font-normal mt-0.5">{p.gig?.category}</div>
+                          <div className="text-[9px] text-slate-500 font-normal mt-0.5">{p.gig?.category}</div>
                         </td>
                         <td className="px-4 py-4">
                           <div className="flex items-center gap-2">
-                            <img src={p.client?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&q=80'} alt="" className="h-6 w-6 rounded-full border border-dark-border object-cover shrink-0" />
+                            <img src={p.client?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&q=80'} alt="" className="h-6 w-6 rounded-full border border-surface-border object-cover shrink-0" />
                             <div>
-                              <div className="font-bold text-white text-[11px]">{p.client?.name}</div>
-                              <div className="text-[9px] text-[#64748B]">{p.client?.email}</div>
+                              <div className="font-bold text-slate-900 text-[11px]">{p.client?.name}</div>
+                              <div className="text-[9px] text-slate-500">{p.client?.email}</div>
                             </div>
                           </div>
                         </td>
                         <td className="px-4 py-4">
                           <div className="flex items-center gap-2">
-                            <img src={p.freelancer?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&q=80'} alt="" className="h-6 w-6 rounded-full border border-dark-border object-cover shrink-0" />
+                            <img src={p.freelancer?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&q=80'} alt="" className="h-6 w-6 rounded-full border border-surface-border object-cover shrink-0" />
                             <div>
-                              <div className="font-bold text-white text-[11px]">{p.freelancer?.name}</div>
-                              <div className="text-[9px] text-[#64748B]">{p.freelancer?.email}</div>
+                              <div className="font-bold text-slate-900 text-[11px]">{p.freelancer?.name}</div>
+                              <div className="text-[9px] text-slate-500">{p.freelancer?.email}</div>
                             </div>
                           </div>
                         </td>
-                        <td className="px-4 py-4 font-bold text-white">{fmt(p.amount)}</td>
-                        <td className="px-4 py-4 text-[#64748B]">{fmt(p.platformFee)} <span className="text-[9px]">(10%)</span></td>
-                        <td className="px-4 py-4 font-bold text-[#10B981]">{fmt(p.freelancerAmount)} <span className="text-[9px] text-[#64748B]">(90%)</span></td>
+                        <td className="px-4 py-4 font-bold text-slate-900">{fmt(p.amount)}</td>
+                        <td className="px-4 py-4 text-slate-500">{fmt(p.platformFee)} <span className="text-[9px]">(10%)</span></td>
+                        <td className="px-4 py-4 font-bold text-[#10B981]">{fmt(p.freelancerAmount)} <span className="text-[9px] text-slate-500">(90%)</span></td>
                         <td className="px-4 py-4"><StatusBadge status={p.status} /></td>
-                        <td className="px-4 py-4 text-[#64748B] text-[10px] whitespace-nowrap">{date}</td>
+                        <td className="px-4 py-4 text-slate-500 text-[10px] whitespace-nowrap">{date}</td>
                         <td className="px-4 py-4 text-right">
                           <button
                             onClick={() => setSelectedPayment(p)}
-                            className="inline-flex items-center gap-1 px-2.5 py-1.5 text-[10px] font-bold bg-brand-indigo/10 border border-brand-indigo/25 text-brand-indigo hover:bg-brand-indigo hover:text-white rounded-lg transition-all cursor-pointer"
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 text-[10px] font-bold bg-orange-600/10 border border-orange-600/25 text-orange-600 hover:bg-orange-600 hover:text-slate-900 rounded-lg transition-all cursor-pointer"
                           >
                             <Eye className="h-3 w-3" />
                             View
@@ -364,21 +364,21 @@ const Revenue = () => {
 
           {/* Pagination */}
           {pagination.pages > 1 && (
-            <div className="flex items-center justify-between px-4 py-3 border-t border-dark-border text-xs text-[#64748B]">
+            <div className="flex items-center justify-between px-4 py-3 border-t border-surface-border text-xs text-slate-500">
               <span>Showing {((pagination.page - 1) * pagination.limit) + 1}–{Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total} records</span>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => fetchPayments(pagination.page - 1)}
                   disabled={pagination.page <= 1}
-                  className="p-1.5 rounded-lg bg-white/5 border border-dark-border text-slate-400 hover:text-white disabled:opacity-30 cursor-pointer disabled:cursor-default"
+                  className="p-1.5 rounded-lg bg-surface-muted border border-surface-border text-slate-400 hover:text-slate-900 disabled:opacity-30 cursor-pointer disabled:cursor-default"
                 >
                   <ChevronLeft className="h-3.5 w-3.5" />
                 </button>
-                <span className="font-bold text-white">Page {pagination.page} of {pagination.pages}</span>
+                <span className="font-bold text-slate-900">Page {pagination.page} of {pagination.pages}</span>
                 <button
                   onClick={() => fetchPayments(pagination.page + 1)}
                   disabled={pagination.page >= pagination.pages}
-                  className="p-1.5 rounded-lg bg-white/5 border border-dark-border text-slate-400 hover:text-white disabled:opacity-30 cursor-pointer disabled:cursor-default"
+                  className="p-1.5 rounded-lg bg-surface-muted border border-surface-border text-slate-400 hover:text-slate-900 disabled:opacity-30 cursor-pointer disabled:cursor-default"
                 >
                   <ChevronRight className="h-3.5 w-3.5" />
                 </button>
@@ -390,37 +390,37 @@ const Revenue = () => {
 
       {/* Top Earners Table */}
       <div className="space-y-4">
-        <h2 className="text-md font-bold text-white uppercase tracking-wider">Top Performing Freelancers</h2>
-        <div className="bg-dark-surface rounded-2xl border border-dark-border overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.2)]">
+        <h2 className="text-md font-bold text-slate-900 uppercase tracking-wider">Top Performing Freelancers</h2>
+        <div className="bg-white rounded-2xl border border-surface-border overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.2)]">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-white/5 border-b border-dark-border text-xs">
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748B] uppercase tracking-wider">Rank</th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748B] uppercase tracking-wider">Freelancer</th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748B] uppercase tracking-wider">Skills</th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748B] uppercase tracking-wider">Total Earnings</th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748B] uppercase tracking-wider">Completed Gigs</th>
-                  <th className="px-6 py-4 text-xs font-bold text-[#64748B] uppercase tracking-wider text-right">Rating</th>
+                <tr className="bg-surface-muted border-b border-surface-border text-xs">
+                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Rank</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Freelancer</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Skills</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Total Earnings</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Completed Gigs</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Rating</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-dark-border/40 text-xs text-slate-300">
+              <tbody className="divide-y divide-surface-border/40 text-xs text-slate-300">
                 {freelancers.map((item, idx) => (
                   <tr key={idx} className="hover:bg-white/[0.01]">
-                    <td className="px-6 py-4 font-bold text-brand-indigo font-mono">#{idx + 1}</td>
+                    <td className="px-6 py-4 font-bold text-orange-600 font-mono">#{idx + 1}</td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <img src={item.user?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=40'} alt={item.user?.name} className="h-8 w-8 rounded-full border border-dark-border object-cover" />
+                        <img src={item.user?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=40'} alt={item.user?.name} className="h-8 w-8 rounded-full border border-surface-border object-cover" />
                         <div className="flex flex-col">
-                          <span className="font-bold text-white">{item.user?.name}</span>
-                          <span className="text-[10px] text-[#64748B] font-medium">{item.user?.email}</span>
+                          <span className="font-bold text-slate-900">{item.user?.name}</span>
+                          <span className="text-[10px] text-slate-500 font-medium">{item.user?.email}</span>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 max-w-[200px]">
                       <div className="flex flex-wrap gap-1">
                         {item.skills?.slice(0, 3).map((skill, sIdx) => (
-                          <span key={sIdx} className="px-1.5 py-0.5 rounded bg-white/5 border border-dark-border text-[9px] text-[#94A3B8]">{skill}</span>
+                          <span key={sIdx} className="px-1.5 py-0.5 rounded bg-surface-muted border border-surface-border text-[9px] text-slate-500">{skill}</span>
                         ))}
                       </div>
                     </td>
@@ -440,10 +440,10 @@ const Revenue = () => {
       {/* Payment Detail Modal */}
       {selectedPayment && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setSelectedPayment(null)}>
-          <div className="bg-[#111118] border border-dark-border rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl" onClick={e => e.stopPropagation()}>
+          <div className="bg-white border border-surface-border rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-extrabold text-white">Payment Details</h3>
-              <button onClick={() => setSelectedPayment(null)} className="p-1.5 rounded-lg hover:bg-white/10 text-[#64748B] hover:text-white cursor-pointer"><X className="h-4 w-4" /></button>
+              <h3 className="text-sm font-extrabold text-slate-900">Payment Details</h3>
+              <button onClick={() => setSelectedPayment(null)} className="p-1.5 rounded-lg hover:bg-surface-subtle text-slate-500 hover:text-slate-900 cursor-pointer"><X className="h-4 w-4" /></button>
             </div>
 
             <div className="space-y-3 text-xs">
@@ -460,15 +460,15 @@ const Revenue = () => {
                 ['Status', selectedPayment.status.toUpperCase()],
                 ['Type', selectedPayment.type],
               ].map(([label, value]) => (
-                <div key={label} className="flex justify-between border-b border-dark-border/30 pb-2 last:border-0">
-                  <span className="text-[#64748B] font-bold">{label}</span>
-                  <span className="text-white font-semibold text-right ml-4 break-all">{value || '—'}</span>
+                <div key={label} className="flex justify-between border-b border-surface-border/30 pb-2 last:border-0">
+                  <span className="text-slate-500 font-bold">{label}</span>
+                  <span className="text-slate-900 font-semibold text-right ml-4 break-all">{value || '—'}</span>
                 </div>
               ))}
 
               {/* Timeline */}
               <div className="pt-2">
-                <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider block mb-2">Timeline</span>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-2">Timeline</span>
                 <div className="space-y-1.5">
                   {[
                     ['Created', selectedPayment.createdAt],
@@ -477,8 +477,8 @@ const Revenue = () => {
                     ['Refunded', selectedPayment.refundedAt]
                   ].filter(([, d]) => d).map(([label, date]) => (
                     <div key={label} className="flex justify-between text-[11px]">
-                      <span className="text-[#64748B]">{label}</span>
-                      <span className="text-white">{new Date(date).toLocaleString('en-IN')}</span>
+                      <span className="text-slate-500">{label}</span>
+                      <span className="text-slate-900">{new Date(date).toLocaleString('en-IN')}</span>
                     </div>
                   ))}
                 </div>

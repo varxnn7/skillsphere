@@ -33,17 +33,17 @@ const DataTable = ({ columns, data = [], loading, renderRow }) => {
   }, [data, sortKey, sortOrder]);
 
   return (
-    <div className="bg-dark-surface rounded-2xl border border-dark-border overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.2)]">
+    <div className="bg-white rounded-2xl border border-surface-border overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.2)]">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-dark-border/60 bg-[rgba(255,255,255,0.01)] text-xs">
+            <tr className="border-b border-surface-border/60 bg-[rgba(255,255,255,0.01)] text-xs">
               {columns.map((col, idx) => (
                 <th
                   key={idx}
                   onClick={() => handleSort(col.key, col.sortable)}
-                  className={`px-6 py-4 font-bold text-[#64748B] uppercase tracking-wider ${
-                    col.sortable ? 'cursor-pointer select-none hover:text-white transition-colors' : ''
+                  className={`px-6 py-4 font-bold text-slate-500 uppercase tracking-wider ${
+                    col.sortable ? 'cursor-pointer select-none hover:text-slate-900 transition-colors' : ''
                   }`}
                 >
                   <div className="flex items-center gap-1.5">
@@ -53,9 +53,9 @@ const DataTable = ({ columns, data = [], loading, renderRow }) => {
                         {sortKey !== col.key ? (
                           <ArrowUpDown className="h-3 w-3" />
                         ) : sortOrder === 'asc' ? (
-                          <ArrowUp className="h-3 w-3 text-brand-indigo" />
+                          <ArrowUp className="h-3 w-3 text-orange-600" />
                         ) : (
-                          <ArrowDown className="h-3 w-3 text-brand-indigo" />
+                          <ArrowDown className="h-3 w-3 text-orange-600" />
                         )}
                       </span>
                     )}
@@ -64,20 +64,20 @@ const DataTable = ({ columns, data = [], loading, renderRow }) => {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-dark-border/40">
+          <tbody className="divide-y divide-surface-border/40">
             {loading ? (
               Array.from({ length: 5 }).map((_, rIdx) => (
-                <tr key={rIdx} className="animate-pulse border-b border-dark-border/40">
+                <tr key={rIdx} className="animate-pulse border-b border-surface-border/40">
                   {columns.map((_, cIdx) => (
                     <td key={cIdx} className="px-6 py-4">
-                      <div className="h-4 bg-white/5 rounded-lg w-5/6"></div>
+                      <div className="h-4 bg-surface-muted rounded-lg w-5/6"></div>
                     </td>
                   ))}
                 </tr>
               ))
             ) : sortedData.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} className="px-6 py-12 text-center text-xs font-bold text-[#64748B]">
+                <td colSpan={columns.length} className="px-6 py-12 text-center text-xs font-bold text-slate-500">
                   No matching records found.
                 </td>
               </tr>

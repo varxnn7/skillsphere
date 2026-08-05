@@ -9,8 +9,17 @@ import Toast from '../components/Toast';
 import LoadingSpinner from '../components/LoadingSpinner';
 import {
   User, Briefcase, ShieldAlert, CheckCircle,
-  Mail, Lock, UserCircle, ArrowRight, Zap
+  Mail, Lock, UserCircle, ArrowRight
 } from 'lucide-react';
+
+/* ── Logo Mark ──────────────────────────────────────────── */
+const LogoMark = ({ size = 36 }) => (
+  <svg width={size} height={size} viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="36" height="36" rx="10" fill="rgba(255,255,255,0.2)"/>
+    <path d="M24 11.5C24 11.5 21.5 9 18 9C13.5 9 11 11.5 11 14C11 19 24 17 24 22C24 24.5 21.5 27 17.5 27C13.5 27 11 24.5 11 24.5" stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"/>
+    <circle cx="27" cy="9" r="3" fill="#FB923C"/>
+  </svg>
+);
 
 const Register = () => {
   const navigate = useNavigate();
@@ -144,14 +153,14 @@ const Register = () => {
               <br />Check your inbox and click the link to activate your account.
             </p>
 
-            <div className="bg-brand-50 border border-brand-200 rounded-2xl p-4 mb-6">
-              <p className="text-sm text-brand-700 font-semibold">
+            <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4 mb-6">
+              <p className="text-sm text-orange-700 font-semibold">
                 Redirecting to login in{' '}
-                <span className="text-2xl font-black text-brand-600">{countdown}</span>s
+                <span className="text-2xl font-black text-orange-600">{countdown}</span>s
               </p>
-              <div className="mt-2 h-1.5 bg-brand-100 rounded-full overflow-hidden">
+              <div className="mt-2 h-1.5 bg-orange-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-brand rounded-full transition-all duration-1000"
+                  className="h-full bg-gradient-orange rounded-full transition-all duration-1000"
                   style={{ width: `${((4 - countdown) / 4) * 100}%` }}
                 />
               </div>
@@ -182,8 +191,8 @@ const Register = () => {
 
       <div className="flex-1 flex items-center justify-center p-4 md:py-10 relative overflow-hidden">
         {/* Decorative blobs */}
-        <div className="absolute top-10 left-10 w-72 h-72 rounded-full bg-brand-100 blur-3xl opacity-50 pointer-events-none animate-float" />
-        <div className="absolute bottom-10 right-10 w-64 h-64 rounded-full bg-violet-100 blur-3xl opacity-40 pointer-events-none animate-float" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-10 left-10 w-72 h-72 rounded-full bg-orange-100 blur-3xl opacity-50 pointer-events-none animate-float" />
+        <div className="absolute bottom-10 right-10 w-64 h-64 rounded-full bg-amber-100 blur-3xl opacity-40 pointer-events-none animate-float" style={{ animationDelay: '2s' }} />
 
         <div className="bg-white rounded-3xl border border-surface-border shadow-[0_20px_60px_rgba(0,0,0,0.07)] max-w-4xl w-full overflow-hidden flex flex-col md:flex-row relative z-10 animate-blur-in">
 
@@ -198,9 +207,7 @@ const Register = () => {
             />
             <div className="relative z-10">
               <div className="flex items-center gap-2.5 mb-8">
-                <div className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
-                  <Zap className="h-5 w-5 text-white" />
-                </div>
+                <LogoMark size={36} />
                 <span className="text-lg font-black text-white">SkillSphere</span>
               </div>
               <h2 className="text-3xl font-black tracking-tight mb-4 leading-tight">
@@ -225,7 +232,7 @@ const Register = () => {
               ))}
             </div>
 
-            <p className="text-xs text-white/40 mt-8 relative z-10">© 2026 SkillSphere Inc.</p>
+            <p className="text-xs text-slate-900/40 mt-8 relative z-10">© 2026 SkillSphere Inc.</p>
           </div>
 
           {/* ── Right Panel ────────────────────────────────────── */}
@@ -240,13 +247,13 @@ const Register = () => {
                 onClick={() => setRole('client')}
                 className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 text-center transition-all duration-200 cursor-pointer ${
                   role === 'client'
-                    ? 'border-brand-500 bg-brand-50 shadow-sm'
-                    : 'border-surface-border bg-surface-subtle hover:border-brand-200 hover:bg-brand-50/50'
+                    ? 'border-orange-500 bg-orange-50 shadow-sm'
+                    : 'border-surface-border bg-surface-subtle hover:border-orange-200 hover:bg-orange-50/50'
                 }`}
               >
-                <User className={`h-6 w-6 mb-2 ${role === 'client' ? 'text-brand-600' : 'text-slate-400'}`} />
-                <span className={`text-sm font-bold ${role === 'client' ? 'text-brand-700' : 'text-slate-500'}`}>I'm a Client</span>
-                <span className={`text-[10px] mt-0.5 ${role === 'client' ? 'text-brand-500' : 'text-slate-400'}`}>I want to hire</span>
+                <User className={`h-6 w-6 mb-2 ${role === 'client' ? 'text-orange-600' : 'text-slate-400'}`} />
+                <span className={`text-sm font-bold ${role === 'client' ? 'text-orange-700' : 'text-slate-500'}`}>I'm a Client</span>
+                <span className={`text-[10px] mt-0.5 ${role === 'client' ? 'text-orange-500' : 'text-slate-400'}`}>I want to hire</span>
               </button>
 
               <button
@@ -254,13 +261,13 @@ const Register = () => {
                 onClick={() => setRole('freelancer')}
                 className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 text-center transition-all duration-200 cursor-pointer ${
                   role === 'freelancer'
-                    ? 'border-violet-500 bg-violet-50 shadow-sm'
-                    : 'border-surface-border bg-surface-subtle hover:border-violet-200 hover:bg-violet-50/50'
+                    ? 'border-charcoal-700 bg-charcoal-50 shadow-sm'
+                    : 'border-surface-border bg-surface-subtle hover:border-charcoal-300 hover:bg-charcoal-50/50'
                 }`}
               >
-                <Briefcase className={`h-6 w-6 mb-2 ${role === 'freelancer' ? 'text-violet-600' : 'text-slate-400'}`} />
-                <span className={`text-sm font-bold ${role === 'freelancer' ? 'text-violet-700' : 'text-slate-500'}`}>I'm a Freelancer</span>
-                <span className={`text-[10px] mt-0.5 ${role === 'freelancer' ? 'text-violet-500' : 'text-slate-400'}`}>I want to work</span>
+                <Briefcase className={`h-6 w-6 mb-2 ${role === 'freelancer' ? 'text-charcoal-700' : 'text-slate-400'}`} />
+                <span className={`text-sm font-bold ${role === 'freelancer' ? 'text-charcoal-800' : 'text-slate-500'}`}>I'm a Freelancer</span>
+                <span className={`text-[10px] mt-0.5 ${role === 'freelancer' ? 'text-charcoal-600' : 'text-slate-400'}`}>I want to work</span>
               </button>
             </div>
 
@@ -398,7 +405,7 @@ const Register = () => {
             {/* Login Link */}
             <p className="text-center text-xs text-slate-400 mt-6">
               Already have an account?{' '}
-              <Link to="/login" className="text-brand-600 font-bold hover:text-brand-700 transition-colors">
+              <Link to="/login" className="text-orange-600 font-bold hover:text-orange-700 transition-colors">
                 Log in
               </Link>
             </p>

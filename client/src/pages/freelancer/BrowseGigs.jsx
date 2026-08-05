@@ -108,32 +108,32 @@ const BrowseGigs = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] text-white flex flex-col transition-smooth">
+    <div className="min-h-screen bg-surface-subtle text-slate-900 flex flex-col transition-smooth">
       <div className="flex-1 max-w-7xl w-full mx-auto p-6 space-y-6 relative z-10 animate-fade-up">
         {/* Top Header Banner search */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-white">Gig Marketplace</h1>
-            <p className="text-[#94A3B8] text-sm mt-1">Browse approved job postings and bid on matching projects</p>
+            <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900">Gig Marketplace</h1>
+            <p className="text-slate-500 text-sm mt-1">Browse approved job postings and bid on matching projects</p>
           </div>
 
           {/* Search bar inputs */}
           <div className="relative flex-1 max-w-md w-full">
-            <SearchIcon className="absolute left-4 top-3.5 h-4.5 w-4.5 text-[#64748B]" />
+            <SearchIcon className="absolute left-4 top-3.5 h-4.5 w-4.5 text-slate-500" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search by keywords (e.g. React Developer)..."
-              className="w-full pl-11 pr-4 py-3 rounded-xl border border-dark-border bg-dark-surface/50 text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-indigo/30 focus:border-brand-indigo transition-smooth"
+              className="w-full pl-11 pr-4 py-3 rounded-xl border border-surface-border bg-surface-muted0 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-orange-600/30 focus:border-orange-600 transition-smooth"
             />
           </div>
         </div>
 
         {/* Sorting and Mobile toggle bar */}
-        <div className="flex items-center justify-between border-b border-dark-border/60 pb-3">
+        <div className="flex items-center justify-between border-b border-surface-border/60 pb-3">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-[#64748B]">Showing approved postings</span>
+            <span className="text-xs font-bold text-slate-500">Showing approved postings</span>
           </div>
 
           <div className="flex items-center gap-3">
@@ -146,7 +146,7 @@ const BrowseGigs = () => {
                 params.set('page', '1');
                 navigate({ search: params.toString() });
               }}
-              className="px-3 py-1.5 rounded-lg border border-dark-border bg-dark-surface text-xs font-bold text-slate-300 focus:outline-none"
+              className="px-3 py-1.5 rounded-lg border border-surface-border bg-white text-xs font-bold text-slate-300 focus:outline-none"
             >
               <option value="newest">Newest First</option>
               <option value="budget">Highest Budget</option>
@@ -156,7 +156,7 @@ const BrowseGigs = () => {
             {/* Mobile filter toggle */}
             <button
               onClick={() => setShowMobileFilters(!showMobileFilters)}
-              className="md:hidden p-2 bg-dark-surface border border-dark-border rounded-xl text-[#94A3B8] hover:text-white"
+              className="md:hidden p-2 bg-white border border-surface-border rounded-xl text-slate-500 hover:text-slate-900"
             >
               <SlidersHorizontal className="h-4.5 w-4.5" />
             </button>
@@ -176,7 +176,7 @@ const BrowseGigs = () => {
 
           {/* Mobile Bottom Sheets / Filter drawer */}
           {showMobileFilters && (
-            <div className="md:hidden col-span-1 border-t border-dark-border pt-4">
+            <div className="md:hidden col-span-1 border-t border-surface-border pt-4">
               <GigFilters
                 filters={currentParams}
                 onFilterChange={handleFilterChange}
@@ -191,11 +191,11 @@ const BrowseGigs = () => {
               /* Skeleton Loader Cards Grid */
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
                 {[1, 2, 3, 4, 5, 6].map(idx => (
-                  <div key={idx} className="bg-dark-surface border border-dark-border rounded-2xl p-6 h-64 animate-pulse space-y-4">
+                  <div key={idx} className="bg-white border border-surface-border rounded-2xl p-6 h-64 animate-pulse space-y-4">
                     <div className="h-4 bg-dark-border rounded-lg w-1/3" />
                     <div className="h-6 bg-dark-border rounded-lg w-3/4" />
                     <div className="h-16 bg-dark-border rounded-lg w-full" />
-                    <div className="flex justify-between items-center pt-4 border-t border-dark-border/40">
+                    <div className="flex justify-between items-center pt-4 border-t border-surface-border/40">
                       <div className="h-8 bg-dark-border rounded-lg w-1/4" />
                       <div className="h-8 bg-dark-border rounded-lg w-1/4" />
                     </div>
@@ -203,15 +203,15 @@ const BrowseGigs = () => {
                 ))}
               </div>
             ) : gigs.length === 0 ? (
-              <div className="text-center py-24 bg-dark-surface/20 border border-dark-border rounded-3xl p-8 max-w-md mx-auto space-y-4">
-                <SearchIcon className="h-12 w-12 mx-auto text-[#64748B]" />
-                <h3 className="text-md font-bold text-white">No Matching Gigs Found</h3>
-                <p className="text-xs text-[#94A3B8] leading-relaxed">
+              <div className="text-center py-24 bg-white/20 border border-surface-border rounded-3xl p-8 max-w-md mx-auto space-y-4">
+                <SearchIcon className="h-12 w-12 mx-auto text-slate-500" />
+                <h3 className="text-md font-bold text-slate-900">No Matching Gigs Found</h3>
+                <p className="text-xs text-slate-500 leading-relaxed">
                   Try adjusting your search criteria, widening the budget range, or resetting filters.
                 </p>
                 <button
                   onClick={handleReset}
-                  className="px-4 py-2 bg-brand-indigo rounded-xl text-xs font-bold hover-glow-purple cursor-pointer"
+                  className="px-4 py-2 bg-orange-600 rounded-xl text-xs font-bold hover-glow-orange cursor-pointer"
                 >
                   Reset All Filters
                 </button>

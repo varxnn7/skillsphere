@@ -104,15 +104,15 @@ const DisputeDetail = () => {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-2">
-        <div className="w-8 h-8 border-3 border-brand-indigo border-t-transparent rounded-full animate-spin" />
-        <span className="text-xs font-bold text-[#64748B] uppercase tracking-wide">Loading Arbitration Dossier...</span>
+        <div className="w-8 h-8 border-3 border-orange-600 border-t-transparent rounded-full animate-spin" />
+        <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">Loading Arbitration Dossier...</span>
       </div>
     );
   }
 
   if (!dispute) {
     return (
-      <div className="text-center py-12 text-xs font-bold text-[#64748B]">
+      <div className="text-center py-12 text-xs font-bold text-slate-500">
         Dispute details could not be found.
       </div>
     );
@@ -161,42 +161,42 @@ const DisputeDetail = () => {
       {/* Admin Adjudication Confirmation Modal */}
       {adjudicateWinner && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="bg-dark-surface w-full max-w-md rounded-2xl border border-dark-border p-6 space-y-4 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-            <h3 className="text-md font-bold text-white flex items-center gap-2">
-              <ShieldAlert className="h-5 w-5 text-brand-indigo" />
+          <div className="bg-white w-full max-w-md rounded-2xl border border-surface-border p-6 space-y-4 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+            <h3 className="text-md font-bold text-slate-900 flex items-center gap-2">
+              <ShieldAlert className="h-5 w-5 text-orange-600" />
               <span>Adjudicate Verdict: Resolve for {adjudicateWinner === 'client' ? 'Client (Refund)' : 'Freelancer (Release)'}</span>
             </h3>
             
-            <p className="text-xs text-[#94A3B8]">
+            <p className="text-xs text-slate-500">
               Explain the reason behind this verdict. This message will be sent to both client and freelancer.
             </p>
 
             <div className="space-y-3 pt-2 text-xs">
               <div className="space-y-1">
-                <label className="block text-[10px] font-bold text-[#64748B] uppercase">Resolution Explanation (Required)</label>
+                <label className="block text-[10px] font-bold text-slate-500 uppercase">Resolution Explanation (Required)</label>
                 <textarea
                   rows="3"
                   value={resolutionText}
                   onChange={(e) => setResolutionText(e.target.value)}
                   placeholder="Explain why this decision is made based on evidence..."
-                  className="w-full px-3 py-2 rounded-xl border border-dark-border bg-dark-surface text-white focus:ring-2 focus:ring-brand-indigo resize-none"
+                  className="w-full px-3 py-2 rounded-xl border border-surface-border bg-white text-slate-900 focus:ring-2 focus:ring-orange-600 resize-none"
                   required
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="block text-[10px] font-bold text-[#64748B] uppercase">Private Adjudication Notes (Admin only)</label>
+                <label className="block text-[10px] font-bold text-slate-500 uppercase">Private Adjudication Notes (Admin only)</label>
                 <textarea
                   rows="2"
                   value={adminNotes}
                   onChange={(e) => setAdminNotes(e.target.value)}
                   placeholder="Internal audit log details..."
-                  className="w-full px-3 py-2 rounded-xl border border-dark-border bg-dark-surface text-white focus:ring-2 focus:ring-brand-indigo resize-none"
+                  className="w-full px-3 py-2 rounded-xl border border-surface-border bg-white text-slate-900 focus:ring-2 focus:ring-orange-600 resize-none"
                 />
               </div>
             </div>
 
-            <div className="flex gap-3 justify-end border-t border-dark-border/40 pt-4">
+            <div className="flex gap-3 justify-end border-t border-surface-border/40 pt-4">
               <button
                 type="button"
                 onClick={() => {
@@ -204,7 +204,7 @@ const DisputeDetail = () => {
                   setResolutionText('');
                   setAdminNotes('');
                 }}
-                className="px-4 py-2 text-xs font-bold rounded-xl bg-white/5 border border-dark-border text-[#94A3B8] cursor-pointer"
+                className="px-4 py-2 text-xs font-bold rounded-xl bg-surface-muted border border-surface-border text-slate-500 cursor-pointer"
               >
                 Cancel
               </button>
@@ -212,8 +212,8 @@ const DisputeDetail = () => {
                 type="button"
                 onClick={executeVerdict}
                 disabled={resolving}
-                className={`px-4 py-2 text-xs font-bold rounded-xl text-white cursor-pointer ${
-                  adjudicateWinner === 'client' ? 'bg-[#10B981] hover:bg-[#10B981]/90' : 'bg-brand-indigo hover:bg-brand-indigo/90'
+                className={`px-4 py-2 text-xs font-bold rounded-xl text-slate-900 cursor-pointer ${
+                  adjudicateWinner === 'client' ? 'bg-[#10B981] hover:bg-[#10B981]/90' : 'bg-orange-600 hover:bg-orange-600/90'
                 }`}
               >
                 {resolving ? 'Issuing verdict...' : 'Confirm Adjudication'}
@@ -226,11 +226,11 @@ const DisputeDetail = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
-          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-purple-500/10 text-purple-400 border border-purple-500/20 mb-2">
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-orange-500/10 text-purple-400 border border-orange-500/20 mb-2">
             ⚖️ Mediation Chamber
           </span>
-          <h1 className="text-xl md:text-2xl font-extrabold text-white">Dispute Arbitration File</h1>
-          <p className="text-xs text-[#94A3B8] mt-1">Project Contract: <span className="font-semibold text-white">{dispute.gig?.title}</span></p>
+          <h1 className="text-xl md:text-2xl font-extrabold text-slate-900">Dispute Arbitration File</h1>
+          <p className="text-xs text-slate-500 mt-1">Project Contract: <span className="font-semibold text-slate-900">{dispute.gig?.title}</span></p>
         </div>
 
         <span className={`inline-flex px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider self-start ${
@@ -246,29 +246,29 @@ const DisputeDetail = () => {
         <div className="md:col-span-2 space-y-6">
           
           {/* Statement */}
-          <div className="bg-dark-surface p-6 rounded-2xl border border-dark-border space-y-4">
-            <h3 className="text-sm font-bold text-white border-b border-dark-border/40 pb-2">Conflict Context</h3>
+          <div className="bg-white p-6 rounded-2xl border border-surface-border space-y-4">
+            <h3 className="text-sm font-bold text-slate-900 border-b border-surface-border/40 pb-2">Conflict Context</h3>
             
             <div className="space-y-3 text-xs">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <span className="block text-[#64748B] font-bold uppercase text-[9px] mb-0.5">Raised By</span>
-                  <span className="text-white font-semibold">{dispute.raisedBy?.name || 'User'} ({dispute.raisedBy?.role})</span>
+                  <span className="block text-slate-500 font-bold uppercase text-[9px] mb-0.5">Raised By</span>
+                  <span className="text-slate-900 font-semibold">{dispute.raisedBy?.name || 'User'} ({dispute.raisedBy?.role})</span>
                 </div>
                 <div>
-                  <span className="block text-[#64748B] font-bold uppercase text-[9px] mb-0.5">Opposing Party</span>
-                  <span className="text-white font-semibold">{dispute.against?.name || 'User'} ({dispute.against?.role})</span>
+                  <span className="block text-slate-500 font-bold uppercase text-[9px] mb-0.5">Opposing Party</span>
+                  <span className="text-slate-900 font-semibold">{dispute.against?.name || 'User'} ({dispute.against?.role})</span>
                 </div>
               </div>
 
               <div className="space-y-1.5 pt-2">
-                <span className="block text-[#64748B] font-bold uppercase text-[9px]">Primary Dispute Reason</span>
-                <p className="font-semibold text-white bg-white/5 p-3 rounded-xl border border-dark-border">{dispute.reason}</p>
+                <span className="block text-slate-500 font-bold uppercase text-[9px]">Primary Dispute Reason</span>
+                <p className="font-semibold text-slate-900 bg-surface-muted p-3 rounded-xl border border-surface-border">{dispute.reason}</p>
               </div>
 
               <div className="space-y-1.5">
-                <span className="block text-[#64748B] font-bold uppercase text-[9px]">Detailed Statement</span>
-                <p className="text-xs text-[#94A3B8] leading-relaxed bg-[rgba(255,255,255,0.01)] p-4 rounded-xl border border-dark-border/60">
+                <span className="block text-slate-500 font-bold uppercase text-[9px]">Detailed Statement</span>
+                <p className="text-xs text-slate-500 leading-relaxed bg-[rgba(255,255,255,0.01)] p-4 rounded-xl border border-surface-border/60">
                   {dispute.description}
                 </p>
               </div>
@@ -276,24 +276,24 @@ const DisputeDetail = () => {
           </div>
 
           {/* Evidence dossier */}
-          <div className="bg-dark-surface p-6 rounded-2xl border border-dark-border space-y-4">
-            <h3 className="text-sm font-bold text-white border-b border-dark-border/40 pb-2">Evidence Dossier</h3>
+          <div className="bg-white p-6 rounded-2xl border border-surface-border space-y-4">
+            <h3 className="text-sm font-bold text-slate-900 border-b border-surface-border/40 pb-2">Evidence Dossier</h3>
             
             {dispute.evidence.length === 0 ? (
-              <p className="text-xs text-[#64748B] font-bold text-center py-4">No evidence documents submitted yet.</p>
+              <p className="text-xs text-slate-500 font-bold text-center py-4">No evidence documents submitted yet.</p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {dispute.evidence.map((file, idx) => (
-                  <div key={idx} className="p-3 rounded-xl border border-dark-border bg-white/[0.01] flex items-center justify-between text-xs text-slate-300">
+                  <div key={idx} className="p-3 rounded-xl border border-surface-border bg-white/[0.01] flex items-center justify-between text-xs text-slate-300">
                     <div className="flex items-center gap-2 truncate">
-                      <FileText className="h-4 w-4 text-brand-indigo shrink-0" />
+                      <FileText className="h-4 w-4 text-orange-600 shrink-0" />
                       <span className="truncate">{file.name}</span>
                     </div>
                     <a
                       href={file.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-1.5 rounded-lg bg-white/5 border border-dark-border hover:border-brand-indigo text-[#94A3B8] hover:text-white shrink-0 cursor-pointer"
+                      className="p-1.5 rounded-lg bg-surface-muted border border-surface-border hover:border-orange-600 text-slate-500 hover:text-slate-900 shrink-0 cursor-pointer"
                       title="Download Evidence File"
                     >
                       <Download className="h-3.5 w-3.5" />
@@ -305,17 +305,17 @@ const DisputeDetail = () => {
 
             {/* Add More Evidence (only for dispute raiser) */}
             {!isResolved && isRaiser && (
-              <form onSubmit={handleAddEvidence} className="border-t border-dark-border/40 pt-4 flex items-center gap-2">
+              <form onSubmit={handleAddEvidence} className="border-t border-surface-border/40 pt-4 flex items-center gap-2">
                 <input
                   type="file"
                   onChange={(e) => setAdditionalFile(e.target.files[0])}
-                  className="text-xs text-[#94A3B8] file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-xs file:bg-white/5 file:text-white file:cursor-pointer flex-1"
+                  className="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-xs file:bg-surface-muted file:text-slate-900 file:cursor-pointer flex-1"
                   required
                 />
                 <button
                   type="submit"
                   disabled={addingEvidence}
-                  className="px-4 py-2 bg-brand-indigo hover:bg-brand-indigo/90 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  className="px-4 py-2 bg-orange-600 hover:bg-orange-600/90 text-slate-900 text-xs font-bold rounded-xl flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                 >
                   <Send className="h-3.5 w-3.5" />
                   {addingEvidence ? 'Uploading...' : 'Add Evidence'}
@@ -329,17 +329,17 @@ const DisputeDetail = () => {
         <div className="space-y-6">
           
           {/* Dispute contract escrow info */}
-          <div className="bg-dark-surface p-6 rounded-2xl border border-dark-border space-y-4">
-            <h3 className="text-sm font-bold text-white">Escrow Info</h3>
+          <div className="bg-white p-6 rounded-2xl border border-surface-border space-y-4">
+            <h3 className="text-sm font-bold text-slate-900">Escrow Info</h3>
             {dispute.payment ? (
-              <div className="space-y-3.5 text-xs text-[#94A3B8]">
+              <div className="space-y-3.5 text-xs text-slate-500">
                 <div className="flex justify-between">
                   <span>Locked Escrow</span>
-                  <span className="font-bold text-white">₹{dispute.payment.amount.toLocaleString()}</span>
+                  <span className="font-bold text-slate-900">₹{dispute.payment.amount.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Milestone Index</span>
-                  <span className="font-bold text-white">Milestone #{dispute.payment.milestoneIndex + 1}</span>
+                  <span className="font-bold text-slate-900">Milestone #{dispute.payment.milestoneIndex + 1}</span>
                 </div>
               </div>
             ) : (
@@ -348,20 +348,20 @@ const DisputeDetail = () => {
           </div>
 
           {/* Timeline of events */}
-          <div className="bg-dark-surface p-6 rounded-2xl border border-dark-border space-y-4">
-            <h3 className="text-sm font-bold text-white border-b border-dark-border/40 pb-2">Timeline of Events</h3>
-            <div className="relative border-l border-dark-border/60 ml-2.5 pl-5 space-y-5 text-xs">
+          <div className="bg-white p-6 rounded-2xl border border-surface-border space-y-4">
+            <h3 className="text-sm font-bold text-slate-900 border-b border-surface-border/40 pb-2">Timeline of Events</h3>
+            <div className="relative border-l border-surface-border/60 ml-2.5 pl-5 space-y-5 text-xs">
               {timelineEvents.map((ev, idx) => (
                 <div key={idx} className="relative">
-                  <div className="absolute -left-[27px] top-0.5 w-3.5 h-3.5 rounded-full bg-dark-surface border-2 border-brand-indigo flex items-center justify-center">
-                    <div className="w-1.5 h-1.5 rounded-full bg-brand-indigo" />
+                  <div className="absolute -left-[27px] top-0.5 w-3.5 h-3.5 rounded-full bg-white border-2 border-orange-600 flex items-center justify-center">
+                    <div className="w-1.5 h-1.5 rounded-full bg-orange-600" />
                   </div>
                   <div className="space-y-0.5">
-                    <span className="block text-[10px] text-[#64748B] font-bold">
+                    <span className="block text-[10px] text-slate-500 font-bold">
                       {ev.date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                     </span>
-                    <h4 className="font-bold text-white">{ev.title}</h4>
-                    <p className="text-[11px] text-[#94A3B8] leading-normal">{ev.description}</p>
+                    <h4 className="font-bold text-slate-900">{ev.title}</h4>
+                    <p className="text-[11px] text-slate-500 leading-normal">{ev.description}</p>
                   </div>
                 </div>
               ))}
@@ -375,14 +375,14 @@ const DisputeDetail = () => {
                 <CheckCircle2 className="h-5 w-5" />
                 <h4 className="text-sm font-bold">Mediator Verdict</h4>
               </div>
-              <div className="text-xs space-y-2 text-[#94A3B8]">
-                <p><span className="font-bold text-white">Ruling Winner:</span> <span className="capitalize text-green-400 font-bold">{dispute.status.split('-')[1] || 'Resolved'}</span></p>
-                <p><span className="font-bold text-white">Resolution Summary:</span> {dispute.resolution}</p>
+              <div className="text-xs space-y-2 text-slate-500">
+                <p><span className="font-bold text-slate-900">Ruling Winner:</span> <span className="capitalize text-green-400 font-bold">{dispute.status.split('-')[1] || 'Resolved'}</span></p>
+                <p><span className="font-bold text-slate-900">Resolution Summary:</span> {dispute.resolution}</p>
                 {dispute.resolvedAt && (
-                  <p><span className="font-bold text-white">Date Adjudicated:</span> {new Date(dispute.resolvedAt).toLocaleDateString('en-IN')}</p>
+                  <p><span className="font-bold text-slate-900">Date Adjudicated:</span> {new Date(dispute.resolvedAt).toLocaleDateString('en-IN')}</p>
                 )}
                 {dispute.adminNotes && (
-                  <p className="border-t border-dark-border/40 pt-2"><span className="font-bold text-white">Mediator Internal Notes:</span> {dispute.adminNotes}</p>
+                  <p className="border-t border-surface-border/40 pt-2"><span className="font-bold text-slate-900">Mediator Internal Notes:</span> {dispute.adminNotes}</p>
                 )}
               </div>
             </div>
@@ -390,24 +390,24 @@ const DisputeDetail = () => {
 
           {/* Admin resolving tools */}
           {isAdmin && !isResolved && (
-            <div className="bg-dark-surface p-6 rounded-2xl border border-dark-border space-y-4">
-              <div className="flex items-center gap-2 text-brand-indigo border-b border-dark-border/40 pb-2">
+            <div className="bg-white p-6 rounded-2xl border border-surface-border space-y-4">
+              <div className="flex items-center gap-2 text-orange-600 border-b border-surface-border/40 pb-2">
                 <AlertOctagon className="h-5 w-5" />
-                <h3 className="text-sm font-bold text-white">Arbitrate Ruling</h3>
+                <h3 className="text-sm font-bold text-slate-900">Arbitrate Ruling</h3>
               </div>
-              <p className="text-[11px] text-[#94A3B8] leading-normal">Evaluate the evidence. Resolving for Client refunds the money, while resolving for Freelancer releases escrow.</p>
+              <p className="text-[11px] text-slate-500 leading-normal">Evaluate the evidence. Resolving for Client refunds the money, while resolving for Freelancer releases escrow.</p>
               
               <div className="flex flex-col gap-3 pt-2">
                 <button
                   onClick={() => setAdjudicateWinner('client')}
-                  className="w-full py-2.5 bg-[#10B981] hover:bg-[#10B981]/90 text-white font-bold text-xs rounded-xl cursor-pointer shadow-lg shadow-green-500/10 text-center"
+                  className="w-full py-2.5 bg-[#10B981] hover:bg-[#10B981]/90 text-slate-900 font-bold text-xs rounded-xl cursor-pointer shadow-lg shadow-green-500/10 text-center"
                 >
                   Resolve for Client (Refund)
                 </button>
                 
                 <button
                   onClick={() => setAdjudicateWinner('freelancer')}
-                  className="w-full py-2.5 bg-brand-indigo hover:bg-brand-indigo/90 text-white font-bold text-xs rounded-xl cursor-pointer shadow-lg shadow-indigo-500/10 text-center"
+                  className="w-full py-2.5 bg-orange-600 hover:bg-orange-600/90 text-slate-900 font-bold text-xs rounded-xl cursor-pointer shadow-lg shadow-indigo-500/10 text-center"
                 >
                   Resolve for Freelancer (Release)
                 </button>

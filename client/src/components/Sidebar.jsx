@@ -14,7 +14,7 @@ const Sidebar = ({ links }) => {
       {/* Collapse/Expand Toggle */}
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute top-5 -right-3.5 h-7 w-7 rounded-full bg-white border border-surface-border shadow-card flex items-center justify-center text-slate-400 hover:text-brand-600 hover:border-brand-200 focus:outline-none cursor-pointer transition-all duration-200"
+        className="absolute top-5 -right-3.5 h-7 w-7 rounded-full bg-white border border-surface-border shadow-card flex items-center justify-center text-slate-400 hover:text-orange-600 hover:border-orange-200 focus:outline-none cursor-pointer transition-all duration-200"
       >
         {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
       </button>
@@ -30,7 +30,7 @@ const Sidebar = ({ links }) => {
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
                   isActive
-                    ? 'bg-brand-50 text-brand-700 border border-brand-200 shadow-sm'
+                    ? 'bg-orange-50 text-orange-700 border border-orange-200 shadow-sm'
                     : 'hover:bg-surface-muted hover:text-slate-700 text-slate-500'
                 }`
               }

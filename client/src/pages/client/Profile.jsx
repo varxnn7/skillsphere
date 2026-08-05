@@ -99,8 +99,8 @@ const ClientProfile = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Profile Overview Card */}
-      <div className="bg-dark-surface rounded-3xl border border-dark-border shadow-[0_0_20px_rgba(0,0,0,0.2)] overflow-hidden">
-        <div className="h-32 bg-gradient-brand relative" />
+      <div className="bg-white rounded-3xl border border-surface-border shadow-[0_0_20px_rgba(0,0,0,0.2)] overflow-hidden">
+        <div className="h-32 bg-gradient-orange relative" />
         <div className="px-6 pb-6 relative flex flex-col sm:flex-row sm:items-end gap-4 -mt-10">
           <AvatarUpload
             currentAvatar={user?.avatar}
@@ -108,16 +108,16 @@ const ClientProfile = () => {
             isUploading={isUploadingAvatar}
           />
           <div className="flex-1">
-            <h1 className="text-2xl font-extrabold text-white">{clientProfile?.companyName || user?.name || 'Company Name'}</h1>
-            <p className="text-xs text-[#94A3B8] font-bold uppercase tracking-wider mb-2">Verified Client Account</p>
-            <div className="flex items-center gap-2 text-[#94A3B8] text-xs font-semibold">
+            <h1 className="text-2xl font-extrabold text-slate-900">{clientProfile?.companyName || user?.name || 'Company Name'}</h1>
+            <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2">Verified Client Account</p>
+            <div className="flex items-center gap-2 text-slate-500 text-xs font-semibold">
               <MapPin className="h-4 w-4" />
               {clientProfile?.location || 'Location not specified'}
             </div>
           </div>
           <button
             onClick={() => setIsEditing(!isEditing)}
-            className="px-4 py-2 text-xs font-bold bg-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.1)] text-white rounded-xl transition-smooth cursor-pointer"
+            className="px-4 py-2 text-xs font-bold bg-surface-subtle hover:bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.1)] text-slate-900 rounded-xl transition-smooth cursor-pointer"
           >
             {isEditing ? 'Cancel Edit' : 'Edit Profile'}
           </button>
@@ -128,30 +128,30 @@ const ClientProfile = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Left Side: Stats and Info */}
         <div className="space-y-6">
-          <div className="bg-dark-surface p-6 rounded-3xl border border-dark-border shadow-[0_0_20px_rgba(0,0,0,0.2)]">
-            <h2 className="font-bold text-white text-sm mb-4">Platform Stats</h2>
+          <div className="bg-white p-6 rounded-3xl border border-surface-border shadow-[0_0_20px_rgba(0,0,0,0.2)]">
+            <h2 className="font-bold text-slate-900 text-sm mb-4">Platform Stats</h2>
             
             <div className="space-y-4">
-              <div className="flex items-center justify-between border-b border-dark-border pb-3">
-                <span className="flex items-center gap-2 text-xs font-medium text-[#64748B]">
-                  <Briefcase className="h-4 w-4 text-[#64748B]" />
+              <div className="flex items-center justify-between border-b border-surface-border pb-3">
+                <span className="flex items-center gap-2 text-xs font-medium text-slate-500">
+                  <Briefcase className="h-4 w-4 text-slate-500" />
                   Gigs Posted
                 </span>
-                <span className="text-sm font-bold text-white">{clientProfile?.totalPosted || 0}</span>
+                <span className="text-sm font-bold text-slate-900">{clientProfile?.totalPosted || 0}</span>
               </div>
-              <div className="flex items-center justify-between border-b border-dark-border pb-3">
-                <span className="flex items-center gap-2 text-xs font-medium text-[#64748B]">
-                  <DollarSign className="h-4 w-4 text-[#64748B]" />
+              <div className="flex items-center justify-between border-b border-surface-border pb-3">
+                <span className="flex items-center gap-2 text-xs font-medium text-slate-500">
+                  <DollarSign className="h-4 w-4 text-slate-500" />
                   Total Spent
                 </span>
-                <span className="text-sm font-bold text-white">₹{clientProfile?.totalSpent || 0}</span>
+                <span className="text-sm font-bold text-slate-900">₹{clientProfile?.totalSpent || 0}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-xs font-medium text-[#64748B]">
-                  <Award className="h-4 w-4 text-[#64748B]" />
+                <span className="flex items-center gap-2 text-xs font-medium text-slate-500">
+                  <Award className="h-4 w-4 text-slate-500" />
                   Average Rating
                 </span>
-                <span className="text-sm font-bold text-white">
+                <span className="text-sm font-bold text-slate-900">
                   {clientProfile?.averageRating ? `${clientProfile.averageRating}/5` : 'No reviews'}
                 </span>
               </div>
@@ -161,53 +161,53 @@ const ClientProfile = () => {
 
         {/* Right Side: Forms/Bio details */}
         <div className="md:col-span-2">
-          <div className="bg-dark-surface p-6 rounded-3xl border border-dark-border shadow-[0_0_20px_rgba(0,0,0,0.2)]">
+          <div className="bg-white p-6 rounded-3xl border border-surface-border shadow-[0_0_20px_rgba(0,0,0,0.2)]">
             {isEditing ? (
               <form onSubmit={handleSubmit} className="space-y-6">
-                <h2 className="font-bold text-white text-md border-b border-dark-border pb-4">Edit Company Details</h2>
+                <h2 className="font-bold text-slate-900 text-md border-b border-surface-border pb-4">Edit Company Details</h2>
                 
                 {/* Company Name */}
                 <div>
-                  <label className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wide mb-1.5">Company Name</label>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Company Name</label>
                   <div className="relative">
-                    <Building className="absolute left-3 top-3.5 h-4 w-4 text-[#64748B]" />
+                    <Building className="absolute left-3 top-3.5 h-4 w-4 text-slate-500" />
                     <input
                       type="text"
                       name="companyName"
                       value={formData.companyName}
                       onChange={handleChange}
                       placeholder="e.g. Acme Corporation"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border bg-[rgba(255,255,255,0.03)] text-white border-dark-border text-sm focus:outline-none focus:ring-2 focus:ring-brand-indigo/30 focus:border-brand-indigo transition-smooth"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border bg-surface-subtle text-slate-900 border-surface-border text-sm focus:outline-none focus:ring-2 focus:ring-orange-600/30 focus:border-orange-600 transition-smooth"
                     />
                   </div>
                 </div>
 
                 {/* Location */}
                 <div>
-                  <label className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wide mb-1.5">Location</label>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Location</label>
                   <div className="relative">
-                    <MapPin className="absolute left-3 top-3.5 h-4 w-4 text-[#64748B]" />
+                    <MapPin className="absolute left-3 top-3.5 h-4 w-4 text-slate-500" />
                     <input
                       type="text"
                       name="location"
                       value={formData.location}
                       onChange={handleChange}
                       placeholder="e.g. Pune, Maharashtra"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border bg-[rgba(255,255,255,0.03)] text-white border-dark-border text-sm focus:outline-none focus:ring-2 focus:ring-brand-indigo/30 focus:border-brand-indigo transition-smooth"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border bg-surface-subtle text-slate-900 border-surface-border text-sm focus:outline-none focus:ring-2 focus:ring-orange-600/30 focus:border-orange-600 transition-smooth"
                     />
                   </div>
                 </div>
 
                 {/* Bio / About */}
                 <div>
-                  <label className="block text-xs font-bold text-[#94A3B8] uppercase tracking-wide mb-1.5">About / Bio</label>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">About / Bio</label>
                   <textarea
                     name="bio"
                     value={formData.bio}
                     onChange={handleChange}
                     rows="4"
                     placeholder="Describe your company, industry, or goals..."
-                    className="w-full px-4 py-3 rounded-xl border bg-[rgba(255,255,255,0.03)] text-white border-dark-border text-sm focus:outline-none focus:ring-2 focus:ring-brand-indigo/30 focus:border-brand-indigo transition-smooth"
+                    className="w-full px-4 py-3 rounded-xl border bg-surface-subtle text-slate-900 border-surface-border text-sm focus:outline-none focus:ring-2 focus:ring-orange-600/30 focus:border-orange-600 transition-smooth"
                   />
                 </div>
 
@@ -215,7 +215,7 @@ const ClientProfile = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-2 py-4 mt-2 bg-gradient-brand text-white rounded-xl font-bold shadow-lg hover-glow-purple hover:scale-[1.01] active:scale-95 transition-all duration-200 text-sm cursor-pointer disabled:opacity-70 disabled:hover:scale-100"
+                  className="w-full flex items-center justify-center gap-2 py-4 mt-2 bg-gradient-orange text-slate-900 rounded-xl font-bold shadow-lg hover-glow-orange hover:scale-[1.01] active:scale-95 transition-all duration-200 text-sm cursor-pointer disabled:opacity-70 disabled:hover:scale-100"
                 >
                   {loading ? <LoadingSpinner size="sm" color="white" /> : (
                     <>
@@ -227,10 +227,10 @@ const ClientProfile = () => {
               </form>
             ) : (
               <div className="space-y-6">
-                <h2 className="font-bold text-white text-md border-b border-dark-border pb-4">Company Overview</h2>
+                <h2 className="font-bold text-slate-900 text-md border-b border-surface-border pb-4">Company Overview</h2>
                 <div>
-                  <h3 className="text-xs font-bold text-[#64748B] uppercase tracking-wide mb-2">About Us</h3>
-                  <p className="text-[#94A3B8] text-sm leading-relaxed whitespace-pre-wrap">
+                  <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">About Us</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed whitespace-pre-wrap">
                     {clientProfile?.bio || 'No details provided. Click "Edit Profile" to add company information.'}
                   </p>
                 </div>

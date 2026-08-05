@@ -32,29 +32,29 @@ const TagInput = ({ tags, onChange, placeholder = 'Add skills (e.g. React, Pytho
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="flex-1 px-4 py-3 rounded-xl border border-dark-border bg-[rgba(255,255,255,0.03)] text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-indigo/30 focus:border-brand-indigo transition-smooth"
+          className="flex-1 input-clean"
         />
         <button
           type="button"
           onClick={addTag}
-          className="px-4 py-3 rounded-xl bg-dark-surface border border-dark-border hover:border-brand-indigo hover:text-white text-[#94A3B8] transition-smooth flex items-center justify-center cursor-pointer"
+          className="px-4 py-3 rounded-xl bg-white border border-surface-border hover:border-orange-400 hover:text-orange-600 text-slate-400 transition-all flex items-center justify-center cursor-pointer shadow-sm"
         >
           <Plus className="h-4 w-4" />
         </button>
       </div>
 
       {tags.length > 0 && (
-        <div className="flex flex-wrap gap-2 p-3 rounded-xl bg-[rgba(255,255,255,0.01)] border border-dark-border/40">
+        <div className="flex flex-wrap gap-2 p-3 rounded-xl bg-surface-subtle border border-surface-border">
           {tags.map((tag, idx) => (
             <span
               key={idx}
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-indigo/10 border border-brand-indigo/25 text-brand-indigo"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-orange-50 border border-orange-200 text-orange-700"
             >
               {tag}
               <button
                 type="button"
                 onClick={() => removeTag(idx)}
-                className="hover:text-white transition-colors"
+                className="hover:text-orange-900 transition-colors"
               >
                 <X className="h-3 w-3" />
               </button>

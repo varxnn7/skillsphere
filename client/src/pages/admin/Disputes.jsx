@@ -57,20 +57,20 @@ const Disputes = () => {
           <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-red-500/10 text-red-400 border border-red-500/20 mb-2">
             ⚖️ Platform Arbitration
           </span>
-          <h1 className="text-2xl font-extrabold text-white">Disputes Mediation</h1>
-          <p className="text-xs text-[#94A3B8] mt-1">Review locked escrow funds, inspect project deliverables evidence, and issue refund/release rulings.</p>
+          <h1 className="text-2xl font-extrabold text-slate-900">Disputes Mediation</h1>
+          <p className="text-xs text-slate-500 mt-1">Review locked escrow funds, inspect project deliverables evidence, and issue refund/release rulings.</p>
         </div>
 
         {/* Tab Controls */}
-        <div className="flex gap-2 bg-white/5 border border-dark-border p-1 rounded-xl self-start sm:self-auto">
+        <div className="flex gap-2 bg-surface-muted border border-surface-border p-1 rounded-xl self-start sm:self-auto">
           {['open', 'under-review', 'resolved'].map((tab) => (
             <button
               key={tab}
               onClick={() => { setActiveTab(tab); setPage(1); }}
               className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer capitalize ${
                 activeTab === tab
-                  ? 'bg-brand-indigo text-white shadow-md'
-                  : 'text-[#94A3B8] hover:text-white'
+                  ? 'bg-orange-600 text-slate-900 shadow-md'
+                  : 'text-slate-500 hover:text-slate-900'
               }`}
             >
               {tab.replace('-', ' ')}
@@ -82,8 +82,8 @@ const Disputes = () => {
       {/* Disputes content grid */}
       {loading ? (
         <div className="flex flex-col items-center justify-center min-h-[300px] gap-2">
-          <RefreshCw className="h-6 w-6 animate-spin text-brand-indigo" />
-          <span className="text-xs font-bold text-[#64748B] uppercase tracking-wide">Syncing Arbitration Files...</span>
+          <RefreshCw className="h-6 w-6 animate-spin text-orange-600" />
+          <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">Syncing Arbitration Files...</span>
         </div>
       ) : disputes.length === 0 ? (
         <div className="py-6">
@@ -105,11 +105,11 @@ const Disputes = () => {
             return (
               <div
                 key={d._id}
-                className="bg-dark-surface p-6 rounded-2xl border border-dark-border flex flex-col justify-between hover:border-[rgba(255,255,255,0.08)] transition-colors space-y-4"
+                className="bg-white p-6 rounded-2xl border border-surface-border flex flex-col justify-between hover:border-[rgba(255,255,255,0.08)] transition-colors space-y-4"
               >
                 <div className="space-y-4">
                   <div className="flex justify-between items-start gap-2">
-                    <span className="inline-flex px-2 py-0.5 rounded bg-white/5 border border-dark-border text-[9px] font-extrabold text-[#64748B] uppercase tracking-wide truncate max-w-[150px]">
+                    <span className="inline-flex px-2 py-0.5 rounded bg-surface-muted border border-surface-border text-[9px] font-extrabold text-slate-500 uppercase tracking-wide truncate max-w-[150px]">
                       {d.reason}
                     </span>
                     <span className={`inline-flex px-2 py-0.5 rounded text-[9px] font-extrabold uppercase tracking-wide border ${
@@ -120,31 +120,31 @@ const Disputes = () => {
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-bold text-white leading-normal truncate">{d.gig?.title || 'Gig Contract'}</h3>
-                    <p className="text-xs text-[#94A3B8] leading-relaxed line-clamp-2 mt-1.5">{d.description}</p>
+                    <h3 className="text-sm font-bold text-slate-900 leading-normal truncate">{d.gig?.title || 'Gig Contract'}</h3>
+                    <p className="text-xs text-slate-500 leading-relaxed line-clamp-2 mt-1.5">{d.description}</p>
                   </div>
 
                   {/* Parties & Escrow Amount Details */}
-                  <div className="border-t border-dark-border/40 pt-4 grid grid-cols-2 gap-2 text-xs">
+                  <div className="border-t border-surface-border/40 pt-4 grid grid-cols-2 gap-2 text-xs">
                     <div>
-                      <span className="block text-[9px] text-[#64748B] font-bold uppercase">Raised By</span>
+                      <span className="block text-[9px] text-slate-500 font-bold uppercase">Raised By</span>
                       <span className="text-slate-300 font-semibold truncate block">{d.raisedBy?.name || 'Client'}</span>
                     </div>
                     <div>
-                      <span className="block text-[9px] text-[#64748B] font-bold uppercase">Against</span>
+                      <span className="block text-[9px] text-slate-500 font-bold uppercase">Against</span>
                       <span className="text-slate-300 font-semibold truncate block">{d.against?.name || 'Freelancer'}</span>
                     </div>
-                    <div className="col-span-2 border-t border-dark-border/30 pt-3 flex justify-between items-center text-[10px] text-[#64748B] font-bold uppercase">
+                    <div className="col-span-2 border-t border-surface-border/30 pt-3 flex justify-between items-center text-[10px] text-slate-500 font-bold uppercase">
                       <span>Raised: {dateRaised}</span>
-                      <span className="text-white text-xs font-black">Disputed: ₹{d.payment?.amount?.toLocaleString() || 0}</span>
+                      <span className="text-slate-900 text-xs font-black">Disputed: ₹{d.payment?.amount?.toLocaleString() || 0}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="border-t border-dark-border/40 pt-4 w-full">
+                <div className="border-t border-surface-border/40 pt-4 w-full">
                   <Link
                     to={`/dispute/${d._id}`}
-                    className="w-full py-2.5 rounded-xl bg-white/5 border border-dark-border hover:border-brand-indigo/50 text-[#94A3B8] hover:text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                    className="w-full py-2.5 rounded-xl bg-surface-muted border border-surface-border hover:border-orange-600/50 text-slate-500 hover:text-slate-900 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <Scale className="h-4 w-4" />
                     Review Dispute File
@@ -159,19 +159,19 @@ const Disputes = () => {
       {/* Pagination controls */}
       {totalPages > 1 && (
         <div className="flex justify-between items-center pt-2">
-          <span className="text-xs text-[#64748B] font-bold">Showing page {page} of {totalPages}</span>
+          <span className="text-xs text-slate-500 font-bold">Showing page {page} of {totalPages}</span>
           <div className="flex gap-2">
             <button
               onClick={() => setPage((p) => Math.max(p - 1, 1))}
               disabled={page === 1}
-              className="px-3.5 py-2 bg-white/5 border border-dark-border text-[#94A3B8] text-xs font-bold rounded-xl cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed hover:border-brand-indigo/40"
+              className="px-3.5 py-2 bg-surface-muted border border-surface-border text-slate-500 text-xs font-bold rounded-xl cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed hover:border-orange-600/40"
             >
               Previous
             </button>
             <button
               onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
               disabled={page === totalPages}
-              className="px-3.5 py-2 bg-white/5 border border-dark-border text-[#94A3B8] text-xs font-bold rounded-xl cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed hover:border-brand-indigo/40"
+              className="px-3.5 py-2 bg-surface-muted border border-surface-border text-slate-500 text-xs font-bold rounded-xl cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed hover:border-orange-600/40"
             >
               Next
             </button>

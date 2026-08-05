@@ -102,7 +102,7 @@ const AdminDashboard = () => {
       title: 'Total Users',
       value: stats.users?.total ?? 0,
       icon: Users,
-      color: 'bg-brand-50 text-brand-600 border-brand-200',
+      color: 'bg-orange-50 text-orange-600 border-orange-200',
       change: `+${stats.users?.newThisMonth ?? 0} this month`,
     },
     {
@@ -116,7 +116,7 @@ const AdminDashboard = () => {
       title: 'Active Gigs',
       value: stats.gigs?.open ?? 0,
       icon: FileText,
-      color: 'bg-violet-50 text-violet-600 border-violet-200',
+      color: 'bg-slate-50 text-slate-700 border-slate-200',
       change: `${stats.gigs?.pendingApproval ?? 0} pending approval`,
     },
     {
@@ -131,7 +131,7 @@ const AdminDashboard = () => {
   const getRoleBadge = (role) => {
     const map = {
       admin: 'bg-red-50 text-red-600 border-red-200',
-      freelancer: 'bg-violet-50 text-violet-600 border-violet-200',
+      freelancer: 'bg-slate-50 text-slate-700 border-slate-200',
       client: 'bg-blue-50 text-blue-600 border-blue-200',
     };
     return (
@@ -149,7 +149,7 @@ const AdminDashboard = () => {
 
       {/* Header */}
       <div>
-        <span className="inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-brand-50 text-brand-700 border border-brand-200 mb-3">
+        <span className="inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-orange-50 text-orange-700 border border-orange-200 mb-3">
           🛡️ Admin Control Panel
         </span>
         <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900">Platform Overview</h1>
@@ -186,8 +186,8 @@ const AdminDashboard = () => {
         <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Quick Actions</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { to: '/admin/users', label: 'Manage Users', icon: Users, color: 'text-brand-600' },
-            { to: '/admin/gigs', label: 'Moderate Gigs', icon: FileText, color: 'text-violet-600' },
+            { to: '/admin/users', label: 'Manage Users', icon: Users, color: 'text-orange-600' },
+            { to: '/admin/gigs', label: 'Moderate Gigs', icon: FileText, color: 'text-slate-700' },
             { to: '/admin/disputes', label: 'Dispute Chamber', icon: Scale, color: 'text-red-500' },
             { to: '/admin/revenue', label: 'Revenue Ledger', icon: BarChart2, color: 'text-emerald-600' },
           ].map((item) => {
@@ -196,7 +196,7 @@ const AdminDashboard = () => {
               <Link
                 key={item.to}
                 to={item.to}
-                className="p-4 bg-white rounded-xl border border-surface-border hover:border-brand-200 hover:shadow-card hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-between group"
+                className="p-4 bg-white rounded-xl border border-surface-border hover:border-orange-200 hover:shadow-card hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-between group"
               >
                 <span className="flex items-center gap-2.5 text-sm font-semibold text-slate-600 group-hover:text-slate-800">
                   <Icon className={`h-4 w-4 ${item.color}`} />
@@ -216,7 +216,7 @@ const AdminDashboard = () => {
             <h2 className="font-bold text-slate-800 text-base">Recent Signups</h2>
             <p className="text-xs text-slate-400 mt-0.5">Latest registered user accounts</p>
           </div>
-          <Link to="/admin/users" className="text-xs font-bold text-brand-600 hover:text-brand-700 transition-colors">
+          <Link to="/admin/users" className="text-xs font-bold text-orange-600 hover:text-orange-700 transition-colors">
             View All →
           </Link>
         </div>
@@ -246,7 +246,7 @@ const AdminDashboard = () => {
                       <img
                         src={usr.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=40'}
                         alt={usr.name}
-                        className="h-8 w-8 rounded-full object-cover border-2 border-brand-100"
+                        className="h-8 w-8 rounded-full object-cover border-2 border-orange-100"
                       />
                       <div>
                         <div className="font-semibold text-slate-800 text-sm">{usr.name}</div>
@@ -271,7 +271,7 @@ const AdminDashboard = () => {
                       <button
                         onClick={() => handleChat(usr.id)}
                         title="Start conversation"
-                        className="p-1.5 rounded-lg bg-surface-muted hover:bg-brand-50 hover:text-brand-600 text-slate-400 transition-colors cursor-pointer border border-surface-border hover:border-brand-200"
+                        className="p-1.5 rounded-lg bg-surface-muted hover:bg-orange-50 hover:text-orange-600 text-slate-400 transition-colors cursor-pointer border border-surface-border hover:border-orange-200"
                       >
                         <MessageSquare className="h-3.5 w-3.5" />
                       </button>

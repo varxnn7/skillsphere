@@ -11,7 +11,7 @@ const MultiStepForm = ({ steps = [], currentStep = 0 }) => {
 
         {/* Active Progress Line */}
         <div
-          className="absolute top-1/2 left-0 h-0.5 bg-brand-indigo -translate-y-1/2 z-0 transition-all duration-300"
+          className="absolute top-1/2 left-0 h-0.5 bg-orange-600 -translate-y-1/2 z-0 transition-all duration-300"
           style={{
             width: steps.length > 1 ? `${(currentStep / (steps.length - 1)) * 100}%` : '0%'
           }}
@@ -28,10 +28,10 @@ const MultiStepForm = ({ steps = [], currentStep = 0 }) => {
               <div
                 className={`h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs border transition-all duration-300 ${
                   isCompleted
-                    ? 'bg-brand-indigo border-brand-indigo text-white shadow-lg shadow-brand-indigo/20'
+                    ? 'bg-orange-600 border-orange-600 text-slate-900 shadow-lg shadow-orange-600/20'
                     : isActive
-                    ? 'bg-dark-surface border-brand-indigo text-brand-indigo ring-4 ring-brand-indigo/10'
-                    : 'bg-dark-surface border-dark-border text-[#64748B]'
+                    ? 'bg-white border-orange-600 text-orange-600 ring-4 ring-orange-600/10'
+                    : 'bg-white border-surface-border text-slate-500'
                 }`}
               >
                 {isCompleted ? <Check className="h-4 w-4" /> : idx + 1}
@@ -40,7 +40,7 @@ const MultiStepForm = ({ steps = [], currentStep = 0 }) => {
               {/* Title Text */}
               <span
                 className={`absolute top-10 whitespace-nowrap text-[10px] font-bold uppercase tracking-wider transition-colors duration-300 ${
-                  isActive ? 'text-brand-indigo' : isCompleted ? 'text-slate-300' : 'text-[#64748B]'
+                  isActive ? 'text-orange-600' : isCompleted ? 'text-slate-300' : 'text-slate-500'
                 }`}
               >
                 {step}

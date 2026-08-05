@@ -64,7 +64,7 @@ const ClientDashboard = () => {
     <div className="space-y-8 animate-blur-in">
       {/* ── Header Banner ────────────────────────────────────────────── */}
       <div className="bg-white p-6 md:p-8 rounded-3xl border border-surface-border shadow-card flex flex-col md:flex-row md:items-center md:justify-between gap-4 relative overflow-hidden">
-        <div className="absolute -top-10 -right-10 w-48 h-48 bg-brand-50 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -top-10 -right-10 w-48 h-48 bg-orange-50 rounded-full blur-2xl pointer-events-none" />
 
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-2">
@@ -73,7 +73,7 @@ const ClientDashboard = () => {
             </span>
           </div>
           <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
-            Welcome back, <span className="text-brand-600">{user?.name || 'Client'}</span>
+            Welcome back, <span className="text-orange-600">{user?.name || 'Client'}</span>
           </h1>
           <p className="text-slate-500 text-sm mt-1">
             Monitor your posted gigs, check incoming bids, and manage payments.
@@ -147,14 +147,14 @@ const ClientDashboard = () => {
                   <div key={act.id} className="relative group">
                     {/* Timeline dot */}
                     <span
-                      className={`absolute -left-[33px] top-1.5 h-6 w-6 rounded-full ${dotBg} flex items-center justify-center text-white ring-4 ring-white shadow-sm`}
+                      className={`absolute -left-[33px] top-1.5 h-6 w-6 rounded-full ${dotBg} flex items-center justify-center text-slate-900 ring-4 ring-white shadow-sm`}
                     >
                       <Icon className="h-3.5 w-3.5" />
                     </span>
 
                     <div>
                       <div className="flex justify-between items-center gap-4 mb-1">
-                        <h3 className="font-bold text-slate-900 text-sm group-hover:text-brand-600 transition-colors">
+                        <h3 className="font-bold text-slate-900 text-sm group-hover:text-orange-600 transition-colors">
                           {act.title}
                         </h3>
                         <span className="text-xs text-slate-400 font-medium whitespace-nowrap">
@@ -173,10 +173,10 @@ const ClientDashboard = () => {
         {/* Right Side: Quick Action Links / Local Info */}
         <div className="space-y-6">
           {/* Quick Info Box */}
-          <div className="bg-gradient-cta text-white p-6 rounded-3xl shadow-lg relative overflow-hidden">
-            <div className="absolute -right-10 -bottom-10 h-36 w-36 bg-white/10 rounded-full blur-xl" />
+          <div className="bg-gradient-cta text-slate-900 p-6 rounded-3xl shadow-lg relative overflow-hidden">
+            <div className="absolute -right-10 -bottom-10 h-36 w-36 bg-surface-subtle rounded-full blur-xl" />
             <h3 className="font-black text-lg mb-2">Need Talent Fast?</h3>
-            <p className="text-xs text-white/80 leading-relaxed mb-4">
+            <p className="text-xs text-slate-900/80 leading-relaxed mb-4">
               Use our smart location engine to find electricians, plumbers, and developers working within 5 kilometers of your office.
             </p>
             <Link
@@ -201,7 +201,7 @@ const ClientDashboard = () => {
               </p>
               <Link
                 to="/client/profile"
-                className="inline-flex items-center gap-1 mt-3 text-xs font-bold text-brand-600 hover:text-brand-700 transition-colors"
+                className="inline-flex items-center gap-1 mt-3 text-xs font-bold text-orange-600 hover:text-orange-700 transition-colors"
               >
                 Complete Profile <ArrowRight className="h-3 w-3" />
               </Link>

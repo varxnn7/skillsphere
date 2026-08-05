@@ -7,7 +7,16 @@ import api from '../utils/api';
 import Navbar from '../components/Navbar';
 import Toast from '../components/Toast';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { LogIn, Mail, Lock, Zap, RefreshCw, CheckCircle } from 'lucide-react';
+import { LogIn, Mail, Lock, RefreshCw, CheckCircle } from 'lucide-react';
+
+/* ── Logo Mark ──────────────────────────────────────────── */
+const LogoMark = ({ size = 56 }) => (
+  <svg width={size} height={size} viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="36" height="36" rx="10" fill="#1F2937"/>
+    <path d="M24 11.5C24 11.5 21.5 9 18 9C13.5 9 11 11.5 11 14C11 19 24 17 24 22C24 24.5 21.5 27 17.5 27C13.5 27 11 24.5 11 24.5" stroke="#EA580C" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"/>
+    <circle cx="27" cy="9" r="3" fill="#FB923C"/>
+  </svg>
+);
 
 const Login = () => {
   const navigate = useNavigate();
@@ -134,14 +143,14 @@ const Login = () => {
 
       <div className="flex-1 flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
         {/* Decorative blobs */}
-        <div className="absolute top-10 right-10 w-80 h-80 rounded-full bg-brand-100 blur-3xl opacity-50 pointer-events-none animate-float" />
-        <div className="absolute bottom-10 left-10 w-72 h-72 rounded-full bg-violet-100 blur-3xl opacity-40 pointer-events-none animate-float" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-10 right-10 w-80 h-80 rounded-full bg-orange-100 blur-3xl opacity-50 pointer-events-none animate-float" />
+        <div className="absolute bottom-10 left-10 w-72 h-72 rounded-full bg-amber-100 blur-3xl opacity-40 pointer-events-none animate-float" style={{ animationDelay: '2s' }} />
 
         <div className="bg-white rounded-3xl border border-surface-border shadow-[0_20px_60px_rgba(0,0,0,0.08)] max-w-md w-full p-8 md:p-10 relative z-10 animate-blur-in">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="h-14 w-14 bg-gradient-brand rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-brand-glow">
-              <Zap className="h-7 w-7 text-white" />
+            <div className="flex justify-center mb-4">
+              <LogoMark size={56} />
             </div>
             <h1 className="text-2xl font-black text-slate-900 mb-1">Welcome back</h1>
             <p className="text-slate-400 text-sm">Sign in to your SkillSphere account</p>
@@ -204,7 +213,7 @@ const Login = () => {
             <div>
               <div className="flex justify-between items-center mb-1.5">
                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Password</label>
-                <Link to="/forgot-password" className="text-xs font-semibold text-brand-600 hover:text-brand-700 transition-colors">
+                <Link to="/forgot-password" className="text-xs font-semibold text-orange-600 hover:text-orange-700 transition-colors">
                   Forgot password?
                 </Link>
               </div>
@@ -265,7 +274,7 @@ const Login = () => {
           {/* Register Link */}
           <p className="text-center text-xs text-slate-400 mt-8">
             New to SkillSphere?{' '}
-            <Link to="/register" className="text-brand-600 font-bold hover:text-brand-700 transition-colors">
+            <Link to="/register" className="text-orange-600 font-bold hover:text-orange-700 transition-colors">
               Create a free account
             </Link>
           </p>

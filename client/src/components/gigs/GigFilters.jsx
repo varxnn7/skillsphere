@@ -35,16 +35,16 @@ const GigFilters = ({ filters, onFilterChange, onReset }) => {
   };
 
   return (
-    <div className="bg-dark-surface border border-dark-border rounded-2xl p-6 space-y-6">
+    <div className="bg-white border border-surface-border rounded-2xl p-6 space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-center pb-4 border-b border-dark-border/60">
+      <div className="flex justify-between items-center pb-4 border-b border-surface-border/60">
         <div className="flex items-center gap-2">
-          <Filter className="h-4.5 w-4.5 text-brand-indigo" />
-          <span className="text-sm font-extrabold text-white">Filter Search</span>
+          <Filter className="h-4.5 w-4.5 text-orange-600" />
+          <span className="text-sm font-extrabold text-slate-900">Filter Search</span>
         </div>
         <button
           onClick={onReset}
-          className="text-xs font-bold text-brand-indigo hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer"
+          className="text-xs font-bold text-orange-600 hover:text-slate-900 transition-colors flex items-center gap-1.5 cursor-pointer"
         >
           <RotateCcw className="h-3.5 w-3.5" />
           Reset All
@@ -53,7 +53,7 @@ const GigFilters = ({ filters, onFilterChange, onReset }) => {
 
       {/* Categories */}
       <div className="space-y-3">
-        <h4 className="text-xs font-bold text-[#94A3B8] uppercase tracking-wide">Category</h4>
+        <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wide">Category</h4>
         <div className="flex flex-col gap-2">
           {categories.map((cat, idx) => (
             <button
@@ -61,8 +61,8 @@ const GigFilters = ({ filters, onFilterChange, onReset }) => {
               onClick={() => handleCategoryChange(cat)}
               className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all border ${
                 filters.category === cat
-                  ? 'bg-brand-indigo/10 border-brand-indigo/35 text-brand-indigo font-extrabold'
-                  : 'border-transparent text-[#94A3B8] hover:bg-white/5 hover:text-white'
+                  ? 'bg-orange-600/10 border-orange-600/35 text-orange-600 font-extrabold'
+                  : 'border-transparent text-slate-500 hover:bg-surface-muted hover:text-slate-900'
               } cursor-pointer`}
             >
               {cat}
@@ -85,7 +85,7 @@ const GigFilters = ({ filters, onFilterChange, onReset }) => {
 
       {/* Experience Level */}
       <div className="space-y-3 pt-2">
-        <h4 className="text-xs font-bold text-[#94A3B8] uppercase tracking-wide">Experience Level</h4>
+        <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wide">Experience Level</h4>
         <div className="flex flex-col gap-2">
           {experienceLevels.map((level) => (
             <button
@@ -93,8 +93,8 @@ const GigFilters = ({ filters, onFilterChange, onReset }) => {
               onClick={() => handleLevelChange(level.value)}
               className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all border ${
                 filters.experienceLevel === level.value
-                  ? 'bg-brand-indigo/10 border-brand-indigo/35 text-brand-indigo font-extrabold'
-                  : 'border-transparent text-[#94A3B8] hover:bg-white/5 hover:text-white'
+                  ? 'bg-orange-600/10 border-orange-600/35 text-orange-600 font-extrabold'
+                  : 'border-transparent text-slate-500 hover:bg-surface-muted hover:text-slate-900'
               } cursor-pointer`}
             >
               {level.label}
@@ -104,8 +104,8 @@ const GigFilters = ({ filters, onFilterChange, onReset }) => {
       </div>
 
       {/* Remote Toggle */}
-      <div className="flex items-center justify-between p-3 bg-[rgba(255,255,255,0.01)] border border-dark-border rounded-xl">
-        <span className="text-xs font-bold text-[#94A3B8]">Remote Gigs Only</span>
+      <div className="flex items-center justify-between p-3 bg-[rgba(255,255,255,0.01)] border border-surface-border rounded-xl">
+        <span className="text-xs font-bold text-slate-500">Remote Gigs Only</span>
         <label className="relative inline-flex items-center cursor-pointer select-none">
           <input
             type="checkbox"
@@ -113,7 +113,7 @@ const GigFilters = ({ filters, onFilterChange, onReset }) => {
             onChange={handleRemoteChange}
             className="sr-only peer"
           />
-          <div className="w-9 h-5 bg-dark-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[#94A3B8] after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-indigo peer-checked:after:bg-white" />
+          <div className="w-9 h-5 bg-dark-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[#94A3B8] after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-orange-600 peer-checked:after:bg-white" />
         </label>
       </div>
     </div>

@@ -72,16 +72,16 @@ const FreelancerDashboard = () => {
       {/* ── Header Banner ────────────────────────────────────────────── */}
       <div className="bg-white p-6 md:p-8 rounded-3xl border border-surface-border shadow-card flex flex-col md:flex-row md:items-center md:justify-between gap-4 relative overflow-hidden">
         {/* Subtle decorative blob */}
-        <div className="absolute -top-10 -right-10 w-48 h-48 bg-brand-50 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -top-10 -right-10 w-48 h-48 bg-orange-50 rounded-full blur-2xl pointer-events-none" />
 
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-2">
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-brand-50 text-brand-600 border border-brand-200">
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-orange-50 text-orange-600 border border-orange-200">
               💼 Freelancer Dashboard
             </span>
           </div>
           <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
-            Welcome back, <span className="text-brand-600">{user?.name || 'Freelancer'}</span>
+            Welcome back, <span className="text-orange-600">{user?.name || 'Freelancer'}</span>
           </h1>
           <p className="text-slate-500 text-sm mt-1">
             Review your profile visits, pending bids, earnings progression, and local work alerts.
@@ -95,7 +95,7 @@ const FreelancerDashboard = () => {
           const Icon = stat.icon || Eye;
           const iconColors = [
             'bg-indigo-50 text-indigo-600 border-indigo-200',
-            'bg-violet-50 text-violet-600 border-violet-200',
+            'bg-slate-50 text-slate-700 border-slate-200',
             'bg-emerald-50 text-emerald-600 border-emerald-200',
             'bg-amber-50 text-amber-600 border-amber-200',
           ];
@@ -179,7 +179,7 @@ const FreelancerDashboard = () => {
         <div className="space-y-6">
           <div className="bg-white p-6 rounded-3xl border border-surface-border shadow-card">
             <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="h-5 w-5 text-brand-600" />
+              <Sparkles className="h-5 w-5 text-orange-600" />
               <h2 className="text-md font-black text-slate-900">Hyperlocal Opportunities</h2>
             </div>
             <p className="text-xs text-slate-500 mb-4 leading-normal">
@@ -195,21 +195,21 @@ const FreelancerDashboard = () => {
                 localJobs.map((job) => (
                   <div
                     key={job.id}
-                    className="p-3.5 border border-slate-200 bg-slate-50/70 rounded-2xl hover:border-brand-300 hover:bg-brand-50/30 transition-all cursor-pointer group"
+                    className="p-3.5 border border-slate-200 bg-slate-50/70 rounded-2xl hover:border-orange-300 hover:bg-orange-50/30 transition-all cursor-pointer group"
                   >
-                    <h3 className="text-sm font-bold text-slate-800 mb-1 group-hover:text-brand-600 transition-colors">
+                    <h3 className="text-sm font-bold text-slate-800 mb-1 group-hover:text-orange-600 transition-colors">
                       {job.title}
                     </h3>
                     <div className="flex justify-between items-center text-xs text-slate-500 font-medium mb-2.5">
                       <span className="flex items-center gap-1 text-slate-600">
-                        <MapPin className="h-3.5 w-3.5 text-brand-500" />
+                        <MapPin className="h-3.5 w-3.5 text-orange-500" />
                         {job.distance}
                       </span>
                       <span>{job.client}</span>
                     </div>
                     <div className="flex justify-between items-center border-t border-slate-200/80 pt-2.5">
                       <span className="text-sm font-black text-slate-900">{job.budget}</span>
-                      <button className="text-xs font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+                      <button className="text-xs font-bold text-orange-600 hover:text-orange-700 flex items-center gap-1">
                         Quick Proposal <ArrowRight className="h-3 w-3" />
                       </button>
                     </div>
@@ -220,9 +220,9 @@ const FreelancerDashboard = () => {
           </div>
 
           {/* Tip Box */}
-          <div className="bg-violet-50 border border-violet-200 p-5 rounded-3xl shadow-sm">
+          <div className="bg-slate-50 border border-slate-200 p-5 rounded-3xl shadow-sm">
             <h4 className="text-xs font-bold text-violet-800 mb-1">💡 Optimization Tip</h4>
-            <p className="text-xs text-violet-700 leading-relaxed">
+            <p className="text-xs text-slate-800 leading-relaxed">
               Add your recent work certifications and upload your resume on the profile page to rank higher in local search query returns.
             </p>
           </div>

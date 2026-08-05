@@ -12,47 +12,83 @@ export default {
           DEFAULT: '#FFFFFF',
           subtle: '#F8FAFC',
           muted: '#F1F5F9',
-          border: '#E2E8F0',
-          'border-strong': '#CBD5E1',
+          border: '#E5E7EB',
+          'border-strong': '#D1D5DB',
         },
         // Text hierarchy
         ink: {
-          DEFAULT: '#0F172A',
-          muted: '#475569',
-          faint: '#94A3B8',
+          DEFAULT: '#111827',
+          muted: '#6B7280',
+          faint: '#9CA3AF',
           inverse: '#FFFFFF',
         },
-        // Brand — vibrant blue-violet
+        // Brand — Charcoal
         brand: {
-          DEFAULT: '#6366F1',
-          50:  '#EEF2FF',
-          100: '#E0E7FF',
-          200: '#C7D2FE',
-          300: '#A5B4FC',
-          400: '#818CF8',
-          500: '#6366F1',
-          600: '#4F46E5',
-          700: '#4338CA',
-          800: '#3730A3',
-          900: '#312E81',
-          // Legacy aliases kept for backward compat
-          indigo: '#6366F1',
-          purple: '#8B5CF6',
-          cyan: '#06B6D4',
+          DEFAULT: '#1F2937',
+          50:  '#F9FAFB',
+          100: '#F3F4F6',
+          200: '#E5E7EB',
+          300: '#D1D5DB',
+          400: '#9CA3AF',
+          500: '#6B7280',
+          600: '#4B5563',
+          700: '#374151',
+          800: '#1F2937',
+          900: '#111827',
+          // Legacy aliases
+          indigo: '#1F2937',
+          purple: '#374151',
+          cyan: '#EA580C',
         },
-        // Accent — fresh violet
+        // Accent — Orange
         accent: {
-          DEFAULT: '#8B5CF6',
-          light: '#A78BFA',
-          dark: '#7C3AED',
+          DEFAULT: '#EA580C',
+          light: '#FB923C',
+          dark: '#C2410C',
+          50: '#FFF7ED',
+          100: '#FFEDD5',
+          200: '#FED7AA',
+          300: '#FDBA74',
+          400: '#FB923C',
+          500: '#F97316',
+          600: '#EA580C',
+          700: '#C2410C',
+          800: '#9A3412',
+          900: '#7C2D12',
+        },
+        // Orange (convenience alias)
+        orange: {
+          50:  '#FFF7ED',
+          100: '#FFEDD5',
+          200: '#FED7AA',
+          300: '#FDBA74',
+          400: '#FB923C',
+          500: '#F97316',
+          600: '#EA580C',
+          700: '#C2410C',
+          800: '#9A3412',
+          900: '#7C2D12',
+        },
+        // Charcoal (convenience alias)
+        charcoal: {
+          50:  '#F9FAFB',
+          100: '#F3F4F6',
+          200: '#E5E7EB',
+          300: '#D1D5DB',
+          400: '#9CA3AF',
+          500: '#6B7280',
+          600: '#4B5563',
+          700: '#374151',
+          800: '#1F2937',
+          900: '#111827',
         },
         // Status
-        success: { DEFAULT: '#10B981', light: '#D1FAE5', text: '#065F46' },
+        success: { DEFAULT: '#22C55E', light: '#DCFCE7', text: '#15803D' },
         warning: { DEFAULT: '#F59E0B', light: '#FEF3C7', text: '#92400E' },
         danger:  { DEFAULT: '#EF4444', light: '#FEE2E2', text: '#991B1B' },
         info:    { DEFAULT: '#3B82F6', light: '#DBEAFE', text: '#1E40AF' },
 
-        // Dark mode (legacy, unused in new design but kept for compat)
+        // Dark mode (legacy, kept for compat)
         dark: {
           bg: '#0F172A',
           surface: '#1E293B',
@@ -61,12 +97,13 @@ export default {
       },
 
       backgroundImage: {
-        'gradient-brand': 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
-        'gradient-accent': 'linear-gradient(135deg, #06B6D4, #3B82F6)',
-        'gradient-warm': 'linear-gradient(135deg, #F59E0B, #EF4444)',
-        'gradient-hero': 'linear-gradient(160deg, #EEF2FF 0%, #F8FAFC 50%, #E0E7FF 100%)',
+        'gradient-brand': 'linear-gradient(135deg, #1F2937 0%, #374151 100%)',
+        'gradient-accent': 'linear-gradient(135deg, #EA580C, #FB923C)',
+        'gradient-warm': 'linear-gradient(135deg, #EA580C, #F59E0B)',
+        'gradient-hero': 'linear-gradient(160deg, #FFF7ED 0%, #F8FAFC 50%, #FFEDD5 100%)',
         'gradient-card': 'linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%)',
-        'gradient-cta': 'linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #6366F1 100%)',
+        'gradient-cta': 'linear-gradient(135deg, #1F2937 0%, #374151 50%, #111827 100%)',
+        'gradient-orange': 'linear-gradient(135deg, #EA580C 0%, #C2410C 100%)',
       },
 
       backdropBlur: {
@@ -76,12 +113,14 @@ export default {
 
       boxShadow: {
         'card': '0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04)',
-        'card-hover': '0 8px 30px rgba(99,102,241,0.12), 0 2px 8px rgba(0,0,0,0.06)',
-        'card-3d': '0 20px 60px rgba(99,102,241,0.15), 0 8px 20px rgba(0,0,0,0.08)',
-        'brand-glow': '0 0 30px rgba(99,102,241,0.25), 0 4px 15px rgba(99,102,241,0.15)',
-        'brand-glow-lg': '0 0 60px rgba(99,102,241,0.3), 0 10px 30px rgba(99,102,241,0.2)',
-        'input-focus': '0 0 0 3px rgba(99,102,241,0.15)',
-        'btn': '0 4px 14px rgba(99,102,241,0.35)',
+        'card-hover': '0 8px 30px rgba(234,88,12,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+        'card-3d': '0 20px 60px rgba(234,88,12,0.12), 0 8px 20px rgba(0,0,0,0.08)',
+        'brand-glow': '0 0 30px rgba(31,41,55,0.25), 0 4px 15px rgba(31,41,55,0.15)',
+        'brand-glow-lg': '0 0 60px rgba(31,41,55,0.3), 0 10px 30px rgba(31,41,55,0.2)',
+        'accent-glow': '0 0 30px rgba(234,88,12,0.3), 0 4px 15px rgba(234,88,12,0.2)',
+        'accent-glow-lg': '0 0 60px rgba(234,88,12,0.35), 0 10px 30px rgba(234,88,12,0.25)',
+        'input-focus': '0 0 0 3px rgba(234,88,12,0.15)',
+        'btn': '0 4px 14px rgba(234,88,12,0.35)',
         'navbar': '0 1px 3px rgba(0,0,0,0.06), 0 4px 20px rgba(0,0,0,0.04)',
       },
 
@@ -106,6 +145,7 @@ export default {
         'slide-left': 'slideLeft 0.7s cubic-bezier(0.16, 1, 0.3, 1) both',
         'slide-right': 'slideRight 0.7s cubic-bezier(0.16, 1, 0.3, 1) both',
         'blur-in': 'blurIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'modal-in': 'modalIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both',
       },
 
       keyframes: {
@@ -149,6 +189,10 @@ export default {
         blurIn: {
           '0%':   { opacity: '0', filter: 'blur(8px)', transform: 'scale(0.97)' },
           '100%': { opacity: '1', filter: 'blur(0)', transform: 'scale(1)' },
+        },
+        modalIn: {
+          '0%':   { opacity: '0', transform: 'scale(0.93) translateY(16px)' },
+          '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
         },
       },
 

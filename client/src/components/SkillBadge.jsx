@@ -3,7 +3,7 @@ import React from 'react';
 const SkillBadge = ({ name, level }) => {
   const levelStyles = {
     Beginner: 'bg-blue-500/10 text-brand-cyan border-brand-cyan/20',
-    Intermediate: 'bg-purple-500/10 text-brand-purple border-brand-purple/20',
+    Intermediate: 'bg-orange-500/10 text-brand-purple border-brand-purple/20',
     Expert: 'bg-emerald-500/10 text-[#10B981] border-[#10B981]/20'
   };
 

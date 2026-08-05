@@ -96,12 +96,12 @@ const GigProposals = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] text-white flex flex-col transition-smooth">
+    <div className="min-h-screen bg-surface-subtle text-slate-900 flex flex-col transition-smooth">
       <div className="flex-1 max-w-5xl w-full mx-auto p-6 space-y-8 relative z-10 animate-fade-up">
         {/* Back control */}
         <button
           onClick={() => navigate('/client/my-gigs')}
-          className="inline-flex items-center gap-2 text-xs font-bold text-[#94A3B8] hover:text-white transition-colors cursor-pointer"
+          className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Gigs
@@ -109,24 +109,24 @@ const GigProposals = () => {
 
         {/* Gig Spec Info summary card */}
         {gig && (
-          <div className="bg-dark-surface border border-dark-border rounded-3xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="bg-white border border-surface-border rounded-3xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2">
               <div className="flex items-center gap-3">
-                <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#64748B]">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500">
                   {gig.category}
                 </span>
                 <StatusBadge status={gig.status} />
               </div>
-              <h2 className="text-xl md:text-2xl font-extrabold text-white leading-snug">{gig.title}</h2>
-              <p className="text-xs text-[#94A3B8] leading-relaxed max-w-2xl">{gig.description}</p>
+              <h2 className="text-xl md:text-2xl font-extrabold text-slate-900 leading-snug">{gig.title}</h2>
+              <p className="text-xs text-slate-500 leading-relaxed max-w-2xl">{gig.description}</p>
             </div>
 
-            <div className="border-t md:border-t-0 md:border-l border-dark-border/60 pt-4 md:pt-0 md:pl-6 flex-shrink-0 space-y-1">
-              <span className="block text-[9px] font-bold text-[#64748B] uppercase tracking-wider">Gig Budget</span>
-              <span className="text-lg font-extrabold text-white">
+            <div className="border-t md:border-t-0 md:border-l border-surface-border/60 pt-4 md:pt-0 md:pl-6 flex-shrink-0 space-y-1">
+              <span className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider">Gig Budget</span>
+              <span className="text-lg font-extrabold text-slate-900">
                 ₹{gig.budgetMin?.toLocaleString()} - ₹{gig.budgetMax?.toLocaleString()}
               </span>
-              <span className="block text-[10px] text-[#64748B] font-medium uppercase">
+              <span className="block text-[10px] text-slate-500 font-medium uppercase">
                 {gig.budgetType === 'fixed' ? 'Fixed Price' : 'Hourly Rate'}
               </span>
             </div>
@@ -135,18 +135,18 @@ const GigProposals = () => {
 
         {/* Sort & proposal list */}
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-dark-border/60 pb-3">
-            <h3 className="text-md font-extrabold text-white flex items-center gap-2">
-              <Users className="h-4.5 w-4.5 text-brand-indigo" />
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-border/60 pb-3">
+            <h3 className="text-md font-extrabold text-slate-900 flex items-center gap-2">
+              <Users className="h-4.5 w-4.5 text-orange-600" />
               Incoming Proposals ({proposals.length})
             </h3>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-[#64748B]">Sort by:</span>
+              <span className="text-xs font-bold text-slate-500">Sort by:</span>
               <select
                 value={sortOption}
                 onChange={(e) => setSortOption(e.target.value)}
-                className="px-3 py-1.5 rounded-lg border border-dark-border bg-dark-surface text-xs font-bold text-slate-300 focus:outline-none focus:ring-1 focus:ring-brand-indigo"
+                className="px-3 py-1.5 rounded-lg border border-surface-border bg-white text-xs font-bold text-slate-300 focus:outline-none focus:ring-1 focus:ring-orange-600"
               >
                 <option value="newest">Newest First</option>
                 <option value="lowest_bid">Lowest Bid</option>
@@ -160,10 +160,10 @@ const GigProposals = () => {
               <LoadingSpinner size="lg" color="white" />
             </div>
           ) : sortedProposals.length === 0 ? (
-            <div className="text-center py-20 bg-dark-surface/30 border border-dark-border rounded-3xl p-8 max-w-md mx-auto space-y-3">
-              <MessageSquare className="h-10 w-10 mx-auto text-[#64748B]" />
-              <h3 className="text-sm font-bold text-white">No Proposals Yet</h3>
-              <p className="text-xs text-[#94A3B8] leading-relaxed">
+            <div className="text-center py-20 bg-white/30 border border-surface-border rounded-3xl p-8 max-w-md mx-auto space-y-3">
+              <MessageSquare className="h-10 w-10 mx-auto text-slate-500" />
+              <h3 className="text-sm font-bold text-slate-900">No Proposals Yet</h3>
+              <p className="text-xs text-slate-500 leading-relaxed">
                 As soon as freelancers start applying to your job post, their applications will show up here.
               </p>
             </div>

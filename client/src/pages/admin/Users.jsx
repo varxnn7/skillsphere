@@ -158,7 +158,7 @@ const Users = () => {
           type="checkbox"
           checked={users.length > 0 && selectedUserIds.length === users.length}
           onChange={handleSelectAll}
-          className="rounded border-dark-border bg-dark-surface text-brand-indigo focus:ring-brand-indigo cursor-pointer"
+          className="rounded border-surface-border bg-white text-orange-600 focus:ring-orange-600 cursor-pointer"
         />
       ),
       sortable: false
@@ -199,13 +199,13 @@ const Users = () => {
         <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-brand-purple/15 text-brand-purple border border-brand-purple/30 mb-2">
           🛡️ Admin Control Panel
         </span>
-        <h1 className="text-2xl font-extrabold text-white">Users Moderation</h1>
-        <p className="text-xs text-[#94A3B8] mt-1">Suspend user access, verify freelancer qualifications, and manage system accounts.</p>
+        <h1 className="text-2xl font-extrabold text-slate-900">Users Moderation</h1>
+        <p className="text-xs text-slate-500 mt-1">Suspend user access, verify freelancer qualifications, and manage system accounts.</p>
       </div>
 
       {/* Bulk action bar (if items selected) */}
       {selectedUserIds.length > 0 && (
-        <div className="bg-white/5 border border-dark-border px-6 py-4 rounded-xl flex items-center justify-between animate-in slide-in-from-top-4 duration-150">
+        <div className="bg-surface-muted border border-surface-border px-6 py-4 rounded-xl flex items-center justify-between animate-in slide-in-from-top-4 duration-150">
           <span className="text-xs font-bold text-slate-300">{selectedUserIds.length} user(s) selected</span>
           <div className="flex gap-2">
             <button
@@ -216,7 +216,7 @@ const Users = () => {
             </button>
             <button
               onClick={() => triggerAction(selectedUserIds, 'delete')}
-              className="px-3.5 py-2 bg-red-500 hover:bg-red-600 text-white text-xs font-bold rounded-xl cursor-pointer transition-colors"
+              className="px-3.5 py-2 bg-red-500 hover:bg-red-600 text-slate-900 text-xs font-bold rounded-xl cursor-pointer transition-colors"
             >
               Delete Selected
             </button>
@@ -225,23 +225,23 @@ const Users = () => {
       )}
 
       {/* Filters Form */}
-      <div className="bg-dark-surface p-6 rounded-2xl border border-dark-border flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-[0_0_20px_rgba(0,0,0,0.15)]">
+      <div className="bg-white p-6 rounded-2xl border border-surface-border flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-[0_0_20px_rgba(0,0,0,0.15)]">
         
         {/* Search */}
         <form onSubmit={handleSearchSubmit} className="flex-1 flex gap-2">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-3.5 h-4 w-4 text-[#64748B]" />
+            <Search className="absolute left-3 top-3.5 h-4 w-4 text-slate-500" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search users by name or email address..."
-              className="w-full pl-9 pr-4 py-3 rounded-xl border border-dark-border bg-dark-surface text-xs text-white placeholder:text-[#475569] focus:outline-none focus:ring-2 focus:ring-brand-indigo"
+              className="w-full pl-9 pr-4 py-3 rounded-xl border border-surface-border bg-white text-xs text-slate-900 placeholder:text-[#475569] focus:outline-none focus:ring-2 focus:ring-orange-600"
             />
           </div>
           <button
             type="submit"
-            className="px-4 py-3 rounded-xl bg-gradient-brand hover-glow-purple text-white font-bold text-xs cursor-pointer transition-all"
+            className="px-4 py-3 rounded-xl bg-gradient-orange hover-glow-orange text-slate-900 font-bold text-xs cursor-pointer transition-all"
           >
             Search
           </button>
@@ -252,7 +252,7 @@ const Users = () => {
           <select
             value={role}
             onChange={(e) => { setRole(e.target.value); setPage(1); }}
-            className="px-4 py-2.5 rounded-xl border border-dark-border bg-dark-surface text-xs text-white"
+            className="px-4 py-2.5 rounded-xl border border-surface-border bg-white text-xs text-slate-900"
           >
             <option value="">All Roles</option>
             <option value="client">Client</option>
@@ -263,7 +263,7 @@ const Users = () => {
           <select
             value={status}
             onChange={(e) => { setStatus(e.target.value); setPage(1); }}
-            className="px-4 py-2.5 rounded-xl border border-dark-border bg-dark-surface text-xs text-white"
+            className="px-4 py-2.5 rounded-xl border border-surface-border bg-white text-xs text-slate-900"
           >
             <option value="">All Statuses</option>
             <option value="active">Active Only</option>
@@ -273,7 +273,7 @@ const Users = () => {
           <select
             value={isVerified}
             onChange={(e) => { setIsVerified(e.target.value); setPage(1); }}
-            className="px-4 py-2.5 rounded-xl border border-dark-border bg-dark-surface text-xs text-white"
+            className="px-4 py-2.5 rounded-xl border border-surface-border bg-white text-xs text-slate-900"
           >
             <option value="">All Verifications</option>
             <option value="true">Verified Freelancers</option>
@@ -303,20 +303,20 @@ const Users = () => {
       {/* Pagination controls */}
       {totalPages > 1 && (
         <div className="flex justify-between items-center pt-2">
-          <span className="text-xs text-[#64748B] font-bold">Showing page {page} of {totalPages} ({totalResults} total accounts)</span>
+          <span className="text-xs text-slate-500 font-bold">Showing page {page} of {totalPages} ({totalResults} total accounts)</span>
           
           <div className="flex gap-2">
             <button
               onClick={() => setPage((p) => Math.max(p - 1, 1))}
               disabled={page === 1}
-              className="px-3.5 py-2 bg-white/5 border border-dark-border text-[#94A3B8] text-xs font-bold rounded-xl cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed hover:border-brand-indigo/40"
+              className="px-3.5 py-2 bg-surface-muted border border-surface-border text-slate-500 text-xs font-bold rounded-xl cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed hover:border-orange-600/40"
             >
               Previous
             </button>
             <button
               onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
               disabled={page === totalPages}
-              className="px-3.5 py-2 bg-white/5 border border-dark-border text-[#94A3B8] text-xs font-bold rounded-xl cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed hover:border-brand-indigo/40"
+              className="px-3.5 py-2 bg-surface-muted border border-surface-border text-slate-500 text-xs font-bold rounded-xl cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed hover:border-orange-600/40"
             >
               Next
             </button>
