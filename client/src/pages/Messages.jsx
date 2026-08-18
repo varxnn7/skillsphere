@@ -172,7 +172,8 @@ const Messages = () => {
 
   // Get recipient profile details
   const getRecipient = (conv) => {
-    return conv.participants?.find(p => p._id !== user.id) || {};
+    if (!conv || !conv.participants) return {};
+    return conv.participants.find(p => (p._id !== user?.id && p._id !== user?._id && p !== user?.id && p !== user?._id)) || conv.participants[0] || {};
   };
 
   // Filter conversations
@@ -184,7 +185,7 @@ const Messages = () => {
   // Group messages by date separators
   const groupMessagesByDate = (msgList) => {
     const groups = {};
-    msgList.forEach(msg => {
+    (msgList || []).forEach(msg => {
       const date = new Date(msg.createdAt).toLocaleDateString(undefined, {
         weekday: 'long',
         year: 'numeric',
@@ -208,13 +209,27 @@ const Messages = () => {
       <div className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 flex relative z-10 h-[calc(100vh-70px)] overflow-hidden">
         
         {/* Main portal grid container */}
-        <div className="w-full flex bg-white border border-surface-border/80 rounded-3xl overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.3)]">
+        <div className="w-full flex bg-white border border-surface-border/80 rounded-3xl overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.1)]">
           
           {/* LEFT PANEL: Conversation lists */}
           <div className={`w-full md:w-80 border-r border-surface-border/50 flex flex-col ${conversationId ? 'hidden md:flex' : 'flex'}`}>
-            {/* Search Header */}
+            {/* Search & Header */}
             <div className="p-4 border-b border-surface-border/40 space-y-4">
-              <h2 className="text-lg font-extrabold text-slate-900">Inbox Chat</h2>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <button
+                    onClick={() => {
+                      if (window.history.length > 2) navigate(-1);
+                      else navigate(`/${user?.role || 'client'}/dashboard`);
+                    }}
+                    className="p-2 rounded-xl border border-surface-border bg-surface-subtle hover:bg-white text-slate-500 hover:text-slate-900 transition-all cursor-pointer"
+                    title="Back to Dashboard"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                  </button>
+                  <h2 className="text-lg font-extrabold text-slate-900">Inbox Chat</h2>
+                </div>
+              </div>
               <div className="relative">
                 <Search className="absolute left-3.5 top-3 h-4 w-4 text-[#475569]" />
                 <input
@@ -222,7 +237,7 @@ const Messages = () => {
                   placeholder="Search chats..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-surface-border bg-surface-subtle text-slate-900 text-xs placeholder:text-[#475569] focus:outline-none focus:ring-2 focus:ring-orange-purple/20 focus:border-orange-purple transition-smooth"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-surface-border bg-surface-subtle text-slate-900 text-xs placeholder:text-[#475569] focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-smooth"
                 />
               </div>
             </div>
@@ -246,25 +261,25 @@ const Messages = () => {
                       key={conv._id}
                       onClick={() => navigate(`/messages/${conv._id}`)}
                       className={`p-4 flex items-center gap-3 hover:bg-surface-muted transition-all cursor-pointer relative ${
-                        isActive ? 'bg-surface-muted border-l-4 border-brand-purple' : ''
+                        isActive ? 'bg-surface-muted border-l-4 border-orange-500' : ''
                       }`}
                     >
                       {/* Avatar with online dot */}
                       <div className="relative">
                         <img
                           src={recipient.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=80'}
-                          alt={recipient.name}
+                          alt={recipient.name || 'User'}
                           className="h-10 w-10 rounded-full object-cover border border-surface-border/60"
                         />
                         {isOnline && (
-                          <span className="absolute bottom-0 right-0 h-3 w-3 bg-[#10B981] border-2 border-[#111118] rounded-full" />
+                          <span className="absolute bottom-0 right-0 h-3 w-3 bg-[#10B981] border-2 border-white rounded-full" />
                         )}
                       </div>
 
                       {/* Summary details */}
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-center">
-                          <h4 className="text-xs font-bold text-slate-900 truncate">{recipient.name}</h4>
+                          <h4 className="text-xs font-bold text-slate-900 truncate">{recipient.name || 'User'}</h4>
                           <span className="text-[10px] text-slate-500 font-medium">
                             {conv.lastMessageAt ? new Date(conv.lastMessageAt).toLocaleDateString(undefined, { hour: '2-digit', minute: '2-digit' }) : ''}
                           </span>
@@ -276,7 +291,7 @@ const Messages = () => {
 
                       {/* Unread dot badge */}
                       {isUnread && (
-                        <span className="h-4 w-4 bg-brand-purple text-[9px] font-extrabold text-slate-900 flex items-center justify-center rounded-full">
+                        <span className="h-4 w-4 bg-orange-500 text-[9px] font-extrabold text-white flex items-center justify-center rounded-full">
                           {conv.unreadCountCurrent}
                         </span>
                       )}
@@ -296,24 +311,26 @@ const Messages = () => {
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => navigate('/messages')}
-                      className="md:hidden p-1.5 rounded-xl border border-surface-border text-slate-500 hover:text-slate-900 cursor-pointer mr-1"
+                      className="p-2 rounded-xl border border-surface-border bg-surface-subtle hover:bg-white text-slate-600 hover:text-slate-900 transition-all cursor-pointer flex items-center gap-1.5 text-xs font-bold shadow-xs"
+                      title="Back to All Chats"
                     >
                       <ArrowLeft className="h-4 w-4" />
+                      <span className="hidden sm:inline">Back</span>
                     </button>
 
                     <div className="relative">
                       <img
                         src={getRecipient(activeConv).avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=80'}
-                        alt={getRecipient(activeConv).name}
+                        alt={getRecipient(activeConv).name || 'User'}
                         className="h-10 w-10 rounded-full object-cover border border-surface-border/60"
                       />
                       {onlineUsers.includes(getRecipient(activeConv)._id) && (
-                        <span className="absolute bottom-0 right-0 h-3 w-3 bg-[#10B981] border-2 border-[#111118] rounded-full" />
+                        <span className="absolute bottom-0 right-0 h-3 w-3 bg-[#10B981] border-2 border-white rounded-full" />
                       )}
                     </div>
 
                     <div>
-                      <h3 className="text-xs font-bold text-slate-900">{getRecipient(activeConv).name}</h3>
+                      <h3 className="text-xs font-bold text-slate-900">{getRecipient(activeConv).name || 'User'}</h3>
                       <p className="text-[10px] text-slate-500 mt-0.5 font-medium uppercase tracking-wider">
                         {onlineUsers.includes(getRecipient(activeConv)._id) ? 'Online' : 'Offline'}
                       </p>
@@ -322,8 +339,8 @@ const Messages = () => {
 
                   {/* Gig context if any */}
                   {activeConv.gig && (
-                    <div className="hidden lg:flex flex-col items-end px-3 py-1.5 rounded-xl border border-brand-purple/20 bg-brand-purple/5 text-[10px] font-bold">
-                      <span className="text-brand-purple uppercase tracking-wider">Gig Context</span>
+                    <div className="hidden lg:flex flex-col items-end px-3 py-1.5 rounded-xl border border-orange-500/20 bg-orange-50 text-[10px] font-bold">
+                      <span className="text-orange-600 uppercase tracking-wider">Gig Context</span>
                       <span className="text-slate-900 mt-0.5 truncate max-w-[150px]">{activeConv.gig.title}</span>
                     </div>
                   )}
@@ -342,7 +359,9 @@ const Messages = () => {
 
                       {/* Messages loop */}
                       {msgs.map((msg) => {
-                        const isMe = msg.sender._id === user.id || msg.sender === user.id;
+                        const senderId = msg.sender?._id || msg.sender;
+                        const currentUserId = user?.id || user?._id;
+                        const isMe = senderId === currentUserId;
 
                         return (
                           <div
@@ -354,7 +373,7 @@ const Messages = () => {
                               <div
                                 className={`p-3 rounded-2xl text-xs leading-relaxed shadow-sm ${
                                   isMe
-                                    ? 'bg-brand-purple text-slate-900 rounded-tr-none'
+                                    ? 'bg-orange-500 text-white rounded-tr-none'
                                     : 'bg-white border border-surface-border/80 text-slate-700 rounded-tl-none'
                                 }`}
                               >
@@ -372,7 +391,7 @@ const Messages = () => {
                                     rel="noreferrer"
                                     className="mb-2 p-2 rounded-xl bg-surface-muted border border-white/10 flex items-center gap-2 hover:bg-surface-subtle transition-colors"
                                   >
-                                    <FileText className="h-5 w-5 text-brand-purple" />
+                                    <FileText className="h-5 w-5 text-orange-500" />
                                     <div className="flex-1 min-w-0 text-left">
                                       <p className="text-[11px] font-bold truncate text-slate-900">{msg.fileName}</p>
                                       <p className="text-[9px] text-slate-500">{(msg.fileSize / 1024).toFixed(1)} KB</p>
@@ -390,7 +409,7 @@ const Messages = () => {
                                 </span>
                                 {isMe && (
                                   msg.isRead ? (
-                                    <CheckCheck className="h-3.5 w-3.5 text-brand-purple" />
+                                    <CheckCheck className="h-3.5 w-3.5 text-orange-500" />
                                   ) : (
                                     <Check className="h-3.5 w-3.5 text-[#475569]" />
                                   )
@@ -406,10 +425,10 @@ const Messages = () => {
                   {/* Typing Indicator */}
                   {typingUsers[conversationId]?.length > 0 && (
                     <div className="flex justify-start">
-                      <div className="p-3 bg-white border border-surface-border/60 rounded-2xl rounded-tl-none flex items-center gap-1.5">
-                        <div className="h-2 w-2 bg-brand-purple rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                        <div className="h-2 w-2 bg-brand-purple rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                        <div className="h-2 w-2 bg-brand-purple rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                      <div className="p-3 bg-white border border-surface-border/60 rounded-2xl rounded-tl-none flex items-center gap-1.5 shadow-xs">
+                        <div className="h-2 w-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <div className="h-2 w-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <div className="h-2 w-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                       </div>
                     </div>
                   )}
@@ -422,10 +441,10 @@ const Messages = () => {
                   
                   {/* File Upload Progress */}
                   {uploading && (
-                    <div className="mb-3 flex items-center justify-between gap-3 text-xs font-bold text-brand-purple">
+                    <div className="mb-3 flex items-center justify-between gap-3 text-xs font-bold text-orange-600">
                       <span>Uploading document...</span>
-                      <div className="flex-1 h-1.5 bg-dark-border rounded-lg overflow-hidden relative">
-                        <div className="h-full bg-brand-purple transition-all duration-300" style={{ width: `${uploadProgress}%` }} />
+                      <div className="flex-1 h-1.5 bg-slate-100 rounded-lg overflow-hidden relative">
+                        <div className="h-full bg-orange-500 transition-all duration-300" style={{ width: `${uploadProgress}%` }} />
                       </div>
                       <span>{uploadProgress}%</span>
                     </div>
@@ -433,12 +452,12 @@ const Messages = () => {
 
                   {/* Attachment Preview Card */}
                   {attachment && (
-                    <div className="mb-3 p-3 rounded-2xl border border-brand-purple/20 bg-brand-purple/5 flex items-center justify-between">
+                    <div className="mb-3 p-3 rounded-2xl border border-orange-500/20 bg-orange-50 flex items-center justify-between">
                       <div className="flex items-center gap-2.5 min-w-0">
                         {attachment.type === 'image' ? (
                           <img src={attachment.url} alt="preview" className="h-10 w-10 rounded-lg object-cover border border-surface-border" />
                         ) : (
-                          <FileText className="h-8 w-8 text-brand-purple flex-shrink-0" />
+                          <FileText className="h-8 w-8 text-orange-600 flex-shrink-0" />
                         )}
                         <div className="min-w-0 text-left">
                           <p className="text-[11px] font-bold text-slate-900 truncate">{attachment.name}</p>
@@ -459,7 +478,7 @@ const Messages = () => {
                     
                     {/* File Attachment Dropdowns */}
                     <div className="flex gap-1">
-                      <label className="p-2.5 rounded-xl border border-surface-border hover:border-surface-border text-slate-500 hover:text-slate-900 cursor-pointer hover:bg-surface-muted transition-colors">
+                      <label className="p-2.5 rounded-xl border border-surface-border hover:border-orange-200 text-slate-500 hover:text-slate-900 cursor-pointer hover:bg-orange-50/50 transition-colors">
                         <Paperclip className="h-4 w-4" />
                         <input
                           type="file"
@@ -468,7 +487,7 @@ const Messages = () => {
                           accept=".pdf,.doc,.docx"
                         />
                       </label>
-                      <label className="p-2.5 rounded-xl border border-surface-border hover:border-surface-border text-slate-500 hover:text-slate-900 cursor-pointer hover:bg-surface-muted transition-colors">
+                      <label className="p-2.5 rounded-xl border border-surface-border hover:border-orange-200 text-slate-500 hover:text-slate-900 cursor-pointer hover:bg-orange-50/50 transition-colors">
                         <ImageIcon className="h-4 w-4" />
                         <input
                           type="file"
@@ -485,15 +504,15 @@ const Messages = () => {
                       value={inputText}
                       onChange={handleInputChange}
                       disabled={uploading}
-                      className="flex-1 px-4 py-3 rounded-xl border border-surface-border bg-surface-subtle text-slate-900 text-xs focus:outline-none focus:ring-2 focus:ring-orange-purple/20 focus:border-orange-purple transition-smooth"
+                      className="flex-1 px-4 py-3 rounded-xl border border-surface-border bg-surface-subtle text-slate-900 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-smooth"
                     />
 
                     <button
                       type="submit"
                       disabled={uploading || (!inputText.trim() && !attachment)}
-                      className="p-3 bg-gradient-orange text-slate-900 rounded-xl shadow-lg hover-glow-orange flex items-center justify-center hover:scale-105 active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+                      className="p-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl shadow-md hover:shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all cursor-pointer disabled:opacity-40 disabled:hover:scale-100"
                     >
-                      <Send className="h-4 w-4" />
+                      <Send className="h-4 w-4 text-white" />
                     </button>
 
                   </form>

@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '../socket';
+import api from '../utils/api';
 import {
   addMessage,
   setTypingStatus,
@@ -12,91 +13,146 @@ const useChat = (activeConversationId) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
 
-  // Send Message
-  const sendMessage = useCallback((content, type = 'text', fileUrl = '', fileName = '', fileSize = 0) => {
-    if (!socket.connected || !activeConversationId) return;
-    
-    socket.emit('send_message', {
-      conversationId: activeConversationId,
-      content,
-      type,
-      fileUrl,
-      fileName,
-      fileSize
-    });
-  }, [activeConversationId]);
+  // Send Message (Dual support: Socket + HTTP fallback)
+  const sendMessage = useCallback(async (content, type = 'text', fileUrl = '', fileName = '', fileSize = 0) => {
+    if (!activeConversationId || (!content && !fileUrl)) return;
+
+    // 1. If socket is connected, send via Socket.IO
+    if (socket && socket.connected) {
+      socket.emit('send_message', {
+        conversationId: activeConversationId,
+        content,
+        type,
+        fileUrl,
+        fileName,
+        fileSize
+      });
+      return;
+    }
+
+    // 2. Otherwise send via HTTP API fallback
+    try {
+      const response = await api.post('/messages', {
+        conversationId: activeConversationId,
+        content,
+        type,
+        fileUrl,
+        fileName,
+        fileSize
+      });
+
+      if (response.data && response.data.success && response.data.message) {
+        const msg = response.data.message;
+        dispatch(addMessage(msg));
+        dispatch(updateConversationLastMessage({
+          conversationId: activeConversationId,
+          lastMessage: msg
+        }));
+      }
+    } catch (err) {
+      console.error('Failed to send message via HTTP API:', err);
+    }
+  }, [activeConversationId, dispatch]);
 
   // Typing Start
   const sendTypingStart = useCallback(() => {
-    if (!socket.connected || !activeConversationId) return;
+    if (!socket || !socket.connected || !activeConversationId) return;
     socket.emit('typing_start', activeConversationId);
   }, [activeConversationId]);
 
   // Typing Stop
   const sendTypingStop = useCallback(() => {
-    if (!socket.connected || !activeConversationId) return;
+    if (!socket || !socket.connected || !activeConversationId) return;
     socket.emit('typing_stop', activeConversationId);
   }, [activeConversationId]);
 
   // Mark Read
-  const markRead = useCallback(() => {
-    if (!socket.connected || !activeConversationId) return;
-    socket.emit('message_read', { conversationId: activeConversationId });
+  const markRead = useCallback(async () => {
+    if (!activeConversationId) return;
+    if (socket && socket.connected) {
+      socket.emit('message_read', { conversationId: activeConversationId });
+    } else {
+      try {
+        await api.put(`/conversations/${activeConversationId}/read`);
+      } catch (err) {
+        // silent catch
+      }
+    }
   }, [activeConversationId]);
 
   // Set up listeners for the active conversation
   useEffect(() => {
     if (!activeConversationId) return;
 
-    // Join room
-    socket.emit('join_conversation', activeConversationId);
+    const joinAndSync = () => {
+      if (socket && socket.connected) {
+        socket.emit('join_conversation', activeConversationId);
+      }
+      markRead();
+    };
 
-    // Automatically mark existing messages as read
-    markRead();
+    joinAndSync();
+
+    const handleConnect = () => {
+      joinAndSync();
+    };
+
+    socket.on('connect', handleConnect);
 
     // Listen for new messages
-    socket.on('new_message', (message) => {
-      if (message.conversation === activeConversationId) {
+    const handleNewMessage = (message) => {
+      const messageConvId = message.conversation?._id || message.conversation;
+      if (messageConvId === activeConversationId) {
         dispatch(addMessage(message));
         // Reset unread count for current user
         markRead();
       }
-    });
+    };
+
+    socket.on('new_message', handleNewMessage);
 
     // Listen for conversation updates (updates unread count, etc.)
-    socket.on('conversation_updated', (data) => {
+    const handleConvUpdated = (data) => {
       dispatch(updateConversationLastMessage(data));
-    });
+    };
+
+    socket.on('conversation_updated', handleConvUpdated);
 
     // Listen for typing events
-    socket.on('typing_start', ({ conversationId, userId: typingUserId }) => {
-      if (conversationId === activeConversationId && typingUserId !== user.id) {
+    const handleTypingStart = ({ conversationId, userId: typingUserId }) => {
+      if (conversationId === activeConversationId && typingUserId !== user?.id && typingUserId !== user?._id) {
         dispatch(setTypingStatus({ conversationId, userId: typingUserId, isTyping: true }));
       }
-    });
+    };
 
-    socket.on('typing_stop', ({ conversationId, userId: typingUserId }) => {
-      if (conversationId === activeConversationId && typingUserId !== user.id) {
+    const handleTypingStop = ({ conversationId, userId: typingUserId }) => {
+      if (conversationId === activeConversationId && typingUserId !== user?.id && typingUserId !== user?._id) {
         dispatch(setTypingStatus({ conversationId, userId: typingUserId, isTyping: false }));
       }
-    });
+    };
+
+    socket.on('typing_start', handleTypingStart);
+    socket.on('typing_stop', handleTypingStop);
 
     // Listen for read receipts
-    socket.on('message_read', ({ conversationId }) => {
+    const handleMessageRead = ({ conversationId }) => {
       if (conversationId === activeConversationId) {
-        // Redraw or local state update can be handled by reloading messages or manually mapping
+        // Handled via conversation updates
       }
-    });
+    };
+
+    socket.on('message_read', handleMessageRead);
 
     return () => {
-      socket.off('new_message');
-      socket.off('conversation_updated');
-      socket.off('typing_start');
-      socket.off('typing_stop');
-      socket.off('message_read');
+      socket.off('connect', handleConnect);
+      socket.off('new_message', handleNewMessage);
+      socket.off('conversation_updated', handleConvUpdated);
+      socket.off('typing_start', handleTypingStart);
+      socket.off('typing_stop', handleTypingStop);
+      socket.off('message_read', handleMessageRead);
       dispatch(clearChatState());
     };
-  }, [activeConversationId, user.id, dispatch, markRead]);
+  }, [activeConversationId, user, dispatch, markRead]);
 
   return {
     sendMessage,

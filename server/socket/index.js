@@ -82,6 +82,9 @@ const initSocket = (server, allowedOrigins) => {
           return socket.emit('error_message', { message: 'Conversation ID and content required' });
         }
 
+        // Ensure current socket is joined to the conversation room
+        socket.join(conversationId);
+
         // 1. Create and Save Message to DB
         const message = await Message.create({
           conversation: conversationId,
@@ -101,11 +104,19 @@ const initSocket = (server, allowedOrigins) => {
         conversation.lastMessageAt = Date.now();
 
         // Increment unread count for other participants
+        if (!conversation.unreadCount) {
+          conversation.unreadCount = new Map();
+        }
         conversation.participants.forEach(pId => {
           const participantId = pId.toString();
           if (participantId !== userId) {
-            const currentUnread = conversation.unreadCount.get(participantId) || 0;
-            conversation.unreadCount.set(participantId, currentUnread + 1);
+            if (conversation.unreadCount instanceof Map) {
+              const currentUnread = conversation.unreadCount.get(participantId) || 0;
+              conversation.unreadCount.set(participantId, currentUnread + 1);
+            } else if (typeof conversation.unreadCount === 'object') {
+              const currentUnread = conversation.unreadCount[participantId] || 0;
+              conversation.unreadCount[participantId] = currentUnread + 1;
+            }
           }
         });
 
@@ -116,16 +127,22 @@ const initSocket = (server, allowedOrigins) => {
 
         // 3. Broadcast to all users in the conversation room (including sender)
         io.to(conversationId).emit('new_message', populatedMessage);
+        // Also emit directly to current socket as confirmation
+        socket.emit('new_message', populatedMessage);
 
         // 4. Emit unread count update and alert notifications to other participants
         conversation.participants.forEach(async (pId) => {
           const participantId = pId.toString();
           if (participantId !== userId) {
+            const unreadNum = conversation.unreadCount instanceof Map
+              ? (conversation.unreadCount.get(participantId) || 0)
+              : (conversation.unreadCount?.[participantId] || 0);
+
             // Send conversation update to refresh last message & unread count
             io.to(participantId).emit('conversation_updated', {
               conversationId,
               lastMessage: populatedMessage,
-              unreadCount: conversation.unreadCount.get(participantId)
+              unreadCount: unreadNum
             });
 
             // Create notification database object if they are not active in conversation
@@ -173,8 +190,12 @@ const initSocket = (server, allowedOrigins) => {
 
         // Reset unread count for current user
         const conversation = await Conversation.findById(conversationId);
-        if (conversation) {
-          conversation.unreadCount.set(userId, 0);
+        if (conversation && conversation.unreadCount) {
+          if (conversation.unreadCount instanceof Map) {
+            conversation.unreadCount.set(userId, 0);
+          } else if (typeof conversation.unreadCount === 'object') {
+            conversation.unreadCount[userId] = 0;
+          }
           await conversation.save();
         }
 

@@ -237,26 +237,34 @@
 /* ============================================================
    FORM INPUTS — Light theme
    ============================================================ */
-.input-clean {
-  width: 100%;
-  background: #F8FAFC;
-  border: 1.5px solid #E5E7EB;
-  border-radius: 0.75rem;
-  padding: 0.75rem 1rem;
-  font-size: 0.875rem;
-  color: #111827;
-  transition: all 0.2s ease;
-  outline: none;
-}
-.input-clean::placeholder { color: #9CA3AF; }
-.input-clean:focus {
-  background: #FFFFFF;
-  border-color: #EA580C;
-  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.12);
-}
-.input-clean.error {
-  border-color: #EF4444;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+@layer components {
+  .input-clean {
+    width: 100%;
+    background: #F8FAFC;
+    border: 1.5px solid #E5E7EB;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    color: #111827;
+    transition: all 0.2s ease;
+    outline: none;
+  }
+  .input-clean::placeholder { color: #9CA3AF; }
+  .input-clean:focus {
+    background: #FFFFFF;
+    border-color: #EA580C;
+    box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.12);
+  }
+  .input-clean.error {
+    border-color: #EF4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+  }
+  .input-clean.pl-10,
+  .input-clean.pl-11,
+  .input-clean.input-with-icon,
+  .input-with-icon {
+    padding-left: 2.75rem !important;
+  }
 }
 
 /* ============================================================

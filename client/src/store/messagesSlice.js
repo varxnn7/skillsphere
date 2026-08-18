@@ -43,7 +43,12 @@ const messagesSlice = createSlice({
       state.messages = action.payload;
     },
     addMessage: (state, action) => {
-      state.messages.push(action.payload);
+      const msg = action.payload;
+      if (!msg) return;
+      const exists = state.messages.some(m => m._id === msg._id);
+      if (!exists) {
+        state.messages.push(msg);
+      }
     },
     setTypingStatus: (state, action) => {
       const { conversationId, userId, isTyping } = action.payload;

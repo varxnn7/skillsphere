@@ -201,7 +201,7 @@ const Login = () => {
                   onChange={handleChange}
                   placeholder="you@example.com"
                   autoComplete="email"
-                  className={`input-clean pl-10 ${validationErrors.email ? 'error' : ''}`}
+                  className={`input-clean input-with-icon !pl-11 ${validationErrors.email ? 'error' : ''}`}
                 />
               </div>
               {validationErrors.email && (
@@ -227,7 +227,7 @@ const Login = () => {
                   onChange={handleChange}
                   placeholder="••••••••"
                   autoComplete="current-password"
-                  className={`input-clean pl-10 ${validationErrors.password ? 'error' : ''}`}
+                  className={`input-clean input-with-icon !pl-11 ${validationErrors.password ? 'error' : ''}`}
                 />
               </div>
               {validationErrors.password && (

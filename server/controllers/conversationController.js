@@ -81,7 +81,9 @@ exports.getConversations = async (req, res, next) => {
     // Format list to map unread count for current user
     const formattedConversations = conversations.map(conv => {
       const convObj = conv.toObject();
-      convObj.unreadCountCurrent = conv.unreadCount.get(userId) || 0;
+      convObj.unreadCountCurrent = conv.unreadCount instanceof Map
+        ? (conv.unreadCount.get(userId) || 0)
+        : (conv.unreadCount?.[userId] || 0);
       return convObj;
     });
 
@@ -116,11 +118,15 @@ exports.getConversationById = async (req, res, next) => {
     // Reverse to show chronologically
     messages.reverse();
 
+    const unreadCountCurrent = conversation.unreadCount instanceof Map
+      ? (conversation.unreadCount.get(req.user.id) || 0)
+      : (conversation.unreadCount?.[req.user.id] || 0);
+
     res.status(200).json({
       success: true,
       conversation: {
         ...conversation.toObject(),
-        unreadCountCurrent: conversation.unreadCount.get(req.user.id) || 0
+        unreadCountCurrent
       },
       messages
     });
@@ -176,8 +182,14 @@ exports.markConversationRead = async (req, res, next) => {
     }
 
     // Reset unread count for current user
-    conversation.unreadCount.set(req.user.id, 0);
-    await conversation.save();
+    if (conversation.unreadCount) {
+      if (conversation.unreadCount instanceof Map) {
+        conversation.unreadCount.set(req.user.id, 0);
+      } else if (typeof conversation.unreadCount === 'object') {
+        conversation.unreadCount[req.user.id] = 0;
+      }
+      await conversation.save();
+    }
 
     // Update unread messages
     await Message.updateMany(

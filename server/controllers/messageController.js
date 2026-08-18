@@ -40,11 +40,19 @@ exports.sendMessage = async (req, res, next) => {
     conversation.lastMessageAt = Date.now();
 
     // Increment unread count for other participants
+    if (!conversation.unreadCount) {
+      conversation.unreadCount = new Map();
+    }
     conversation.participants.forEach(pId => {
       const participantId = pId.toString();
       if (participantId !== req.user.id) {
-        const currentUnread = conversation.unreadCount.get(participantId) || 0;
-        conversation.unreadCount.set(participantId, currentUnread + 1);
+        if (conversation.unreadCount instanceof Map) {
+          const currentUnread = conversation.unreadCount.get(participantId) || 0;
+          conversation.unreadCount.set(participantId, currentUnread + 1);
+        } else if (typeof conversation.unreadCount === 'object') {
+          const currentUnread = conversation.unreadCount[participantId] || 0;
+          conversation.unreadCount[participantId] = currentUnread + 1;
+        }
       }
     });
 
@@ -62,10 +70,14 @@ exports.sendMessage = async (req, res, next) => {
       conversation.participants.forEach(async (pId) => {
         const participantId = pId.toString();
         if (participantId !== req.user.id) {
+          const unreadNum = conversation.unreadCount instanceof Map
+            ? (conversation.unreadCount.get(participantId) || 0)
+            : (conversation.unreadCount?.[participantId] || 0);
+
           io.to(participantId).emit('conversation_updated', {
             conversationId,
             lastMessage: populatedMessage,
-            unreadCount: conversation.unreadCount.get(participantId)
+            unreadCount: unreadNum
           });
 
           // Check if receiver is online and active in room

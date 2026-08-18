@@ -315,7 +315,7 @@ const Register = () => {
                     onChange={handleChange}
                     placeholder="Your full name"
                     autoComplete="name"
-                    className={`input-clean pl-10 ${validationErrors.name ? 'error' : ''}`}
+                    className={`input-clean input-with-icon !pl-11 ${validationErrors.name ? 'error' : ''}`}
                   />
                 </div>
                 {validationErrors.name && (
@@ -337,7 +337,7 @@ const Register = () => {
                     onChange={handleChange}
                     placeholder="you@example.com"
                     autoComplete="email"
-                    className={`input-clean pl-10 ${validationErrors.email ? 'error' : ''}`}
+                    className={`input-clean input-with-icon !pl-11 ${validationErrors.email ? 'error' : ''}`}
                   />
                 </div>
                 {validationErrors.email && (
@@ -359,7 +359,7 @@ const Register = () => {
                     onChange={handleChange}
                     placeholder="Min. 6 characters"
                     autoComplete="new-password"
-                    className={`input-clean pl-10 ${validationErrors.password ? 'error' : ''}`}
+                    className={`input-clean input-with-icon !pl-11 ${validationErrors.password ? 'error' : ''}`}
                   />
                 </div>
                 {validationErrors.password && (
@@ -381,7 +381,7 @@ const Register = () => {
                     onChange={handleChange}
                     placeholder="Repeat your password"
                     autoComplete="new-password"
-                    className={`input-clean pl-10 ${validationErrors.confirmPassword ? 'error' : ''}`}
+                    className={`input-clean input-with-icon !pl-11 ${validationErrors.confirmPassword ? 'error' : ''}`}
                   />
                 </div>
                 {validationErrors.confirmPassword && (
