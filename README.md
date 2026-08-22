@@ -3,31 +3,29 @@
 > A full-stack freelance marketplace connecting clients and freelancers with real-time chat, escrow payments, and AI-powered job matching.
 
 ## 🌐 Live Demo
-| Service | URL |
-|---------|-----|
-| Frontend | https://skillsphere.vercel.app |
-| Backend API | https://skillsphere-api.onrender.com |
+
+| Service      | URL                                         |
+| ------------ | ------------------------------------------- |
+| Frontend     | https://skillsphere.vercel.app              |
+| Backend API  | https://skillsphere-api.onrender.com        |
 | Health Check | https://skillsphere-api.onrender.com/health |
 
-### Demo Credentials
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | admin@skillsphere.com | Admin@123 |
-
 ## 🛠 Tech Stack
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React 19, Redux Toolkit, React Router v7 |
-| Styling | Tailwind CSS v4 |
-| Backend | Node.js, Express 4 |
-| Database | MongoDB Atlas + Mongoose |
-| Real-time | Socket.IO |
-| Payments | Razorpay (Escrow) |
-| File Storage | Cloudinary |
-| Auth | JWT + Google OAuth 2.0 |
-| Deployment | Vercel (frontend) + Render (backend) |
+
+| Layer        | Technology                               |
+| ------------ | ---------------------------------------- |
+| Frontend     | React 19, Redux Toolkit, React Router v7 |
+| Styling      | Tailwind CSS v4                          |
+| Backend      | Node.js, Express 4                       |
+| Database     | MongoDB Atlas + Mongoose                 |
+| Real-time    | Socket.IO                                |
+| Payments     | Razorpay (Escrow)                        |
+| File Storage | Cloudinary                               |
+| Auth         | JWT + Google OAuth 2.0                   |
+| Deployment   | Vercel (frontend) + Render (backend)     |
 
 ## ✨ Features
+
 - **Multi-role Auth** — Client / Freelancer / Admin with JWT + Google OAuth
 - **Real-time Chat** — Socket.IO powered messaging with typing indicators
 - **Escrow Payments** — Razorpay integration with milestone-based release
@@ -39,10 +37,12 @@
 ## 🚀 Local Setup
 
 ### Prerequisites
+
 - Node.js >= 18
 - MongoDB (local or Atlas)
 
 ### Backend
+
 ```bash
 cd server
 cp .env.example .env
@@ -53,6 +53,7 @@ npm run dev
 ```
 
 ### Frontend
+
 ```bash
 cd client
 cp .env.example .env
@@ -64,6 +65,7 @@ npm run dev
 App runs at: http://localhost:5173
 
 ## 📁 Project Structure
+
 ```
 skillsphere/
 ├── client/          # React + Vite frontend
@@ -85,12 +87,15 @@ skillsphere/
 ```
 
 ## 🔐 Environment Variables
+
 See [`server/.env.example`](server/.env.example) and [`client/.env.example`](client/.env.example)
 
 ## 📦 Production Deployment
+
 - **Backend → Render**: See [`server/render.yaml`](server/render.yaml)
 - **Frontend → Vercel**: See [`client/vercel.json`](client/vercel.json)
 - **Database → MongoDB Atlas**: Whitelist `0.0.0.0/0` for Render's dynamic IPs
 
 ## 📄 License
+
 MIT
