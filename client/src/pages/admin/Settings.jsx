@@ -26,7 +26,7 @@ const AdminSettings = () => {
   const [settings, setSettings] = useState({
     // General
     platformName: 'SkillSphere',
-    supportEmail: 'support@skillsphere.in',
+    supportEmail: 'varunkukreja017@gmail.com',
     platformCommissionRate: 10,
     hyperlocalRadiusKm: 25,
     maintenanceMode: false,

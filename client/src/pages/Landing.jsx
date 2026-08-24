@@ -23,23 +23,6 @@ const LogoMark = ({ size = 32 }) => (
   </svg>
 );
 
-/* ── Animated counter hook ──────────────────────────────── */
-const useCounter = (target, duration = 2000, isVisible = false) => {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (!isVisible) return;
-    let start = 0;
-    const step = target / (duration / 16);
-    const timer = setInterval(() => {
-      start += step;
-      if (start >= target) { setCount(target); clearInterval(timer); }
-      else setCount(Math.floor(start));
-    }, 16);
-    return () => clearInterval(timer);
-  }, [isVisible, target, duration]);
-  return count;
-};
-
 /* ── 3D Feature Card ──────────────────────────────────────── */
 const FeatureCard = ({ icon: Icon, title, description, gradient, delay }) => {
   const { tiltRef, onMouseMove, onMouseLeave } = use3DTilt({ maxTilt: 10, scale: 1.025 });
@@ -62,19 +45,6 @@ const FeatureCard = ({ icon: Icon, title, description, gradient, delay }) => {
   );
 };
 
-/* ── Stat Card ───────────────────────────────────────────── */
-const StatCard = ({ value, suffix = '', label, color, isVisible, delay }) => {
-  const num = useCounter(value, 2000, isVisible);
-  return (
-    <div className={`ss-animate text-center ${delay}`}>
-      <div className={`text-5xl font-black mb-2 ${color}`}>
-        {num.toLocaleString()}{suffix}
-      </div>
-      <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">{label}</div>
-    </div>
-  );
-};
-
 /* ── Step Card ───────────────────────────────────────────── */
 const StepCard = ({ number, title, desc, delay }) => {
   const { tiltRef, onMouseMove, onMouseLeave } = use3DTilt({ maxTilt: 8, scale: 1.02 });
@@ -92,25 +62,6 @@ const StepCard = ({ number, title, desc, delay }) => {
     </div>
   );
 };
-
-/* ── Review Card ─────────────────────────────────────────── */
-const ReviewCard = ({ name, role, quote, rating, avatar, delay }) => (
-  <div className={`ss-animate bg-white rounded-3xl p-7 border border-surface-border ${delay}`} style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
-    <div className="flex mb-4">
-      {[...Array(rating)].map((_, i) => (
-        <Star key={i} className="h-4 w-4 text-amber-400 fill-amber-400" />
-      ))}
-    </div>
-    <p className="text-slate-600 text-sm leading-relaxed mb-5 italic">&ldquo;{quote}&rdquo;</p>
-    <div className="flex items-center gap-3">
-      <img src={avatar} alt={name} className="h-10 w-10 rounded-full object-cover ring-2 ring-orange-100" />
-      <div>
-        <div className="text-sm font-bold text-slate-800">{name}</div>
-        <div className="text-xs text-slate-400 font-medium">{role}</div>
-      </div>
-    </div>
-  </div>
-);
 
 /* ── Floating Shape ──────────────────────────────────────── */
 const FloatingShape = ({ className, style }) => (
@@ -178,23 +129,10 @@ const FooterModal = ({ isOpen, onClose, title, icon: Icon, children }) => {
 ══════════════════════════════════════════════════════════ */
 const Landing = () => {
   // Scroll animation groups
-  const { groupRef: statsRef } = useScrollAnimationGroup();
   const { groupRef: featuresRef } = useScrollAnimationGroup();
   const { groupRef: stepsRef } = useScrollAnimationGroup();
-  const { groupRef: reviewsRef } = useScrollAnimationGroup();
   const { groupRef: heroRef } = useScrollAnimationGroup();
   const { groupRef: ctaRef } = useScrollAnimationGroup();
-
-  // Stats visibility
-  const statsContainerRef = useRef(null);
-  const [statsVisible, setStatsVisible] = useState(false);
-  useEffect(() => {
-    const el = statsContainerRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setStatsVisible(true); }, { threshold: 0.3 });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
 
   // Footer modal state
   const [activeModal, setActiveModal] = useState(null); // 'privacy' | 'terms' | 'contact'
@@ -248,33 +186,6 @@ const Landing = () => {
     { number: '01', title: 'Create Your Profile', desc: 'Sign up as a client or freelancer in under 2 minutes. Showcase your skills or describe your project needs.' },
     { number: '02', title: 'Connect Locally', desc: 'Browse verified local talent or post your gig. Our smart matching surfaces the best fits in your area.' },
     { number: '03', title: 'Work & Get Paid', desc: 'Collaborate securely with escrow protection. Funds release automatically on milestone completion.' },
-  ];
-
-  const reviews = [
-    {
-      name: 'Priya Mehta',
-      role: 'Product Manager, Bengaluru',
-      quote: 'Found an incredible UI designer within 2 km of my office. The project was completed faster than any remote hire I\'ve ever used.',
-      rating: 5,
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&q=80&w=80',
-      delay: 'ss-delay-1',
-    },
-    {
-      name: 'Rahul Sharma',
-      role: 'Freelance Developer',
-      quote: 'SkillSphere changed how I find clients. Local gigs mean less communication lag and I get paid instantly via the milestone system.',
-      rating: 5,
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=80',
-      delay: 'ss-delay-2',
-    },
-    {
-      name: 'Anjali Patel',
-      role: 'Startup Founder, Mumbai',
-      quote: 'The escrow system gave us complete peace of mind. We never had a payment dispute — the platform handled everything seamlessly.',
-      rating: 5,
-      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=80',
-      delay: 'ss-delay-3',
-    },
   ];
 
   return (
@@ -391,19 +302,8 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* ── STATS SECTION ────────────────────────────────── */}
-      <section className="py-20 bg-white border-y border-surface-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div ref={el => { statsContainerRef.current = el; statsRef.current = el; }} className="grid grid-cols-1 sm:grid-cols-3 gap-10 text-center">
-            <StatCard value={15000} suffix="+" label="Active Users" color="text-gradient-orange" isVisible={statsVisible} delay="ss-delay-1" />
-            <StatCard value={45000} suffix="+" label="Gigs Completed" color="text-orange-600" isVisible={statsVisible} delay="ss-delay-2" />
-            <StatCard value={99} suffix=".2%" label="Success Rate" color="text-emerald-600" isVisible={statsVisible} delay="ss-delay-3" />
-          </div>
-        </div>
-      </section>
-
       {/* ── FEATURES SECTION ─────────────────────────────── */}
-      <section className="py-24 bg-surface-subtle">
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="ss-animate inline-flex badge-brand mb-4">
@@ -428,7 +328,7 @@ const Landing = () => {
       </section>
 
       {/* ── HOW IT WORKS ─────────────────────────────────── */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-surface-subtle border-t border-surface-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="ss-animate inline-flex badge-brand mb-4">
@@ -448,25 +348,6 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ─────────────────────────────────── */}
-      <section className="py-24 bg-surface-subtle">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <div className="ss-animate inline-flex badge-brand mb-4">
-              <Star className="h-3.5 w-3.5" /> Real Reviews
-            </div>
-            <h2 className="ss-animate ss-delay-1 text-4xl font-black text-slate-900">
-              Loved by <span className="text-gradient-orange">thousands</span>
-            </h2>
-          </div>
-          <div ref={reviewsRef} className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {reviews.map((r) => (
-              <ReviewCard key={r.name} {...r} />
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── CTA SECTION ──────────────────────────────────── */}
       <section className="py-24 bg-gradient-cta relative overflow-hidden">
         {/* Decorative circles */}
@@ -476,7 +357,7 @@ const Landing = () => {
 
         <div ref={ctaRef} className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <div className="ss-animate inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 border border-white/25 text-white text-xs font-bold uppercase tracking-wider mb-8">
-            <Users className="h-3.5 w-3.5" /> Join 15,000+ users
+            <Users className="h-3.5 w-3.5" /> Hyperlocal Freelance Network
           </div>
           <h2 className="ss-animate ss-delay-1 text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
             Ready to unlock local<br />opportunities?
@@ -572,7 +453,7 @@ const Landing = () => {
         <h3 className="font-bold text-slate-900 mt-2">Data Security</h3>
         <p>We use industry-standard encryption (AES-256) for data at rest and TLS 1.3 for data in transit. Payment information is never stored on our servers — all transactions are handled by our PCI-compliant payment processor.</p>
         <h3 className="font-bold text-slate-900 mt-2">Your Rights</h3>
-        <p>You may request access, correction, or deletion of your personal data at any time by contacting <span className="text-orange-600 font-semibold">privacy@skillsphere.app</span>.</p>
+        <p>You may request access, correction, or deletion of your personal data at any time by contacting <a href="mailto:varunkukreja017@gmail.com" className="text-orange-600 font-semibold hover:underline">varunkukreja017@gmail.com</a>.</p>
       </FooterModal>
 
       {/* Terms of Service Modal */}
@@ -625,7 +506,7 @@ const Landing = () => {
             <div>
               <p className="font-bold text-slate-900 text-sm">Email Support</p>
               <p className="text-slate-500 text-xs mt-0.5">For general inquiries and account help</p>
-              <a href="mailto:support@skillsphere.app" className="text-orange-600 font-semibold text-sm hover:text-orange-700 mt-1 inline-block">support@skillsphere.app</a>
+              <a href="mailto:varunkukreja017@gmail.com" className="text-orange-600 font-semibold text-sm hover:text-orange-700 mt-1 inline-block">varunkukreja017@gmail.com</a>
             </div>
           </div>
 
@@ -636,7 +517,7 @@ const Landing = () => {
             <div>
               <p className="font-bold text-slate-900 text-sm">Trust & Safety</p>
               <p className="text-slate-500 text-xs mt-0.5">Report fraud, abuse, or policy violations</p>
-              <a href="mailto:trust@skillsphere.app" className="text-orange-600 font-semibold text-sm hover:text-orange-700 mt-1 inline-block">trust@skillsphere.app</a>
+              <a href="mailto:varunkukreja017@gmail.com" className="text-orange-600 font-semibold text-sm hover:text-orange-700 mt-1 inline-block">varunkukreja017@gmail.com</a>
             </div>
           </div>
 
@@ -646,8 +527,8 @@ const Landing = () => {
             </div>
             <div>
               <p className="font-bold text-slate-900 text-sm">Business Inquiries</p>
-              <p className="text-slate-500 text-xs mt-0.5">Partnerships, enterprise plans & press</p>
-              <a href="mailto:business@skillsphere.app" className="text-orange-600 font-semibold text-sm hover:text-orange-700 mt-1 inline-block">business@skillsphere.app</a>
+              <p className="text-slate-500 text-xs mt-0.5">Partnerships, enterprise plans & queries</p>
+              <a href="mailto:varunkukreja017@gmail.com" className="text-orange-600 font-semibold text-sm hover:text-orange-700 mt-1 inline-block">varunkukreja017@gmail.com</a>
             </div>
           </div>
         </div>
