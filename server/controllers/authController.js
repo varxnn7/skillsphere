@@ -484,6 +484,72 @@ exports.me = async (req, res, next) => {
   }
 };
 
+// ── @desc    Update Password ─────────────────────────────────────────
+// ── @route   PUT /api/auth/update-password ───────────────────────────
+// ── @access  Private ─────────────────────────────────────────────────
+exports.updatePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!newPassword || newPassword.length < 6) {
+      return res.status(400).json({ success: false, message: 'New password must be at least 6 characters long' });
+    }
+
+    const user = await User.findById(req.user.id).select('+password');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // If user has a password set (not purely Google OAuth without password)
+    if (user.password) {
+      if (!currentPassword) {
+        return res.status(400).json({ success: false, message: 'Please provide your current password' });
+      }
+      const isMatch = await user.matchPassword(currentPassword);
+      if (!isMatch) {
+        return res.status(400).json({ success: false, message: 'Current password is incorrect' });
+      }
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({ success: true, message: 'Password updated successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// ── @desc    Update Account Basic Details (name, etc.) ───────────────
+// ── @route   PUT /api/auth/update-account ────────────────────────────
+// ── @access  Private ─────────────────────────────────────────────────
+exports.updateAccount = async (req, res, next) => {
+  try {
+    const { name } = req.body;
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    if (name) user.name = name.trim();
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Account details updated successfully',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        avatar: user.avatar
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 // ── @desc    Logout ──────────────────────────────────────────────────
 // ── @route   POST /api/auth/logout ──────────────────────────────────
 // ── @access  Private ─────────────────────────────────────────────────
@@ -494,3 +560,4 @@ exports.logout = async (req, res, next) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+

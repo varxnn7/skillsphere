@@ -107,7 +107,7 @@ const AdminDashboard = () => {
     },
     {
       title: 'Platform Revenue',
-      value: `₹${((stats.payments?.totalRevenue ?? 0) / 100).toFixed(0)}`,
+      value: `₹${Number(stats.payments?.totalRevenue ?? 0).toLocaleString('en-IN')}`,
       icon: CreditCard,
       color: 'bg-emerald-50 text-emerald-600 border-emerald-200',
       change: `${stats.payments?.totalTransactions ?? 0} transactions`,
@@ -149,8 +149,9 @@ const AdminDashboard = () => {
 
       {/* Header */}
       <div>
-        <span className="inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-orange-50 text-orange-700 border border-orange-200 mb-3">
-          🛡️ Admin Control Panel
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-orange-50 text-orange-700 border border-orange-200 mb-3">
+          <ShieldCheck className="h-3.5 w-3.5 text-orange-600" />
+          Admin Control Panel
         </span>
         <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900">Platform Overview</h1>
         <p className="text-slate-400 text-sm mt-1">Analyze registrations, oversee transactions, and inspect disputes.</p>

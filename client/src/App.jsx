@@ -49,6 +49,7 @@ import PageLoader from './components/ui/PageLoader';
 
 // Week 4 Lazy Loaded Pages
 const ClientPayments = React.lazy(() => import('./pages/client/Payments'));
+const ClientSettings = React.lazy(() => import('./pages/client/Settings'));
 const MakePayment = React.lazy(() => import('./pages/client/MakePayment'));
 const FreelancerEarnings = React.lazy(() => import('./pages/freelancer/Earnings'));
 const ProjectTracker = React.lazy(() => import('./pages/shared/ProjectTracker'));
@@ -57,8 +58,10 @@ const DisputeDetail = React.lazy(() => import('./pages/shared/DisputeDetail'));
 
 const AdminUsers = React.lazy(() => import('./pages/admin/Users'));
 const AdminGigs = React.lazy(() => import('./pages/admin/Gigs'));
+const AdminPayments = React.lazy(() => import('./pages/admin/Payments'));
 const AdminDisputes = React.lazy(() => import('./pages/admin/Disputes'));
 const AdminRevenue = React.lazy(() => import('./pages/admin/Revenue'));
+const AdminSettings = React.lazy(() => import('./pages/admin/Settings'));
 
 // Placeholder Component for sub-routes
 const Placeholder = ({ title }) => (
@@ -116,7 +119,7 @@ function App() {
             <Route path="messages" element={<Navigate to="/messages" replace />} />
             <Route path="payments" element={<ClientPayments />} />
             <Route path="pay/:proposalId" element={<MakePayment />} />
-            <Route path="settings" element={<Placeholder title="Client Account Settings" />} />
+            <Route path="settings" element={<ClientSettings />} />
           </Route>
 
           {/* Freelancer Routes */}
@@ -181,10 +184,11 @@ function App() {
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="users" element={<AdminUsers />} />
             <Route path="gigs" element={<AdminGigs />} />
-            <Route path="payments" element={<Placeholder title="Transaction Ledger Log" />} />
+            <Route path="payments" element={<AdminPayments />} />
             <Route path="disputes" element={<AdminDisputes />} />
+            <Route path="analytics" element={<AdminRevenue />} />
             <Route path="revenue" element={<AdminRevenue />} />
-            <Route path="settings" element={<Placeholder title="Global System Settings" />} />
+            <Route path="settings" element={<AdminSettings />} />
           </Route>
 
           {/* Shared Tracker & Dispute Routes */}

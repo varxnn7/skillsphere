@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { MapPin, Calendar, Users, Eye, Bookmark, BookmarkCheck } from 'lucide-react';
+import { MapPin, Calendar, Users, Eye, Bookmark, BookmarkCheck, Trash2 } from 'lucide-react';
 import { addBookmark, removeBookmark } from '../../store/gigsSlice';
 import StatusBadge from '../ui/StatusBadge';
+import api from '../../utils/api';
 
-const GigCard = ({ gig, isClientView = false }) => {
+const GigCard = ({ gig, isClientView = false, onGigDeleted }) => {
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
   const { bookmarkedGigs } = useSelector((state) => state.gigs);
   const isBookmarked = bookmarkedGigs.some((g) => g._id === gig._id);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleted, setDeleted] = useState(false);
 
   const handleBookmark = (e) => {
     e.preventDefault();
@@ -20,10 +24,34 @@ const GigCard = ({ gig, isClientView = false }) => {
     }
   };
 
+  const handleAdminDelete = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!window.confirm(`Admin Action: Permanently delete gig "${gig.title}"?`)) {
+      return;
+    }
+    setIsDeleting(true);
+    try {
+      const res = await api.delete(`/admin/gigs/${gig._id}`, {
+        data: { reason: 'Removed by Admin from marketplace' }
+      });
+      if (res.data.success) {
+        setDeleted(true);
+        if (onGigDeleted) onGigDeleted(gig._id);
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to remove gig');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  if (deleted) return null;
+
   return (
     <div className="bg-white border border-surface-border rounded-2xl p-6 hover:border-[rgba(255,255,255,0.08)] hover:shadow-2xl transition-all duration-300 relative group flex flex-col justify-between">
       <div>
-        {/* Header: Title, Category, Bookmark */}
+        {/* Header: Title, Category, Bookmark / Admin Delete */}
         <div className="flex justify-between items-start gap-4 mb-3">
           <div>
             <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500 block mb-1">
@@ -38,18 +66,31 @@ const GigCard = ({ gig, isClientView = false }) => {
             </h3>
           </div>
 
-          {!isClientView && (
-            <button
-              onClick={handleBookmark}
-              className={`p-2 rounded-xl border transition-all ${
-                isBookmarked
-                  ? 'bg-orange-600/15 text-orange-600 border-orange-600/35'
-                  : 'bg-surface-muted border-surface-border text-slate-500 hover:text-slate-900 hover:border-orange-600/50'
-              } cursor-pointer`}
-            >
-              {isBookmarked ? <BookmarkCheck className="h-4.5 w-4.5" /> : <Bookmark className="h-4.5 w-4.5" />}
-            </button>
-          )}
+          <div className="flex items-center gap-1.5">
+            {user?.role === 'admin' && (
+              <button
+                onClick={handleAdminDelete}
+                disabled={isDeleting}
+                title="Admin: Remove Fake/Spam Gig"
+                className="p-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 cursor-pointer transition-colors"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            )}
+
+            {!isClientView && (
+              <button
+                onClick={handleBookmark}
+                className={`p-2 rounded-xl border transition-all ${
+                  isBookmarked
+                    ? 'bg-orange-600/15 text-orange-600 border-orange-600/35'
+                    : 'bg-surface-muted border-surface-border text-slate-500 hover:text-slate-900 hover:border-orange-600/50'
+                } cursor-pointer`}
+              >
+                {isBookmarked ? <BookmarkCheck className="h-4.5 w-4.5" /> : <Bookmark className="h-4.5 w-4.5" />}
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Client details & remote status */}

@@ -141,11 +141,12 @@ const Revenue = () => {
     <div className="space-y-8 animate-in fade-in duration-200">
       {/* Header */}
       <div>
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-brand-purple/15 text-brand-purple border border-brand-purple/30 mb-2">
-          🛡️ Admin Control Panel
+        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-indigo-50 text-indigo-700 border border-indigo-200 mb-2">
+          <BarChart3 className="h-3 w-3 text-indigo-600" />
+          Financial Analytics
         </span>
-        <h1 className="text-2xl font-extrabold text-slate-900">Financial Analytics</h1>
-        <p className="text-xs text-slate-500 mt-1">Audit platform revenue, track escrows, monitor top earners and full payment history.</p>
+        <h1 className="text-2xl font-extrabold text-slate-900">Financial Analytics & Insights</h1>
+        <p className="text-xs text-slate-500 mt-1">Audit platform revenue, track escrows, monitor top earners and category distribution.</p>
       </div>
 
       {/* Stats Cards Row */}

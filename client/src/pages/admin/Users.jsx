@@ -196,8 +196,9 @@ const Users = () => {
 
       {/* Header */}
       <div>
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-brand-purple/15 text-brand-purple border border-brand-purple/30 mb-2">
-          🛡️ Admin Control Panel
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-orange-50 text-orange-700 border border-orange-200 mb-2">
+          <UserCheck className="h-3 w-3 text-orange-600" />
+          User Management
         </span>
         <h1 className="text-2xl font-extrabold text-slate-900">Users Moderation</h1>
         <p className="text-xs text-slate-500 mt-1">Suspend user access, verify freelancer qualifications, and manage system accounts.</p>

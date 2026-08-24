@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import api from '../../utils/api';
 import Toast from '../../components/Toast';
-import { ShieldAlert, AlertTriangle, FileUp, ArrowLeft, Trash2, ShieldCheck } from 'lucide-react';
+import { ShieldAlert, AlertTriangle, AlertCircle, FileUp, ArrowLeft, Trash2, ShieldCheck } from 'lucide-react';
 
 const RaiseDispute = () => {
   const { paymentId } = useParams();
@@ -153,8 +153,9 @@ const RaiseDispute = () => {
 
       {/* Header */}
       <div>
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-red-500/10 text-red-400 border border-red-500/20 mb-2">
-          ⚠️ Arbitration Request
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-red-50 text-red-700 border border-red-200 mb-2">
+          <AlertCircle className="h-3 w-3 text-red-600" />
+          Arbitration Request
         </span>
         <h1 className="text-xl md:text-2xl font-extrabold text-slate-900">Raise Escrow Dispute</h1>
         <p className="text-xs text-slate-500 mt-1">Initiating a dispute freezes this milestone payment in escrow. A platform moderator will investigate the case details.</p>

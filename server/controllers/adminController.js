@@ -489,6 +489,52 @@ exports.rejectGig = async (req, res, next) => {
   }
 };
 
+// @desc    Permanently delete or remove any gig (fake/spam/irrelevant)
+// @route   DELETE /api/admin/gigs/:id
+// @access  Private (Admin only)
+exports.deleteGig = async (req, res, next) => {
+  try {
+    const { reason = 'Violates platform policies or deemed fake/irrelevant' } = req.body || {};
+    const gig = await Gig.findById(req.params.id);
+    if (!gig) {
+      return res.status(404).json({ success: false, message: 'Gig not found' });
+    }
+
+    const gigTitle = gig.title;
+    const clientId = gig.client;
+
+    // Delete associated proposals
+    await Proposal.deleteMany({ gig: gig._id });
+
+    // Delete the gig
+    await Gig.findByIdAndDelete(req.params.id);
+
+    // Notify the client
+    if (clientId) {
+      await Notification.create({
+        user: clientId,
+        type: 'gig_rejected',
+        title: 'Gig Removed by Administrator',
+        message: `Your gig "${gigTitle}" was removed by platform moderation. Reason: ${reason}`,
+        link: '/client/my-gigs'
+      }).catch(err => console.error('Notification error:', err.message));
+    }
+
+    // Log admin action
+    await AdminLog.create({
+      admin: req.user.id,
+      action: 'DELETE_GIG',
+      targetType: 'Gig',
+      targetId: gig._id,
+      details: `Permanently removed gig: "${gigTitle}". Reason: ${reason}`
+    }).catch(err => console.error('AdminLog error:', err.message));
+
+    res.status(200).json({ success: true, message: `Gig "${gigTitle}" has been permanently removed.` });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 // @desc    Get monthly revenue metrics (Area charts)
 // @route   GET /api/admin/revenue
 // @access  Private (Admin only)

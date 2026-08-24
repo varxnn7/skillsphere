@@ -76,8 +76,9 @@ const FreelancerDashboard = () => {
 
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-2">
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-orange-50 text-orange-600 border border-orange-200">
-              💼 Freelancer Dashboard
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-orange-50 text-orange-700 border border-orange-200">
+              <Briefcase className="h-3.5 w-3.5 text-orange-600" />
+              Freelancer Dashboard
             </span>
           </div>
           <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">

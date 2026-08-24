@@ -12,6 +12,7 @@ const {
   getGigs,
   approveGig,
   rejectGig,
+  deleteGig,
   getRevenue,
   getTopFreelancers
 } = require('../controllers/adminController');
@@ -29,6 +30,7 @@ router.delete('/users/:id', deleteUser);
 router.get('/gigs', getGigs);
 router.put('/gigs/:id/approve', approveGig);
 router.put('/gigs/:id/reject', rejectGig);
+router.delete('/gigs/:id', deleteGig);
 
 router.get('/revenue', getRevenue);
 router.get('/top-freelancers', getTopFreelancers);

@@ -9,7 +9,9 @@ const {
   resetPassword,
   googleOAuth,
   me,
-  logout
+  logout,
+  updatePassword,
+  updateAccount
 } = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
 
@@ -23,6 +25,8 @@ router.post('/google-oauth', googleOAuth);
 
 // Protected routes
 router.get('/me', protect, me);
+router.put('/update-password', protect, updatePassword);
+router.put('/update-account', protect, updateAccount);
 router.post('/logout', protect, logout);
 
 module.exports = router;

@@ -97,30 +97,49 @@ const ClientProfile = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-200">
       {/* Profile Overview Card */}
-      <div className="bg-white rounded-3xl border border-surface-border shadow-[0_0_20px_rgba(0,0,0,0.2)] overflow-hidden">
-        <div className="h-32 bg-gradient-orange relative" />
-        <div className="px-6 pb-6 relative flex flex-col sm:flex-row sm:items-end gap-4 -mt-10">
-          <AvatarUpload
-            currentAvatar={user?.avatar}
-            onUpload={handleAvatarUpload}
-            isUploading={isUploadingAvatar}
-          />
-          <div className="flex-1">
-            <h1 className="text-2xl font-extrabold text-slate-900">{clientProfile?.companyName || user?.name || 'Company Name'}</h1>
-            <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2">Verified Client Account</p>
-            <div className="flex items-center gap-2 text-slate-500 text-xs font-semibold">
-              <MapPin className="h-4 w-4" />
-              {clientProfile?.location || 'Location not specified'}
+      <div className="bg-white rounded-3xl border border-surface-border shadow-card overflow-hidden">
+        {/* Cover Banner */}
+        <div className="h-36 bg-gradient-to-r from-slate-900 via-slate-800 to-orange-950 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
+        </div>
+
+        {/* Profile Content Bar */}
+        <div className="px-6 md:px-8 pb-6 relative">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-12 sm:-mt-14">
+            <div className="flex flex-col sm:flex-row sm:items-end gap-4">
+              <div className="p-1 bg-white rounded-full shadow-md inline-block">
+                <AvatarUpload
+                  currentAvatar={user?.avatar}
+                  onUpload={handleAvatarUpload}
+                  isUploading={isUploadingAvatar}
+                />
+              </div>
+              <div className="pt-2 sm:pt-0 sm:pb-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h1 className="text-xl md:text-2xl font-extrabold text-slate-900">
+                    {clientProfile?.companyName || user?.name || 'Company Name'}
+                  </h1>
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wide bg-blue-50 text-blue-700 border border-blue-200">
+                    <Award className="h-3 w-3 text-blue-600" />
+                    Verified Client
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-500 text-xs font-semibold mt-1">
+                  <MapPin className="h-3.5 w-3.5 text-slate-400" />
+                  {clientProfile?.location || 'Location not specified'}
+                </div>
+              </div>
             </div>
+
+            <button
+              onClick={() => setIsEditing(!isEditing)}
+              className="px-4 py-2.5 text-xs font-bold bg-white hover:bg-surface-subtle border border-surface-border hover:border-orange-200 text-slate-800 rounded-xl transition-all shadow-sm cursor-pointer self-start sm:self-auto"
+            >
+              {isEditing ? 'Cancel Edit' : 'Edit Profile'}
+            </button>
           </div>
-          <button
-            onClick={() => setIsEditing(!isEditing)}
-            className="px-4 py-2 text-xs font-bold bg-surface-subtle hover:bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.1)] text-slate-900 rounded-xl transition-smooth cursor-pointer"
-          >
-            {isEditing ? 'Cancel Edit' : 'Edit Profile'}
-          </button>
         </div>
       </div>
 

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../utils/api';
 import Toast from '../../components/Toast';
-import { Check, X, Eye, ShieldAlert, FileText, Calendar, RefreshCw } from 'lucide-react';
+import ConfirmModal from '../../components/ui/ConfirmModal';
+import { Check, X, Eye, ShieldAlert, FileText, Calendar, RefreshCw, Briefcase, Trash2 } from 'lucide-react';
 
 const Gigs = () => {
   const [gigs, setGigs] = useState([]);
@@ -13,6 +14,13 @@ const Gigs = () => {
   const [rejectGigId, setRejectGigId] = useState(null); // id of gig being rejected
   const [rejectReason, setRejectReason] = useState('');
   
+  // Delete gig confirm modal state
+  const [deleteModal, setDeleteModal] = useState({
+    isOpen: false,
+    gigId: null,
+    gigTitle: ''
+  });
+
   const [activeTab, setActiveTab] = useState('pending'); // 'pending' or 'all'
 
   // Pagination
@@ -85,6 +93,32 @@ const Gigs = () => {
     }
   };
 
+  const confirmDeleteGig = (gig) => {
+    setDeleteModal({
+      isOpen: true,
+      gigId: gig._id,
+      gigTitle: gig.title
+    });
+  };
+
+  const handleDeleteGig = async () => {
+    const { gigId } = deleteModal;
+    setDeleteModal({ isOpen: false, gigId: null, gigTitle: '' });
+
+    try {
+      const response = await api.delete(`/admin/gigs/${gigId}`, {
+        data: { reason: 'Removed by platform admin (fake, spam, or terms violation)' }
+      });
+      if (response.data.success) {
+        setToastConfig({ message: 'Gig permanently removed from platform!', type: 'success' });
+        if (previewGig?._id === gigId) setPreviewGig(null);
+        fetchGigs();
+      }
+    } catch (err) {
+      setToastConfig({ message: err.response?.data?.message || 'Failed to remove gig.', type: 'error' });
+    }
+  };
+
   return (
     <div className="space-y-8 animate-in fade-in duration-200">
       {toastConfig && (
@@ -92,6 +126,19 @@ const Gigs = () => {
           message={toastConfig.message}
           type={toastConfig.type}
           onClose={() => setToastConfig(null)}
+        />
+      )}
+
+      {/* Delete Gig Confirm Modal */}
+      {deleteModal.isOpen && (
+        <ConfirmModal
+          isOpen={deleteModal.isOpen}
+          title="Remove Gig from Platform"
+          message={`Are you sure you want to permanently delete the gig "${deleteModal.gigTitle}"? This will remove all associated proposals and cancel any pending interactions.`}
+          confirmText="Permanently Remove"
+          confirmColor="red"
+          onConfirm={handleDeleteGig}
+          onClose={() => setDeleteModal({ isOpen: false, gigId: null, gigTitle: '' })}
         />
       )}
 
@@ -121,13 +168,13 @@ const Gigs = () => {
                   setRejectGigId(null);
                   setRejectReason('');
                 }}
-                className="px-4 py-2 text-xs font-bold rounded-xl bg-surface-muted border border-surface-border text-slate-500"
+                className="px-4 py-2 text-xs font-bold rounded-xl bg-surface-muted border border-surface-border text-slate-500 cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 text-xs font-bold rounded-xl bg-red-500 hover:bg-red-600 text-slate-900"
+                className="px-4 py-2 text-xs font-bold rounded-xl bg-red-500 hover:bg-red-600 text-white cursor-pointer"
               >
                 Send Rejection
               </button>
@@ -169,29 +216,39 @@ const Gigs = () => {
               </div>
             </div>
 
-            <div className="flex gap-3 justify-end border-t border-surface-border/40 pt-4">
+            <div className="flex items-center justify-between border-t border-surface-border/40 pt-4">
               <button
-                onClick={() => setPreviewGig(null)}
-                className="px-4 py-2 text-xs font-bold rounded-xl bg-surface-muted border border-surface-border text-slate-500 cursor-pointer"
+                onClick={() => confirmDeleteGig(previewGig)}
+                className="px-3.5 py-2 text-xs font-bold rounded-xl bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 flex items-center gap-1.5 cursor-pointer transition-colors"
               >
-                Close
+                <Trash2 className="h-3.5 w-3.5" />
+                Remove Gig
               </button>
-              {!previewGig.isApproved && (
-                <>
-                  <button
-                    onClick={() => setRejectGigId(previewGig._id)}
-                    className="px-4 py-2 text-xs font-bold rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 cursor-pointer"
-                  >
-                    Reject Gig
-                  </button>
-                  <button
-                    onClick={() => handleApprove(previewGig._id)}
-                    className="px-4 py-2 text-xs font-bold rounded-xl bg-[#10B981] hover:bg-[#10B981]/90 text-slate-900 cursor-pointer"
-                  >
-                    Approve Gig
-                  </button>
-                </>
-              )}
+
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setPreviewGig(null)}
+                  className="px-4 py-2 text-xs font-bold rounded-xl bg-surface-muted border border-surface-border text-slate-500 cursor-pointer"
+                >
+                  Close
+                </button>
+                {!previewGig.isApproved && (
+                  <>
+                    <button
+                      onClick={() => setRejectGigId(previewGig._id)}
+                      className="px-4 py-2 text-xs font-bold rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 cursor-pointer"
+                    >
+                      Reject
+                    </button>
+                    <button
+                      onClick={() => handleApprove(previewGig._id)}
+                      className="px-4 py-2 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer shadow-sm"
+                    >
+                      Approve
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -200,8 +257,9 @@ const Gigs = () => {
       {/* Header & Tabs */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
         <div>
-          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-brand-purple/15 text-brand-purple border border-brand-purple/30 mb-2">
-            🛡️ Admin Control Panel
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-orange-50 text-orange-700 border border-orange-200 mb-2">
+            <Briefcase className="h-3 w-3 text-orange-600" />
+            Job Moderation
           </span>
           <h1 className="text-2xl font-extrabold text-slate-900">Gigs Moderation</h1>
           <p className="text-xs text-slate-500 mt-1">Approve new gig listings, audit scope requirements, and manage listings catalog.</p>
@@ -271,25 +329,33 @@ const Gigs = () => {
                 </div>
               </div>
 
-              <div className="mt-5 border-t border-surface-border/40 pt-4 flex gap-2 w-full">
+              <div className="mt-5 border-t border-surface-border/40 pt-4 flex items-center gap-2 w-full">
                 <button
                   onClick={() => setPreviewGig(gig)}
-                  className="flex-1 py-2.5 rounded-xl bg-surface-muted border border-surface-border hover:border-orange-600/50 text-slate-500 font-bold text-xs cursor-pointer flex items-center justify-center gap-1 transition-colors"
+                  className="flex-1 py-2.5 rounded-xl bg-surface-muted border border-surface-border hover:border-orange-600/50 text-slate-700 font-bold text-xs cursor-pointer flex items-center justify-center gap-1 transition-colors"
                 >
                   <Eye className="h-4 w-4" />
                   Preview
                 </button>
                 <button
                   onClick={() => setRejectGigId(gig._id)}
-                  className="flex-1 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 font-bold text-xs cursor-pointer hover:bg-red-500/20 transition-colors"
+                  className="py-2.5 px-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-600 font-bold text-xs cursor-pointer hover:bg-amber-500/20 transition-colors"
+                  title="Reject"
                 >
                   Reject
                 </button>
                 <button
                   onClick={() => handleApprove(gig._id)}
-                  className="flex-1 py-2.5 rounded-xl bg-[#10B981] hover:bg-[#10B981]/90 text-slate-900 font-bold text-xs cursor-pointer transition-colors shadow-lg shadow-green-500/10"
+                  className="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs cursor-pointer transition-colors shadow-sm"
                 >
                   Approve
+                </button>
+                <button
+                  onClick={() => confirmDeleteGig(gig)}
+                  className="p-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 cursor-pointer transition-colors"
+                  title="Permanently Delete Fake/Spam Gig"
+                >
+                  <Trash2 className="h-4 w-4" />
                 </button>
               </div>
             </div>
@@ -297,7 +363,7 @@ const Gigs = () => {
         </div>
       ) : (
         /* All Gigs Tab: Table audit view */
-        <div className="bg-white rounded-2xl border border-surface-border overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.2)]">
+        <div className="bg-white rounded-2xl border border-surface-border overflow-hidden shadow-card">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -309,10 +375,10 @@ const Gigs = () => {
                   <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Proposals</th>
                   <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
                   <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Badge</th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Audit</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-surface-border/40 text-xs text-slate-300">
+              <tbody className="divide-y divide-surface-border/40 text-xs text-slate-700">
                 {gigs.map((gig) => {
                   const formattedDate = new Date(gig.createdAt).toLocaleDateString('en-IN', {
                     day: 'numeric',
@@ -321,27 +387,37 @@ const Gigs = () => {
                   });
 
                   return (
-                    <tr key={gig._id} className="hover:bg-white/[0.01]">
+                    <tr key={gig._id} className="hover:bg-surface-subtle/50 transition-colors">
                       <td className="px-6 py-4 font-bold text-slate-900 max-w-[200px] truncate">{gig.title}</td>
                       <td className="px-6 py-4 font-medium">{gig.client?.name || 'Owner'}</td>
                       <td className="px-6 py-4">{gig.category}</td>
-                      <td className="px-6 py-4 font-semibold text-slate-900">₹{gig.budgetMin} - ₹{gig.budgetMax}</td>
-                      <td className="px-6 py-4 font-mono font-bold text-slate-400">{gig.proposals || 0}</td>
+                      <td className="px-6 py-4 font-semibold text-slate-900">₹{gig.budgetMin?.toLocaleString()} - ₹{gig.budgetMax?.toLocaleString()}</td>
+                      <td className="px-6 py-4 font-mono font-bold text-slate-500">{gig.proposals || 0}</td>
                       <td className="px-6 py-4 font-semibold capitalize text-orange-600">{gig.status}</td>
                       <td className="px-6 py-4">
                         <span className={`inline-flex px-2 py-0.5 rounded text-[9px] font-extrabold uppercase tracking-wide border ${
-                          gig.isApproved ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
+                          gig.isApproved ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200'
                         }`}>
                           {gig.isApproved ? 'Approved' : 'Pending'}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <button
-                          onClick={() => setPreviewGig(gig)}
-                          className="p-1.5 rounded-lg bg-surface-muted border border-surface-border hover:border-orange-600/50 text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </button>
+                        <div className="flex items-center justify-end gap-1.5">
+                          <button
+                            onClick={() => setPreviewGig(gig)}
+                            className="p-1.5 rounded-lg bg-surface-muted border border-surface-border hover:border-orange-300 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
+                            title="Preview Gig"
+                          >
+                            <Eye className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => confirmDeleteGig(gig)}
+                            className="p-1.5 rounded-lg bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 transition-colors cursor-pointer"
+                            title="Permanently Remove Fake/Spam Gig"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );

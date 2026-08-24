@@ -226,8 +226,9 @@ const DisputeDetail = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
-          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-orange-500/10 text-purple-400 border border-orange-500/20 mb-2">
-            ⚖️ Mediation Chamber
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-red-50 text-red-700 border border-red-200 mb-2">
+            <ShieldAlert className="h-3 w-3 text-red-600" />
+            Mediation Chamber
           </span>
           <h1 className="text-xl md:text-2xl font-extrabold text-slate-900">Dispute Arbitration File</h1>
           <p className="text-xs text-slate-500 mt-1">Project Contract: <span className="font-semibold text-slate-900">{dispute.gig?.title}</span></p>

@@ -93,26 +93,67 @@ const PostGig = () => {
     setToastConfig({ message: 'Draft saved successfully!', type: 'success' });
   };
 
-  const handleNext = () => {
-    if (currentStep === 0) {
+  const [transitionCooldown, setTransitionCooldown] = useState(false);
+
+  const validateStep = (step) => {
+    if (step === 0) {
       if (!formData.title.trim()) {
         setToastConfig({ message: 'Please enter a job title.', type: 'error' });
-        return;
+        return false;
       }
       if (formData.description.trim().length < 100) {
         setToastConfig({ message: 'Please enter a description of at least 100 characters.', type: 'error' });
-        return;
+        return false;
       }
       if (formData.description.trim().length > 5000) {
         setToastConfig({ message: 'Description cannot exceed 5000 characters.', type: 'error' });
-        return;
+        return false;
       }
     }
-    if (currentStep === 1 && formData.skills.length === 0) {
-      setToastConfig({ message: 'Please add at least one required skill tag.', type: 'error' });
-      return;
+    if (step === 1) {
+      if (formData.skills.length === 0) {
+        setToastConfig({ message: 'Please add at least one required skill tag.', type: 'error' });
+        return false;
+      }
     }
-    setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+    if (step === 2) {
+      if (!formData.budgetMin || Number(formData.budgetMin) <= 0) {
+        setToastConfig({ message: 'Please enter a valid minimum budget.', type: 'error' });
+        return false;
+      }
+      if (Number(formData.budgetMax) < Number(formData.budgetMin)) {
+        setToastConfig({ message: 'Maximum budget must be greater than or equal to minimum budget.', type: 'error' });
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const handleNext = () => {
+    if (!validateStep(currentStep)) return;
+    const nextStep = Math.min(currentStep + 1, steps.length - 1);
+    setCurrentStep(nextStep);
+
+    // If advancing to Step 4 (Review), set a brief cooldown so rapid clicks cannot auto-submit
+    if (nextStep === 3) {
+      setTransitionCooldown(true);
+      setTimeout(() => setTransitionCooldown(false), 400);
+    }
+  };
+
+  const handleStepClick = (targetStep) => {
+    if (targetStep < currentStep) {
+      setCurrentStep(targetStep);
+    } else {
+      for (let i = currentStep; i < targetStep; i++) {
+        if (!validateStep(i)) return;
+      }
+      setCurrentStep(targetStep);
+      if (targetStep === 3) {
+        setTransitionCooldown(true);
+        setTimeout(() => setTransitionCooldown(false), 400);
+      }
+    }
   };
 
   const handleBack = () => {
@@ -138,10 +179,15 @@ const PostGig = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (currentStep < steps.length - 1) {
+  const handleFinalSubmit = async () => {
+    if (currentStep !== 3) {
       handleNext();
+      return;
+    }
+    if (transitionCooldown) return;
+
+    if (!formData.isRemote && !formData.location.trim()) {
+      setToastConfig({ message: 'Please specify the on-site project location.', type: 'error' });
       return;
     }
 
@@ -169,21 +215,22 @@ const PostGig = () => {
   };
 
   return (
-    <div className="min-h-screen bg-surface-subtle text-slate-900 p-6 md:py-12 relative overflow-hidden">
+    <div className="min-h-screen bg-surface-subtle text-slate-900 p-4 md:py-10 relative overflow-hidden">
       {/* Ambient backgrounds */}
-      <div className="absolute top-10 right-10 w-96 h-96 rounded-full bg-orange-600/10 blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-10 left-10 w-96 h-96 rounded-full bg-brand-purple/10 blur-[100px] pointer-events-none" />
+      <div className="absolute top-10 right-10 w-96 h-96 rounded-full bg-orange-600/5 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-10 left-10 w-96 h-96 rounded-full bg-brand-purple/5 blur-[100px] pointer-events-none" />
 
-      <div className="max-w-3xl mx-auto bg-white border border-surface-border rounded-3xl p-6 md:p-8 relative z-10 shadow-2xl">
+      <div className="max-w-3xl mx-auto bg-white border border-surface-border rounded-3xl p-6 md:p-8 relative z-10 shadow-card">
         {/* Header */}
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
             <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900">Create a New Job Post</h1>
             <p className="text-xs text-slate-500 mt-1">Hire top freelancers in our hyperlocal system</p>
           </div>
           <button
+            type="button"
             onClick={saveDraft}
-            className="inline-flex items-center gap-1.5 bg-surface-muted border border-surface-border hover:border-orange-600 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:text-slate-900 transition-all cursor-pointer"
+            className="inline-flex items-center gap-1.5 bg-surface-subtle border border-surface-border hover:border-orange-600 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:text-slate-900 transition-all cursor-pointer self-start sm:self-auto shadow-sm"
           >
             <Save className="h-4 w-4" />
             Save Draft
@@ -191,9 +238,9 @@ const PostGig = () => {
         </div>
 
         {/* Step Progress Bar */}
-        <MultiStepForm steps={steps} currentStep={currentStep} />
+        <MultiStepForm steps={steps} currentStep={currentStep} onStepClick={handleStepClick} />
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+        <div className="mt-6 space-y-6">
           {/* STEP 1: Details */}
           {currentStep === 0 && (
             <div className="space-y-4">
@@ -276,8 +323,8 @@ const PostGig = () => {
                       onClick={() => setFormData({ ...formData, experienceLevel: level })}
                       className={`p-4 rounded-xl border transition-all cursor-pointer text-center capitalize ${
                         formData.experienceLevel === level
-                          ? 'border-orange-600 bg-orange-600/10 text-slate-900 font-bold'
-                          : 'border-surface-border bg-surface-muted0 text-slate-500 hover:border-[#94A3B8]/30'
+                          ? 'border-orange-600 bg-orange-600/10 text-slate-900 font-bold shadow-sm'
+                          : 'border-surface-border bg-white text-slate-500 hover:border-orange-300'
                       }`}
                     >
                       {level}
@@ -308,13 +355,13 @@ const PostGig = () => {
           {currentStep === 2 && (
             <div className="space-y-6">
               {/* Budget Type Toggle */}
-              <div className="flex gap-4 p-1 bg-surface-muted0 border border-surface-border rounded-2xl w-max">
+              <div className="flex gap-4 p-1 bg-surface-subtle border border-surface-border rounded-2xl w-max">
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, budgetType: 'fixed' })}
                   className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                     formData.budgetType === 'fixed'
-                      ? 'bg-gradient-orange text-slate-900 shadow-md'
+                      ? 'bg-orange-600 text-white shadow-sm'
                       : 'text-slate-500 hover:text-slate-900'
                   } cursor-pointer`}
                 >
@@ -325,7 +372,7 @@ const PostGig = () => {
                   onClick={() => setFormData({ ...formData, budgetType: 'hourly' })}
                   className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                     formData.budgetType === 'hourly'
-                      ? 'bg-gradient-orange text-slate-900 shadow-md'
+                      ? 'bg-orange-600 text-white shadow-sm'
                       : 'text-slate-500 hover:text-slate-900'
                   } cursor-pointer`}
                 >
@@ -341,7 +388,7 @@ const PostGig = () => {
                     type="number"
                     value={formData.budgetMin}
                     onChange={(e) => setFormData({ ...formData, budgetMin: Number(e.target.value) })}
-                    className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-subtle text-slate-900 text-sm"
+                    className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-subtle text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-orange-600/30"
                   />
                 </div>
                 <div>
@@ -350,7 +397,7 @@ const PostGig = () => {
                     type="number"
                     value={formData.budgetMax}
                     onChange={(e) => setFormData({ ...formData, budgetMax: Number(e.target.value) })}
-                    className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-subtle text-slate-900 text-sm"
+                    className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-subtle text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-orange-600/30"
                   />
                 </div>
               </div>
@@ -384,7 +431,7 @@ const PostGig = () => {
                 <button
                   type="button"
                   onClick={addMilestone}
-                  className="w-full py-2 bg-orange-600/15 text-orange-600 border border-orange-600/25 hover:bg-orange-600 hover:text-slate-900 transition-all font-bold flex items-center justify-center gap-1.5 cursor-pointer rounded-xl text-xs"
+                  className="w-full py-2 bg-orange-50 text-orange-600 border border-orange-200 hover:bg-orange-100 transition-all font-bold flex items-center justify-center gap-1.5 cursor-pointer rounded-xl text-xs"
                 >
                   <Plus className="h-4 w-4" />
                   Add Milestone
@@ -395,18 +442,18 @@ const PostGig = () => {
                     {formData.milestones.map((m, idx) => (
                       <div
                         key={idx}
-                        className="flex justify-between items-center p-3 rounded-xl border border-surface-border bg-surface-muted0 text-xs text-slate-300"
+                        className="flex justify-between items-center p-3 rounded-xl border border-surface-border bg-surface-subtle text-xs text-slate-700"
                       >
                         <div>
                           <p className="font-bold text-slate-900">{m.title}</p>
                           <p className="text-[10px] text-slate-500">Due: {new Date(m.dueDate).toLocaleDateString()}</p>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className="font-extrabold text-orange-600">₹{m.amount.toLocaleString()}</span>
+                          <span className="font-extrabold text-orange-600">₹{Number(m.amount).toLocaleString()}</span>
                           <button
                             type="button"
                             onClick={() => removeMilestone(idx)}
-                            className="p-1 rounded bg-surface-muted text-slate-500 hover:text-[#EF4444]"
+                            className="p-1 rounded bg-white text-slate-400 hover:text-red-500 border border-surface-border transition-colors cursor-pointer"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -419,70 +466,124 @@ const PostGig = () => {
             </div>
           )}
 
-          {/* STEP 4: Remote Status, Location & Review */}
+          {/* STEP 4: Location, Attachments & Final Review */}
           {currentStep === 3 && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-center justify-between p-4 bg-[rgba(255,255,255,0.01)] border border-surface-border rounded-2xl">
-                  <div>
-                    <span className="block text-xs font-bold text-slate-900">Remote Work Opportunity</span>
-                    <span className="text-[10px] text-slate-500">Allow freelancers to work offsite</span>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer select-none">
-                    <input
-                      type="checkbox"
-                      checked={formData.isRemote}
-                      onChange={(e) => setFormData({ ...formData, isRemote: e.target.checked })}
-                      className="sr-only peer"
-                    />
-                    <div className="w-9 h-5 bg-dark-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[#94A3B8] after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-orange-600 peer-checked:after:bg-white" />
-                  </label>
-                </div>
+            <div className="space-y-6 animate-in fade-in duration-200">
+              <div className="border-b border-surface-border pb-3">
+                <h3 className="text-base font-extrabold text-slate-900">Step 4: Location, Attachments & Review</h3>
+                <p className="text-xs text-slate-500 mt-0.5">Please review your job posting details before confirming publication.</p>
+              </div>
 
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Project Location</label>
-                  <input
-                    type="text"
-                    value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                    placeholder="e.g. Mumbai, Maharashtra"
-                    disabled={formData.isRemote}
-                    className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-subtle text-slate-900 text-sm disabled:opacity-40"
-                  />
+              {/* Work Arrangement Selection */}
+              <div className="space-y-3">
+                <label className="block text-xs font-bold text-slate-600 uppercase tracking-wide">Work Arrangement</label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div
+                    onClick={() => setFormData({ ...formData, isRemote: true })}
+                    className={`p-4 rounded-2xl border-2 transition-all cursor-pointer ${
+                      formData.isRemote
+                        ? 'border-orange-600 bg-orange-50/50 shadow-sm'
+                        : 'border-surface-border bg-white hover:border-slate-300'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm font-bold text-slate-900">🌐 100% Remote</span>
+                      <span className={`h-4 w-4 rounded-full border-2 flex items-center justify-center ${formData.isRemote ? 'border-orange-600 bg-orange-600' : 'border-slate-300'}`}>
+                        {formData.isRemote && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-500">Freelancers worldwide or across India can apply.</p>
+                  </div>
+
+                  <div
+                    onClick={() => setFormData({ ...formData, isRemote: false })}
+                    className={`p-4 rounded-2xl border-2 transition-all cursor-pointer ${
+                      !formData.isRemote
+                        ? 'border-orange-600 bg-orange-50/50 shadow-sm'
+                        : 'border-surface-border bg-white hover:border-slate-300'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm font-bold text-slate-900">📍 On-site / Local</span>
+                      <span className={`h-4 w-4 rounded-full border-2 flex items-center justify-center ${!formData.isRemote ? 'border-orange-600 bg-orange-600' : 'border-slate-300'}`}>
+                        {!formData.isRemote && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-500">Requires local in-person presence in your city.</p>
+                  </div>
                 </div>
               </div>
 
+              {/* Location Input (Active when On-site is selected) */}
+              <div>
+                <label className="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1.5">
+                  {formData.isRemote ? 'Preferred Region / Timezone (Optional)' : 'Project Location (Required for On-site)'}
+                </label>
+                <input
+                  type="text"
+                  value={formData.location}
+                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                  placeholder="e.g. Mumbai, Maharashtra or Bengaluru, Karnataka"
+                  className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-subtle text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-orange-600/30"
+                />
+              </div>
+
+              {/* Attachments */}
               <div>
                 <FileUpload
                   files={formData.attachments}
                   onChange={(attachments) => setFormData({ ...formData, attachments })}
-                  label="Reference Attachments (Specs, Designs)"
+                  label="Reference Attachments (Specs, Designs, Wireframes)"
                 />
               </div>
 
-              {/* Review summary cards */}
-              <div className="border border-surface-border rounded-2xl p-5 bg-surface-muted0 space-y-4">
-                <h3 className="text-sm font-extrabold text-slate-900 border-b border-surface-border/40 pb-2">Final Review</h3>
-                <div className="grid grid-cols-2 gap-4 text-xs">
+              {/* Comprehensive Review Summary Card */}
+              <div className="border border-surface-border rounded-2xl p-5 bg-surface-subtle space-y-4">
+                <div className="flex items-center justify-between border-b border-surface-border pb-2">
+                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Summary of Job Details</h4>
+                  <span className="text-[11px] font-bold text-orange-600">{formData.category}</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                   <div>
-                    <span className="block text-slate-500 font-bold">Title</span>
-                    <span className="text-slate-200 font-semibold">{formData.title || 'Untitled'}</span>
+                    <span className="block text-slate-400 font-bold">Job Title</span>
+                    <span className="text-slate-900 font-bold text-sm">{formData.title || 'Untitled Post'}</span>
                   </div>
+
                   <div>
-                    <span className="block text-slate-500 font-bold">Budget Scale</span>
-                    <span className="text-slate-200 font-semibold">
-                      ₹{formData.budgetMin} - ₹{formData.budgetMax} ({formData.budgetType === 'fixed' ? 'Fixed' : 'Hourly'})
+                    <span className="block text-slate-400 font-bold">Budget & Scale</span>
+                    <span className="text-slate-900 font-bold">
+                      ₹{formData.budgetMin?.toLocaleString()} - ₹{formData.budgetMax?.toLocaleString()} ({formData.budgetType === 'fixed' ? 'Fixed' : 'Hourly'})
                     </span>
                   </div>
+
                   <div>
-                    <span className="block text-slate-500 font-bold">Experience Required</span>
-                    <span className="text-slate-200 font-semibold capitalize">{formData.experienceLevel}</span>
+                    <span className="block text-slate-400 font-bold">Experience Level & Duration</span>
+                    <span className="text-slate-900 font-bold capitalize">
+                      {formData.experienceLevel} · {formData.duration}
+                    </span>
                   </div>
+
                   <div>
-                    <span className="block text-slate-500 font-bold">Work Arrangement</span>
-                    <span className="text-slate-200 font-semibold">{formData.isRemote ? 'Remote' : formData.location || 'On-site'}</span>
+                    <span className="block text-slate-400 font-bold">Work Arrangement</span>
+                    <span className="text-slate-900 font-bold">
+                      {formData.isRemote ? '100% Remote' : `On-site (${formData.location || 'Location pending'})`}
+                    </span>
                   </div>
                 </div>
+
+                {formData.skills.length > 0 && (
+                  <div className="pt-2 border-t border-surface-border/60">
+                    <span className="block text-[11px] text-slate-400 font-bold mb-1.5">Required Skills:</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {formData.skills.map((skill, idx) => (
+                        <span key={idx} className="px-2.5 py-1 rounded-lg bg-white border border-surface-border text-[11px] font-bold text-slate-700">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -493,7 +594,7 @@ const PostGig = () => {
               type="button"
               onClick={handleBack}
               disabled={currentStep === 0}
-              className="px-5 py-3 rounded-xl bg-surface-muted border border-surface-border hover:border-orange-600/50 text-slate-500 disabled:opacity-40 disabled:hover:border-surface-border font-bold text-xs transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-5 py-3 rounded-xl bg-surface-subtle border border-surface-border hover:border-orange-200 text-slate-600 disabled:opacity-40 font-bold text-xs transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <ArrowLeft className="h-4 w-4" />
               Back
@@ -503,23 +604,24 @@ const PostGig = () => {
               <button
                 type="button"
                 onClick={handleNext}
-                className="px-5 py-3 rounded-xl bg-gradient-orange hover-glow-orange text-slate-900 font-bold text-xs flex items-center gap-1.5 cursor-pointer"
+                className="px-6 py-3 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm"
               >
-                Continue
+                Continue to Step {currentStep + 2}
                 <ArrowRight className="h-4 w-4" />
               </button>
             ) : (
               <button
-                type="submit"
-                disabled={isSubmitting}
-                className="px-5 py-3 rounded-xl bg-gradient-orange hover-glow-orange text-slate-900 font-bold text-xs flex items-center gap-1.5 cursor-pointer"
+                type="button"
+                onClick={handleFinalSubmit}
+                disabled={isSubmitting || transitionCooldown}
+                className="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm disabled:opacity-50"
               >
                 <CheckCircle className="h-4 w-4" />
-                {isSubmitting ? 'Posting Gig...' : 'Confirm & Post Job'}
+                {isSubmitting ? 'Publishing Gig...' : 'Confirm & Post Job Now'}
               </button>
             )}
           </div>
-        </form>
+        </div>
       </div>
 
       {toastConfig && (
